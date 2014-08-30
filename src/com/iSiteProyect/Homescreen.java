@@ -11,7 +11,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import com.iSiteProyect.R;
+
+
+
+import com.iSiteProyect.layouts.ll_login;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -118,7 +121,8 @@ public class Homescreen extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				BluetoothDevice device = ((MyAdapter) (mLstDevices.getAdapter())).getSelectedItem();
-				Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+				//Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+				Intent intent = new Intent(getApplicationContext(), ll_login.class);
 				intent.putExtra(DEVICE_EXTRA, device);
 				intent.putExtra(DEVICE_UUID, mDeviceUUID.toString());
 				intent.putExtra(BUFFER_SIZE, mBufferSize);

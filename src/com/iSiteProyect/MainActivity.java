@@ -1,8 +1,4 @@
-/*
- * Released under MIT License http://opensource.org/licenses/MIT
- * Copyright (c) 2013 Plasty Grove
- * Refer to file LICENSE or URL above for full text 
- */
+
 
 package com.iSiteProyect;
 
@@ -10,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
-import com.iSiteProyect.R;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -42,12 +37,10 @@ public class MainActivity extends Activity {
 	private boolean mIsUserInitiatedDisconnect = false;
 
 	// All controls here
-	private TextView mTxtReceive;
+	private TextView mTxtReceive,TxtReceptor;
 	private EditText mEditSend;
-	private Button mBtnDisconnect;
-	private Button mBtnSend;
-	private Button mBtnClear;
-	private Button mBtnClearInput;
+	private Button mBtnDisconnect,mBtnSend,mBtnClear,mBtnClearInput;
+	
 	private ScrollView scrollView;
 	private CheckBox chkScroll;
 	private CheckBox chkReceiveText;
@@ -58,6 +51,8 @@ public class MainActivity extends Activity {
 
 	private ProgressDialog progressDialog;
 
+	//private String detectorString=null;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -71,16 +66,8 @@ public class MainActivity extends Activity {
 		mMaxChars = b.getInt(Homescreen.BUFFER_SIZE);
 
 		Log.d(TAG, "Ready");
-
-		mBtnDisconnect = (Button) findViewById(R.id.btnDisconnect);
-		mBtnSend = (Button) findViewById(R.id.btnSend);
-		mBtnClear = (Button) findViewById(R.id.btnClear);
-		mTxtReceive = (TextView) findViewById(R.id.txtReceive);
-		mEditSend = (EditText) findViewById(R.id.editSend);
-		scrollView = (ScrollView) findViewById(R.id.viewScroll);
-		chkScroll = (CheckBox) findViewById(R.id.chkScroll);
-		chkReceiveText = (CheckBox) findViewById(R.id.chkReceiveText);
-		mBtnClearInput = (Button) findViewById(R.id.btnClearInput);
+		LevantarXML();
+	
 
 		mTxtReceive.setMovementMethod(new ScrollingMovementMethod());
 
@@ -93,6 +80,10 @@ public class MainActivity extends Activity {
 			}
 		});
 
+		
+	
+		
+		
 		mBtnSend.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -106,7 +97,7 @@ public class MainActivity extends Activity {
 				}
 			}
 		});
-
+		
 		mBtnClear.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -125,7 +116,24 @@ public class MainActivity extends Activity {
 
 	}
 
-	private class ReadInput implements Runnable {
+	
+	
+	private void  LevantarXML() {
+		
+		mBtnDisconnect = (Button) findViewById(R.id.btnDisconnect);
+		mBtnSend = (Button) findViewById(R.id.btnSend);
+		mBtnClear = (Button) findViewById(R.id.btnClear);
+	
+		mTxtReceive = (TextView) findViewById(R.id.txtReceive);
+		mEditSend = (EditText) findViewById(R.id.editSend);
+			scrollView = (ScrollView) findViewById(R.id.viewScroll);
+		chkScroll = (CheckBox) findViewById(R.id.chkScroll);
+		chkReceiveText = (CheckBox) findViewById(R.id.chkReceiveText);
+		mBtnClearInput = (Button) findViewById(R.id.btnClearInput);
+		
+	}
+
+	public class ReadInput implements Runnable {
 
 		private boolean bStop = false;
 		private Thread t;
@@ -167,8 +175,14 @@ public class MainActivity extends Activity {
 								public void run() {
 									mTxtReceive.append(strInput);
 									//Uncomment below for testing
-									mTxtReceive.append("\n");
-									mTxtReceive.append("Chars: " + strInput.length() + " Lines: " + mTxtReceive.getLineCount() + "\n");
+									//mTxtReceive.append("\n");
+									//mTxtReceive.append("Chars: " + strInput.length() + " Lines: " + mTxtReceive.getLineCount() + "\n");
+									
+									/// DETECTA STRING
+									
+									
+									 FuncionComandos(strInput);
+									
 									
 									int txtLength = mTxtReceive.getEditableText().length();  
 									if(txtLength > mMaxChars){
@@ -205,8 +219,55 @@ public class MainActivity extends Activity {
 		}
 
 	}
+	
+	private void FuncionEnviar(String StringEnviado){
+		
+		try {
+			mBTSocket.getOutputStream().write((StringEnviado+"\r").getBytes());
+			mEditSend.setText("");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
 
-	private class DisConnectBT extends AsyncTask<Void, Void, Void> {
+	private void FuncionComandos(String detectorString){
+		
+		if (detectorString.contains("iDirect login:")){
+			
+			Toast.makeText(getApplicationContext(), "login", Toast.LENGTH_SHORT).show();
+			FuncionEnviar("root");		
+			
+			
+		}else if(detectorString.contains("Password:")){
+		
+			Toast.makeText(getApplicationContext(), "P@55w0rd!", Toast.LENGTH_SHORT).show();
+			FuncionEnviar("P@55w0rd!");	
+		}else if(detectorString.contains("Username:")){
+		
+			Toast.makeText(getApplicationContext(), "admin", Toast.LENGTH_SHORT).show();
+			FuncionEnviar("admin");	
+		}
+		else if(detectorString.contains("Unknown Command:")){
+			
+			Toast.makeText(getApplicationContext(), "Comando erroneo", Toast.LENGTH_SHORT).show();
+				
+		}else if(detectorString.contains(">")){
+		
+			Toast.makeText(getApplicationContext(), "telnet", Toast.LENGTH_SHORT).show();
+		
+		}else if(detectorString.contains("#")){
+		
+			Toast.makeText(getApplicationContext(), "Linux", Toast.LENGTH_SHORT).show();
+			
+		}
+		
+	}
+
+
+	public class DisConnectBT extends AsyncTask<Void, Void, Void> {
 
 		@Override
 		protected void onPreExecute() {
@@ -278,7 +339,7 @@ public class MainActivity extends Activity {
 		super.onSaveInstanceState(outState);
 	}
 
-	private class ConnectBT extends AsyncTask<Void, Void, Void> {
+	public class ConnectBT extends AsyncTask<Void, Void, Void> {
 		private boolean mConnectSuccessful = true;
 
 		@Override
