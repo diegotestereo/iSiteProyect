@@ -4,13 +4,13 @@
  * Refer to file LICENSE or URL above for full text 
  */
 
-package com.blueserial;
+package com.iSiteProyect;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
-import com.blueserial.R;
+import com.iSiteProyect.R;
 
 import android.app.Activity;
 import android.app.ProgressDialog;

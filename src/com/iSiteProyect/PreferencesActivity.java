@@ -4,9 +4,11 @@
  * Refer to file LICENSE or URL above for full text 
  */
 
-package com.blueserial;
+package com.iSiteProyect;
 
 import java.util.Map;
+
+import com.iSiteProyect.R;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;

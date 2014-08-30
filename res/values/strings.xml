@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">BlueSerial Beta</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">iSiteProyect Beta</string>
+    <string name="action_settings">Seteo</string>
     <string name="title_activity_helpscreen">Helpscreen</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="menu_settings">Settings</string>
+    <string name="hello_world">Hola Mundo!</string>
+    <string name="menu_settings">Seteo</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="pref_send_report">Send crash reports</string>
     <string name="pref_send_report_summary">Helps to fix bugs</string>

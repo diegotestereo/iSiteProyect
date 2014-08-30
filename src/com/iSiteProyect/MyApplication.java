@@ -4,7 +4,7 @@
  * Refer to file LICENSE or URL above for full text 
  */
 
-package com.blueserial;
+package com.iSiteProyect;
 
 import android.app.Application;
 
