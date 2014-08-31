@@ -16,21 +16,14 @@
             android:id="@+id/btnDisconnect"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:layout_weight="5"
+            android:layout_weight="4.88"
             android:text="Disconnect" />
 
         <Button
             android:id="@+id/btnClearInput"
-            android:layout_width="0dp"
+            android:layout_width="204dp"
             android:layout_height="fill_parent"
-            android:layout_weight="5"
             android:text="Clear Input" />
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-        </LinearLayout>
     </LinearLayout>
 
     <ScrollView
@@ -84,17 +77,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-        </LinearLayout>
+        <Button
+            android:id="@+id/btn_comandos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Button" />
 
     </LinearLayout>
 

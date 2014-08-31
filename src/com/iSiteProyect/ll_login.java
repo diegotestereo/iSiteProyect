@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.UUID;
 
 
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -38,7 +39,7 @@ public class ll_login extends Activity {
 	// All controls here
 	private TextView mTxtReceive;
 	private EditText mEditSend;
-	private Button mBtnDisconnect,mBtnSend,mBtnClear,mBtnClearInput;
+	private Button mBtnDisconnect,mBtnSend,mBtnClear,mBtnClearInput,btn_comandos;
 	
 	private ScrollView scrollView;
 	private CheckBox chkScroll;
@@ -80,7 +81,16 @@ public class ll_login extends Activity {
 		});
 
 		
-	
+	btn_comandos.setOnClickListener(new OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			Intent intent = new Intent(getApplicationContext(), ll_comandos.class);
+			
+			startActivity(intent);
+			
+		}
+	});
 		
 		
 		mBtnSend.setOnClickListener(new OnClickListener() {
@@ -122,7 +132,8 @@ public class ll_login extends Activity {
 		mBtnDisconnect = (Button) findViewById(R.id.btnDisconnect);
 		mBtnSend = (Button) findViewById(R.id.btnSend);
 		mBtnClear = (Button) findViewById(R.id.btnClear);
-	
+		btn_comandos = (Button) findViewById(R.id.btn_comandos);
+
 		mTxtReceive = (TextView) findViewById(R.id.txtReceive);
 		mEditSend = (EditText) findViewById(R.id.editSend);
 			scrollView = (ScrollView) findViewById(R.id.viewScroll);
