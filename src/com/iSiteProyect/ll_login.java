@@ -36,7 +36,7 @@ public class ll_login extends Activity {
 	private boolean mIsUserInitiatedDisconnect = false;
 
 	// All controls here
-	private TextView mTxtReceive,TxtReceptor;
+	private TextView mTxtReceive;
 	private EditText mEditSend;
 	private Button mBtnDisconnect,mBtnSend,mBtnClear,mBtnClearInput;
 	
@@ -168,7 +168,7 @@ public class ll_login extends Activity {
 						 * If checked then receive text, better design would probably be to stop thread if unchecked and free resources, but this is a quick fix
 						 */
 
-						if (chkReceiveText.isChecked()) {
+						
 							mTxtReceive.post(new Runnable() {
 								@Override
 								public void run() {
@@ -188,17 +188,16 @@ public class ll_login extends Activity {
 										mTxtReceive.getEditableText().delete(0, txtLength - mMaxChars);
 									}
 
-									if (chkScroll.isChecked()) { // Scroll only if this is checked
 										scrollView.post(new Runnable() { // Snippet from http://stackoverflow.com/a/4612082/1287554
 													@Override
 													public void run() {
 														scrollView.fullScroll(View.FOCUS_DOWN);
 													}
 												});
-									}
+								
 								}
 							});
-						}
+						
 
 					}
 					Thread.sleep(500);
