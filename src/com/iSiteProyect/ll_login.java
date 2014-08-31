@@ -4,9 +4,6 @@ package com.iSiteProyect;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
-
-
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -27,10 +24,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ll_login extends Activity {
-
+	
+	public static final String DEVICE_EXTRA = "com.blueserial.SOCKET";
+	public static final String DEVICE_UUID = "com.blueserial.uuid";
+	public static final String BUFFER_SIZE = "com.blueserial.buffersize";
+	
 	private static final String TAG = "BlueTest5-MainActivity";
 	private int mMaxChars = 50000;//Default
-	private UUID mDeviceUUID;
+	
 	private BluetoothSocket mBTSocket;
 	private ReadInput mReadThread = null;
 
@@ -40,7 +41,10 @@ public class ll_login extends Activity {
 	private TextView mTxtReceive;
 	private EditText mEditSend;
 	private Button mBtnDisconnect,mBtnSend,mBtnClear,mBtnClearInput,btn_comandos;
-	
+	private UUID mDeviceUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // Standard SPP UUID
+	// (http://developer.android.com/reference/android/bluetooth/BluetoothDevice.html#createInsecureRfcommSocketToServiceRecord%28java.util.UUID%29)
+
+	private int mBufferSize = 50000; //Default
 	private ScrollView scrollView;
 	private CheckBox chkScroll;
 	private CheckBox chkReceiveText;
@@ -85,8 +89,13 @@ public class ll_login extends Activity {
 		
 		@Override
 		public void onClick(View v) {
+			
+			
 			Intent intent = new Intent(getApplicationContext(), ll_comandos.class);
 			
+			intent.putExtra(DEVICE_EXTRA, mDevice);
+			intent.putExtra(DEVICE_UUID, mDeviceUUID.toString());
+			intent.putExtra(BUFFER_SIZE, mBufferSize);
 			startActivity(intent);
 			
 		}
