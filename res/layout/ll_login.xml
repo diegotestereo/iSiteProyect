@@ -1,45 +1,116 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    tools:context=".MainActivity" >
 
-    <TextView
-        android:id="@+id/TxtReceptor"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="0.11"
-        android:text="pepeppepe" />
+        android:orientation="horizontal" >
 
-    <Button
-        android:id="@+id/btn_logiSite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Login iSite" />
+        <Button
+            android:id="@+id/btnDisconnect"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="5"
+            android:text="Disconnect" />
+
+        <Button
+            android:id="@+id/btnClearInput"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="5"
+            android:text="Clear Input" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <CheckBox
+                android:id="@+id/chkScroll"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="0dp"
+                android:checked="true"
+                android:text="Scroll" />
+
+            <CheckBox
+                android:id="@+id/chkReceiveText"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Read" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/viewScroll"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:layout_weight="0.00" >
+
+        <TextView
+            android:id="@+id/txtReceive"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:background="#eeeeee"
+            android:hint="Message shows up here ..."
+            android:scrollbars="vertical"
+            android:typeface="monospace" />
+    </ScrollView>
 
     <EditText
-        android:id="@+id/EditPassLinux"
+        android:id="@+id/editSend"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter command ..."
+        android:inputType="text" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btnClear"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:padding="5dp"
+            android:text="Clear" />
+
+        <Button
+            android:id="@+id/btnSend"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:padding="5dp"
+            android:text="Send" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Password iSite"
-        android:text="P@55w0rd!" />
+        android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/btn_logLinux"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Login Linux" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
-    <EditText
-        android:id="@+id/EditPassiSite"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Password Linux"
-        android:text="P@55w0rd!" />
+        </LinearLayout>
 
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout> <!-- </RelativeLayout> -->

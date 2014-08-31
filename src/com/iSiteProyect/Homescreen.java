@@ -14,7 +14,6 @@ import java.util.UUID;
 
 
 
-import com.iSiteProyect.layouts.ll_login;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;

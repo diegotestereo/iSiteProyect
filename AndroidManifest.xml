@@ -36,7 +36,7 @@
             </intent-filter>
         </activity>
         <activity android:name="PreferencesActivity"></activity>
-        <activity android:name="com.iSiteProyect.layouts.ll_login"
+        <activity android:name="com.iSiteProyect.ll_login"
               android:label="prueba"></activity>
     </application>
 
