@@ -27,7 +27,7 @@
     </LinearLayout>
 
     <ScrollView
-        android:id="@+id/viewScroll"
+        android:id="@+id/viewScrollcom"
         android:layout_width="fill_parent"
         android:layout_height="100dp"
         android:layout_weight="0.00" >
@@ -56,14 +56,6 @@
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/btnClear"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:padding="5dp"
-            android:text="Clear" />
-
-        <Button
             android:id="@+id/btnSend"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -74,15 +66,46 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:layout_height="wrap_content" >
 
         <Button
-            android:id="@+id/btn_comandos"
+            android:id="@+id/btnLoginTelnet"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:text="Log isite" />
+
+        <Button
+            android:id="@+id/btn_LogOut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Log Out" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Spinner
+            android:id="@+id/spin_TX"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Button" />
+          
+            android:layout_weight="1" />
+
+        <Spinner
+            android:id="@+id/spin_RX"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:id="@+id/spin_Otros"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
     </LinearLayout>
 
 </LinearLayout> <!-- </RelativeLayout> -->
+

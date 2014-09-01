@@ -38,8 +38,7 @@
         <activity android:name="PreferencesActivity"></activity>
         <activity android:name="com.iSiteProyect.ll_login"
               android:label="prueba"></activity>
-           <activity android:name="com.iSiteProyect.ll_comandos"
-              android:label="COMANDOS"></activity>
+           
     </application>
 
 </manifest>

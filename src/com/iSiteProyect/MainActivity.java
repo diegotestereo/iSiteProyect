@@ -126,7 +126,7 @@ public class MainActivity extends Activity {
 	
 		mTxtReceive = (TextView) findViewById(R.id.txtReceive);
 		mEditSend = (EditText) findViewById(R.id.editSend);
-			scrollView = (ScrollView) findViewById(R.id.viewScroll);
+			scrollView = (ScrollView) findViewById(R.id.viewScrollcom);
 		chkScroll = (CheckBox) findViewById(R.id.chkScroll);
 		chkReceiveText = (CheckBox) findViewById(R.id.chkReceiveText);
 		mBtnClearInput = (Button) findViewById(R.id.btnClearInput);

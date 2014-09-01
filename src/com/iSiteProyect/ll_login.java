@@ -4,6 +4,7 @@ package com.iSiteProyect;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -16,10 +17,16 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ScrollView;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,14 +47,17 @@ public class ll_login extends Activity {
 	// All controls here
 	private TextView mTxtReceive;
 	private EditText mEditSend;
-	private Button mBtnDisconnect,mBtnSend,mBtnClear,mBtnClearInput,btn_comandos;
+	private Button mBtnDisconnect,mBtnSend,mBtnLoginTelnet,mBtnClearInput;
+	 Button btn_LogOut;
+	 Spinner spin_TX,spin_RX,spin_Otros;
+	 ArrayAdapter<String> TxAdapter,RxAdapter,OtrosAdapter;
 	private UUID mDeviceUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // Standard SPP UUID
 	// (http://developer.android.com/reference/android/bluetooth/BluetoothDevice.html#createInsecureRfcommSocketToServiceRecord%28java.util.UUID%29)
-
+    
 	private int mBufferSize = 50000; //Default
 	private ScrollView scrollView;
-	private CheckBox chkScroll;
-	private CheckBox chkReceiveText;
+	 CheckBox chkScroll;
+	 CheckBox chkReceiveText;
 
 	private boolean mIsBluetoothConnected = false;
 
@@ -62,7 +72,8 @@ public class ll_login extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ll_login);
 		ActivityHelper.initialize(this);
-
+		
+		
 		Intent intent = getIntent();
 		Bundle b = intent.getExtras();
 		mDevice = b.getParcelable(Homescreen.DEVICE_EXTRA);
@@ -71,8 +82,8 @@ public class ll_login extends Activity {
 
 		Log.d(TAG, "Ready");
 		LevantarXML();
-	
-
+		SeteoUI();
+		Spinners();
 		mTxtReceive.setMovementMethod(new ScrollingMovementMethod());
 
 		mBtnDisconnect.setOnClickListener(new OnClickListener() {
@@ -85,21 +96,19 @@ public class ll_login extends Activity {
 		});
 
 		
-	btn_comandos.setOnClickListener(new OnClickListener() {
-		
-		@Override
-		public void onClick(View v) {
+		btn_LogOut.setOnClickListener(new OnClickListener() {
 			
-			
-			Intent intent = new Intent(getApplicationContext(), ll_comandos.class);
-			
-			intent.putExtra(DEVICE_EXTRA, mDevice);
-			intent.putExtra(DEVICE_UUID, mDeviceUUID.toString());
-			intent.putExtra(BUFFER_SIZE, mBufferSize);
-			startActivity(intent);
-			
-		}
-	});
+			@Override
+			public void onClick(View v) {
+				try {
+					mBTSocket.getOutputStream().write(("exit\r").getBytes());
+					mEditSend.setText("");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
 		
 		
 		mBtnSend.setOnClickListener(new OnClickListener() {
@@ -116,11 +125,18 @@ public class ll_login extends Activity {
 			}
 		});
 		
-		mBtnClear.setOnClickListener(new OnClickListener() {
+		mBtnLoginTelnet.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
-				mEditSend.setText("");
+				try {
+					mBTSocket.getOutputStream().write(("telnet localhost\r").getBytes());
+				
+					mEditSend.setText("");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		
@@ -136,16 +152,93 @@ public class ll_login extends Activity {
 
 	
 	
+	private void Spinners() {
+		spin_TX.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+					@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		spin_RX.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		spin_Otros.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		
+	}
+
+
+
+	private void SeteoUI() {
+		String[] TxCadena=new String[]{"Tx cw","Tx Enable","Tx Frecuency","Tx ifl 10M","Tx ifl DC","Tx BER","Tx Power"};
+		String[] RxCadena=new String[]{"Rx AGC","Rx Enable","Rx Frecuency","Rx ifl 10M","Rx ifl DC","Rx Pointing","Rx Power","Rx SNR"};
+		String[] OtrosCadena=new String[]{"Serial","Remote State","Report Versions"};
+		
+		
+		TxAdapter= new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item,TxCadena );
+		RxAdapter= new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item,RxCadena );
+		OtrosAdapter= new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item,OtrosCadena );
+		
+		spin_TX.setAdapter(TxAdapter);
+		spin_RX.setAdapter(RxAdapter);
+		spin_Otros.setAdapter(OtrosAdapter);
+	}
+
+
+
 	private void  LevantarXML() {
 		
 		mBtnDisconnect = (Button) findViewById(R.id.btnDisconnect);
 		mBtnSend = (Button) findViewById(R.id.btnSend);
-		mBtnClear = (Button) findViewById(R.id.btnClear);
-		btn_comandos = (Button) findViewById(R.id.btn_comandos);
-
+		mBtnLoginTelnet = (Button) findViewById(R.id.btnLoginTelnet);
+	//	btn_comandos = (Button) findViewById(R.id.btn_comandos);
+		
+		btn_LogOut=(Button)findViewById(R.id.btn_LogOut);
+		
+		spin_TX=(Spinner)findViewById(R.id.spin_TX);
+		spin_RX=(Spinner)findViewById(R.id.spin_RX);
+		spin_Otros=(Spinner)findViewById(R.id.spin_Otros);
+		
+		
+		
 		mTxtReceive = (TextView) findViewById(R.id.txtReceive);
 		mEditSend = (EditText) findViewById(R.id.editSend);
-			scrollView = (ScrollView) findViewById(R.id.viewScroll);
+			scrollView = (ScrollView) findViewById(R.id.viewScrollcom);
 		chkScroll = (CheckBox) findViewById(R.id.chkScroll);
 		chkReceiveText = (CheckBox) findViewById(R.id.chkReceiveText);
 		mBtnClearInput = (Button) findViewById(R.id.btnClearInput);
@@ -194,15 +287,12 @@ public class ll_login extends Activity {
 								public void run() {
 									mTxtReceive.append(strInput);
 									//Uncomment below for testing
-									//mTxtReceive.append("\n");
-									//mTxtReceive.append("Chars: " + strInput.length() + " Lines: " + mTxtReceive.getLineCount() + "\n");
+									mTxtReceive.append("\n");
+									mTxtReceive.append("Chars: " + strInput.length() + " Lines: " + mTxtReceive.getLineCount() + "\n");
 									
 									/// DETECTA STRING
-									
-									
-									 FuncionComandos(strInput);
-									
-									
+									FuncionComandos(strInput);
+																
 									int txtLength = mTxtReceive.getEditableText().length();  
 									if(txtLength > mMaxChars){
 										mTxtReceive.getEditableText().delete(0, txtLength - mMaxChars);
@@ -330,7 +420,7 @@ public class ll_login extends Activity {
 	@Override
 	protected void onPause() {
 		if (mBTSocket != null && mIsBluetoothConnected) {
-			new DisConnectBT().execute();
+			//new DisConnectBT().execute();desconecta bluetooth a pasar a segundo plano
 		}
 		Log.d(TAG, "Paused");
 		super.onPause();
