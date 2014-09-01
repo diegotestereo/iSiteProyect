@@ -37,7 +37,7 @@ public class ll_login extends Activity {
 	public static final String BUFFER_SIZE = "com.blueserial.buffersize";
 	
 	private static final String TAG = "BlueTest5-MainActivity";
-	private int mMaxChars = 50000;//Default
+	private int mMaxChars   = 50000;//Default
 	
 	private BluetoothSocket mBTSocket;
 	private ReadInput mReadThread = null;
