@@ -233,19 +233,13 @@ public class ll_login extends Activity {
 		mBtnDisconnect = (Button) findViewById(R.id.btnDisconnect);
 		mBtnSend = (Button) findViewById(R.id.btnSend);
 		mBtnLoginTelnet = (Button) findViewById(R.id.btnLoginTelnet);
-	//	btn_comandos = (Button) findViewById(R.id.btn_comandos);
-		
 		btn_LogOut=(Button)findViewById(R.id.btn_LogOut);
-		
 		spin_TX=(Spinner)findViewById(R.id.spin_TX);
 		spin_RX=(Spinner)findViewById(R.id.spin_RX);
 		spin_Otros=(Spinner)findViewById(R.id.spin_Otros);
-		
-		
-		
 		mTxtReceive = (TextView) findViewById(R.id.txtReceive);
 		mEditSend = (EditText) findViewById(R.id.editSend);
-			scrollView = (ScrollView) findViewById(R.id.viewScrollcom);
+		scrollView = (ScrollView) findViewById(R.id.viewScrollcom);
 		chkScroll = (CheckBox) findViewById(R.id.chkScroll);
 		chkReceiveText = (CheckBox) findViewById(R.id.chkReceiveText);
 		mBtnClearInput = (Button) findViewById(R.id.btnClearInput);
