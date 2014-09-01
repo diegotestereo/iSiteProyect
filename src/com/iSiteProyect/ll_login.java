@@ -84,7 +84,16 @@ public class ll_login extends Activity {
 		LevantarXML();
 		SeteoUI();
 		Spinners();
+		Botones();
+		
 		mTxtReceive.setMovementMethod(new ScrollingMovementMethod());
+
+
+	}
+
+	
+	
+	private void Botones() {
 
 		mBtnDisconnect.setOnClickListener(new OnClickListener() {
 
@@ -147,19 +156,18 @@ public class ll_login extends Activity {
 				mTxtReceive.setText("");
 			}
 		});
-
+		
 	}
 
-	
-	
+
+
 	private void Spinners() {
 		spin_TX.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 					@Override
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
-				// TODO Auto-generated method stub
-				
+						mEditSend.setText(TxAdapter.getItem(position).toString());
 			}
 
 			@Override
@@ -173,8 +181,7 @@ public class ll_login extends Activity {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
-				// TODO Auto-generated method stub
-				
+				mEditSend.setText(RxAdapter.getItem(position).toString());
 			}
 
 			@Override
@@ -188,7 +195,7 @@ public class ll_login extends Activity {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
-				// TODO Auto-generated method stub
+				mEditSend.setText(OtrosAdapter.getItem(position).toString());
 				
 			}
 
@@ -205,9 +212,9 @@ public class ll_login extends Activity {
 
 
 	private void SeteoUI() {
-		String[] TxCadena=new String[]{"Tx cw","Tx Enable","Tx Frecuency","Tx ifl 10M","Tx ifl DC","Tx BER","Tx Power"};
-		String[] RxCadena=new String[]{"Rx AGC","Rx Enable","Rx Frecuency","Rx ifl 10M","Rx ifl DC","Rx Pointing","Rx Power","Rx SNR"};
-		String[] OtrosCadena=new String[]{"Serial","Remote State","Report Versions"};
+		String[] TxCadena=new String[]{"tx cw","tx enable","tx freq","tx ifl10M","tx iflDC","tx BER","tx power"};
+		String[] RxCadena=new String[]{"rx AGC","rx rnable","rx freq","rx ifl10M","rx iflDC","rx pointing","rx power","rx SNR"};
+		String[] OtrosCadena=new String[]{"sn","remotestate","versions_report"};
 		
 		
 		TxAdapter= new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item,TxCadena );
@@ -287,8 +294,8 @@ public class ll_login extends Activity {
 								public void run() {
 									mTxtReceive.append(strInput);
 									//Uncomment below for testing
-									mTxtReceive.append("\n");
-									mTxtReceive.append("Chars: " + strInput.length() + " Lines: " + mTxtReceive.getLineCount() + "\n");
+								//	mTxtReceive.append("\n");
+									//mTxtReceive.append("Chars: " + strInput.length() + " Lines: " + mTxtReceive.getLineCount() + "\n");
 									
 									/// DETECTA STRING
 									FuncionComandos(strInput);
