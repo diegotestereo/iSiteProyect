@@ -212,8 +212,8 @@ public class ll_login extends Activity {
 
 
 	private void SeteoUI() {
-		String[] TxCadena=new String[]{"tx cw","tx enable","tx freq","tx ifl10M","tx iflDC","tx BER","tx power"};
-		String[] RxCadena=new String[]{"rx AGC","rx rnable","rx freq","rx ifl10M","rx iflDC","rx pointing","rx power","rx SNR"};
+		String[] TxCadena=new String[]{"tx cw","tx enable","tx freq","tx ifl10","tx iflDC","tx BER","tx power"};
+		String[] RxCadena=new String[]{"rx AGC","rx rnable","rx freq","rx ifl10","rx iflDC","rx pointing","rx power","rx SNR"};
 		String[] OtrosCadena=new String[]{"sn","remotestate","versions_report"};
 		
 		
