@@ -23,6 +23,8 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -30,6 +32,7 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 public class ll_login extends Activity {
 	
@@ -46,13 +49,14 @@ public class ll_login extends Activity {
 	private boolean mIsUserInitiatedDisconnect = false;
  private Boolean Apuntamiento=false;
 	// All controls here
-	private TextView mTxtReceive;
+	 TextView mTxtReceive,TxtProgresoBarra;
 	private EditText mEditSend;
 	private ProgressBar pbarProgreso;
-	private Button BotonBarra, mBtnDisconnect,mBtnSend,mBtnLoginTelnet,mBtnClearInput;
+	private Button  mBtnDisconnect,mBtnSend,mBtnLoginTelnet,mBtnClearInput;
 	 Button btn_LogOut;
 	 Spinner spin_TX,spin_RX,spin_Otros;
 	 ArrayAdapter<String> TxAdapter,RxAdapter,OtrosAdapter;
+	 ToggleButton TB_Apuntamiento;
 	private UUID mDeviceUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // Standard SPP UUID
 	// (http://developer.android.com/reference/android/bluetooth/BluetoothDevice.html#createInsecureRfcommSocketToServiceRecord%28java.util.UUID%29)
     
@@ -99,16 +103,29 @@ public class ll_login extends Activity {
 
 
 	private void Botones() {
-
-		BotonBarra.setOnClickListener(new OnClickListener() {
+		
+		
+		
+		TB_Apuntamiento.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
 			@Override
-			public void onClick(View v) {
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				
+				if(isChecked){Apuntamiento=true;
 				tarea = new MiTareaAsincrona();
 		        tarea.execute();
-			
+		     
+					
+				}else{
+		        Apuntamiento=false;
+					
+				}
+				pbarProgreso.setProgress(0);
+				
 			}
 		});
+		
+		
 		
 		
 		mBtnDisconnect.setOnClickListener(new OnClickListener() {
@@ -148,10 +165,7 @@ public class ll_login extends Activity {
 					e.printStackTrace();
 				}
 				
-				
-				if(Apuntamiento){
-					Apuntamiento=false;
-				}else{Apuntamiento=true;}
+			
 			}
 		});
 		
@@ -168,7 +182,7 @@ public class ll_login extends Activity {
 					e.printStackTrace();
 				}
 
-				Hilos();
+				
 			}
 		});
 		
@@ -234,8 +248,8 @@ public class ll_login extends Activity {
 
 	private void SeteoUI() {
 		String[] TxCadena=new String[]{"tx cw","tx enable","tx freq","tx ifl10","tx iflDC","tx BER","tx power"};
-		String[] RxCadena=new String[]{"rx AGC","rx rnable","rx freq","rx ifl10","rx iflDC","rx pointing","rx power","rx SNR"};
-		String[] OtrosCadena=new String[]{"sn","remotestate","versions_report"};
+		String[] RxCadena=new String[]{"rx AGC","rx rnable","rx freq","rx ifl10","rx iflDC","rx pointing enable","rx pointing on","rx pointing off","rx power","rx SNR"};
+		String[] OtrosCadena=new String[]{"sn","remotestate","versions_report","reset board"};
 		
 		
 		TxAdapter= new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item,TxCadena );
@@ -248,11 +262,11 @@ public class ll_login extends Activity {
 	}
 
 	private void  LevantarXML() {
-		
+		TB_Apuntamiento=(ToggleButton) findViewById(R.id.toggleButtonApuntamiento);
 		mBtnDisconnect = (Button) findViewById(R.id.btnDisconnect);
 		mBtnSend = (Button) findViewById(R.id.btnSend);
 		mBtnLoginTelnet = (Button) findViewById(R.id.btnLoginTelnet);
-		BotonBarra=(Button) findViewById(R.id.btn_progress);
+		TxtProgresoBarra=(TextView)findViewById(R.id.TxtProgresoBarra);
 		btn_LogOut=(Button)findViewById(R.id.btn_LogOut);
 		spin_TX=(Spinner)findViewById(R.id.spin_TX);
 		spin_RX=(Spinner)findViewById(R.id.spin_RX);
@@ -315,7 +329,7 @@ public class ll_login extends Activity {
 								//	mTxtReceive.append("\n");
 									//mTxtReceive.append("Chars: " + strInput.length() + " Lines: " + mTxtReceive.getLineCount() + "\n");
 									
-									/// DETECTA STRING
+								
 									FuncionComandos(strInput);
 								
 									
@@ -529,13 +543,12 @@ public class ll_login extends Activity {
     		NivelGlobal=Float.parseFloat(strInputGlobal);
     					}
     		NivelGlobalInt=(int) (NivelGlobal*10);
+    		pbarProgreso.setProgress(NivelGlobalInt);
     		
-        	
-        	
-            pbarProgreso.setProgress(NivelGlobalInt);
             }
             
-            
+	    	 pbarProgreso.setProgress(0);
+	    	 TxtProgresoBarra.setText("0");
 	        return true;
 	    }
 	 
@@ -562,32 +575,8 @@ public class ll_login extends Activity {
 	        
 	    }
 	}
-	private void Hilos() {
-		
-		mEditSend.setText("");
-		mEditSend.setText(strInputGlobal);
-		
-		
-		
-		
-		new Thread(new Runnable() {
-			
-		    public void run() {
-		    	
-		    	
-				
-		  
-		          pbarProgreso.post(new Runnable() {
-		            public void run() {
-		            
-		            }
-		            });
-		          }
-		    	
-		
-		}).start();
-		
-	}
+	
+	
 
 
 }

@@ -47,7 +47,7 @@
         android:id="@+id/editSend"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter command ..."
+        android:hint="Ingrese Comando ..."
         android:inputType="text" />
 
     <LinearLayout
@@ -87,18 +87,25 @@
 
         <TextView
             android:id="@+id/textView1"
-            android:layout_width="150dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Frecuencia"
             android:textSize="16dp" />
 
         <EditText
             android:id="@+id/EditFrecuencia"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:ems="10"
+            android:hint="Frecuencia ..."
             android:inputType="number" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mhz" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -133,17 +140,25 @@
             android:id="@+id/pbarProgreso"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="match_parent"
             android:max="200"
             android:maxHeight="16dp" />
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_progress"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/TxtProgresoBarra"
+        android:layout_width="107dp"
         android:layout_height="wrap_content"
-        android:text="progreso barra" />
+        android:layout_gravity="center"
+        android:text="TextView"
+        android:textSize="20dp" />
+
+    <ToggleButton
+        android:id="@+id/toggleButtonApuntamiento"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ToggleButton" />
 
 </LinearLayout> <!-- </RelativeLayout> -->
 

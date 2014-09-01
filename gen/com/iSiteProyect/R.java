@@ -31,7 +31,8 @@ public final class R {
     }
     public static final class id {
         public static final int EditFrecuencia=0x7f0a0011;
-        public static final int action_settings=0x7f0a0017;
+        public static final int TxtProgresoBarra=0x7f0a0017;
+        public static final int action_settings=0x7f0a0019;
         public static final int btnClear=0x7f0a000b;
         public static final int btnClearInput=0x7f0a0005;
         public static final int btnConnect=0x7f0a0003;
@@ -40,17 +41,18 @@ public final class R {
         public static final int btnSearch=0x7f0a0002;
         public static final int btnSend=0x7f0a000c;
         public static final int btn_LogOut=0x7f0a000f;
-        public static final int btn_progress=0x7f0a0016;
         public static final int chkReceiveText=0x7f0a0007;
         public static final int chkScroll=0x7f0a0006;
         public static final int editSend=0x7f0a000a;
         public static final int lstContent=0x7f0a000d;
         public static final int lstDevices=0x7f0a0001;
-        public static final int pbarProgreso=0x7f0a0015;
-        public static final int spin_Otros=0x7f0a0014;
-        public static final int spin_RX=0x7f0a0013;
-        public static final int spin_TX=0x7f0a0012;
+        public static final int pbarProgreso=0x7f0a0016;
+        public static final int spin_Otros=0x7f0a0015;
+        public static final int spin_RX=0x7f0a0014;
+        public static final int spin_TX=0x7f0a0013;
         public static final int textView1=0x7f0a0010;
+        public static final int textView2=0x7f0a0012;
+        public static final int toggleButtonApuntamiento=0x7f0a0018;
         public static final int txtListHeading=0x7f0a0000;
         public static final int txtReceive=0x7f0a0009;
         public static final int viewScrollcom=0x7f0a0008;
