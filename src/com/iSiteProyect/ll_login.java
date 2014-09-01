@@ -39,12 +39,12 @@ public class ll_login extends Activity {
 	
 	private static final String TAG = "BlueTest5-MainActivity";
 	private int mMaxChars   = 50000;//Default
-	
+	private MiTareaAsincrona tarea;
 	private BluetoothSocket mBTSocket;
 	private ReadInput mReadThread = null;
 
 	private boolean mIsUserInitiatedDisconnect = false;
-
+ private Boolean Apuntamiento=false;
 	// All controls here
 	private TextView mTxtReceive;
 	private EditText mEditSend;
@@ -60,7 +60,9 @@ public class ll_login extends Activity {
 	private ScrollView scrollView;
 	 CheckBox chkScroll;
 	 CheckBox chkReceiveText;
-
+	 Float NivelGlobal;
+	 int NivelGlobalInt=0;
+	 String strInputGlobal="";
 	private boolean mIsBluetoothConnected = false;
 
 	private BluetoothDevice mDevice;
@@ -102,8 +104,9 @@ public class ll_login extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				
-				Hilos();
+				tarea = new MiTareaAsincrona();
+		        tarea.execute();
+			
 			}
 		});
 		
@@ -144,6 +147,11 @@ public class ll_login extends Activity {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				
+				
+				if(Apuntamiento){
+					Apuntamiento=false;
+				}else{Apuntamiento=true;}
 			}
 		});
 		
@@ -159,6 +167,8 @@ public class ll_login extends Activity {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+
+				Hilos();
 			}
 		});
 		
@@ -256,6 +266,8 @@ public class ll_login extends Activity {
 		pbarProgreso= (ProgressBar) findViewById(R.id.pbarProgreso);
 	}
 
+
+	
 	public class ReadInput implements Runnable {
 
 		private boolean bStop = false;
@@ -297,13 +309,16 @@ public class ll_login extends Activity {
 								@Override
 								public void run() {
 									mTxtReceive.append(strInput);
+									strInputGlobal=strInput.substring(0,4);
+									
 									//Uncomment below for testing
 								//	mTxtReceive.append("\n");
 									//mTxtReceive.append("Chars: " + strInput.length() + " Lines: " + mTxtReceive.getLineCount() + "\n");
 									
 									/// DETECTA STRING
 									FuncionComandos(strInput);
-																
+								
+									
 									int txtLength = mTxtReceive.getEditableText().length();  
 									if(txtLength > mMaxChars){
 										mTxtReceive.getEditableText().delete(0, txtLength - mMaxChars);
@@ -499,47 +514,80 @@ public class ll_login extends Activity {
 		}
 
 	}
-/*
-	private void tareaLarga()
-	{
-	    try {
-	        Thread.sleep(1000);
-	    } catch(InterruptedException e) {}
+
+	
+	private class MiTareaAsincrona extends AsyncTask<Void, Integer, Boolean> {
+		 
+	    @Override
+	    protected Boolean doInBackground(Void... params) {
+	    	while(Apuntamiento){
+	   
+        	if (strInputGlobal.equals(""))
+    		{NivelGlobal=(float) 0;}
+    		else{
+    		
+    		NivelGlobal=Float.parseFloat(strInputGlobal);
+    					}
+    		NivelGlobalInt=(int) (NivelGlobal*10);
+    		
+        	
+        	
+            pbarProgreso.setProgress(NivelGlobalInt);
+            }
+            
+            
+	        return true;
+	    }
+	 
+	    @Override
+	    protected void onProgressUpdate(Integer... values) {
+	  
+	    }
+	 
+	    @Override
+	    protected void onPreExecute() {
+	        pbarProgreso.setMax(200);
+	        pbarProgreso.setProgress(0);
+	    }
+	 
+	    @Override
+	    protected void onPostExecute(Boolean result) {
+	      
+	            
+	                 
+	    }
+	 
+	    @Override
+	    protected void onCancelled() {
+	        
+	    }
 	}
-	*/
 	private void Hilos() {
+		
+		mEditSend.setText("");
+		mEditSend.setText(strInputGlobal);
+		
+		
+		
+		
 		new Thread(new Runnable() {
+			
 		    public void run() {
 		    	
 		    	
-		    	
-		    	
-		   /*     pbarProgreso.post(new Runnable() {
-		       public void run() {
-		          pbarProgreso.setProgress(0);
-		     }
-		   });*/
-		
-		 
-		/*   for(int i=1; i<=10; i++) {
-		        tareaLarga();
-		    	
-		       pbarProgreso.post(new Runnable() {
+				
+		  
+		          pbarProgreso.post(new Runnable() {
 		            public void run() {
-		                pbarProgreso.incrementProgressBy(10);
-		                }
+		            
+		            }
 		            });
-		    }*/
-		 
-		    runOnUiThread(new Runnable() {
-		        public void run() {
-		            Toast.makeText(getApplicationContext(), "Tarea finalizada!",
-		                Toast.LENGTH_SHORT).show();
-		        }
-		    });
-		    }
+		          }
+		    	
+		
 		}).start();
 		
 	}
+
 
 }
