@@ -24,6 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -47,7 +48,8 @@ public class ll_login extends Activity {
 	// All controls here
 	private TextView mTxtReceive;
 	private EditText mEditSend;
-	private Button mBtnDisconnect,mBtnSend,mBtnLoginTelnet,mBtnClearInput;
+	private ProgressBar pbarProgreso;
+	private Button BotonBarra, mBtnDisconnect,mBtnSend,mBtnLoginTelnet,mBtnClearInput;
 	 Button btn_LogOut;
 	 Spinner spin_TX,spin_RX,spin_Otros;
 	 ArrayAdapter<String> TxAdapter,RxAdapter,OtrosAdapter;
@@ -85,16 +87,27 @@ public class ll_login extends Activity {
 		SeteoUI();
 		Spinners();
 		Botones();
-		
+	
 		mTxtReceive.setMovementMethod(new ScrollingMovementMethod());
 
 
 	}
 
 	
-	
+
+
 	private void Botones() {
 
+		BotonBarra.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				Hilos();
+			}
+		});
+		
+		
 		mBtnDisconnect.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -209,8 +222,6 @@ public class ll_login extends Activity {
 		
 	}
 
-
-
 	private void SeteoUI() {
 		String[] TxCadena=new String[]{"tx cw","tx enable","tx freq","tx ifl10","tx iflDC","tx BER","tx power"};
 		String[] RxCadena=new String[]{"rx AGC","rx rnable","rx freq","rx ifl10","rx iflDC","rx pointing","rx power","rx SNR"};
@@ -226,13 +237,12 @@ public class ll_login extends Activity {
 		spin_Otros.setAdapter(OtrosAdapter);
 	}
 
-
-
 	private void  LevantarXML() {
 		
 		mBtnDisconnect = (Button) findViewById(R.id.btnDisconnect);
 		mBtnSend = (Button) findViewById(R.id.btnSend);
 		mBtnLoginTelnet = (Button) findViewById(R.id.btnLoginTelnet);
+		BotonBarra=(Button) findViewById(R.id.btn_progress);
 		btn_LogOut=(Button)findViewById(R.id.btn_LogOut);
 		spin_TX=(Spinner)findViewById(R.id.spin_TX);
 		spin_RX=(Spinner)findViewById(R.id.spin_RX);
@@ -243,7 +253,7 @@ public class ll_login extends Activity {
 		chkScroll = (CheckBox) findViewById(R.id.chkScroll);
 		chkReceiveText = (CheckBox) findViewById(R.id.chkReceiveText);
 		mBtnClearInput = (Button) findViewById(R.id.btnClearInput);
-		
+		pbarProgreso= (ProgressBar) findViewById(R.id.pbarProgreso);
 	}
 
 	public class ReadInput implements Runnable {
@@ -375,7 +385,6 @@ public class ll_login extends Activity {
 		
 	}
 
-
 	public class DisConnectBT extends AsyncTask<Void, Void, Void> {
 
 		@Override
@@ -489,6 +498,48 @@ public class ll_login extends Activity {
 			progressDialog.dismiss();
 		}
 
+	}
+/*
+	private void tareaLarga()
+	{
+	    try {
+	        Thread.sleep(1000);
+	    } catch(InterruptedException e) {}
+	}
+	*/
+	private void Hilos() {
+		new Thread(new Runnable() {
+		    public void run() {
+		    	
+		    	
+		    	
+		    	
+		   /*     pbarProgreso.post(new Runnable() {
+		       public void run() {
+		          pbarProgreso.setProgress(0);
+		     }
+		   });*/
+		
+		 
+		/*   for(int i=1; i<=10; i++) {
+		        tareaLarga();
+		    	
+		       pbarProgreso.post(new Runnable() {
+		            public void run() {
+		                pbarProgreso.incrementProgressBy(10);
+		                }
+		            });
+		    }*/
+		 
+		    runOnUiThread(new Runnable() {
+		        public void run() {
+		            Toast.makeText(getApplicationContext(), "Tarea finalizada!",
+		                Toast.LENGTH_SHORT).show();
+		        }
+		    });
+		    }
+		}).start();
+		
 	}
 
 }
