@@ -11,6 +11,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.content.res.Resources.Theme;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -247,14 +248,16 @@ public class ll_login extends Activity {
 	}
 
 	private void SeteoUI() {
-		String[] TxCadena=new String[]{"tx cw","tx enable","tx freq","tx ifl10","tx iflDC","tx BER","tx power"};
-		String[] RxCadena=new String[]{"rx AGC","rx rnable","rx freq","rx ifl10","rx iflDC","rx pointing enable","rx pointing on","rx pointing off","rx power","rx SNR"};
-		String[] OtrosCadena=new String[]{"sn","remotestate","versions_report","reset board"};
+		TxtProgresoBarra.setText("0");
+		
+		String[] TxCadena=new String[]{"tx cw","tx enable","tx freq","tx ifl10","tx iflDC","tx iflDC on","tx iflDC off","tx BER","tx power"};
+		String[] RxCadena=new String[]{"rx AGC","rx enable","rx disable","rx freq","rx ifl10","rx iflDC","rx iflDC on","rx iflDC off","rx pointing enable","rx pointing on","rx pointing off","rx power","rx SNR"};
+		String[] OtrosCadena=new String[]{"sn","remotestate","versions_report","reset board","exit",};
 		
 		
-		TxAdapter= new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item,TxCadena );
-		RxAdapter= new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item,RxCadena );
-		OtrosAdapter= new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item,OtrosCadena );
+		TxAdapter= new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,TxCadena );
+		RxAdapter= new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,RxCadena );
+		OtrosAdapter= new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,OtrosCadena );
 		
 		spin_TX.setAdapter(TxAdapter);
 		spin_RX.setAdapter(RxAdapter);
@@ -267,6 +270,7 @@ public class ll_login extends Activity {
 		mBtnSend = (Button) findViewById(R.id.btnSend);
 		mBtnLoginTelnet = (Button) findViewById(R.id.btnLoginTelnet);
 		TxtProgresoBarra=(TextView)findViewById(R.id.TxtProgresoBarra);
+
 		btn_LogOut=(Button)findViewById(R.id.btn_LogOut);
 		spin_TX=(Spinner)findViewById(R.id.spin_TX);
 		spin_RX=(Spinner)findViewById(R.id.spin_RX);
@@ -542,19 +546,37 @@ public class ll_login extends Activity {
     		
     		NivelGlobal=Float.parseFloat(strInputGlobal);
     					}
+        	
+        	
+        	
     		NivelGlobalInt=(int) (NivelGlobal*10);
     		pbarProgreso.setProgress(NivelGlobalInt);
     		
+    		 runOnUiThread(new Runnable() {
+
+    	         @Override
+    	             public void run() {
+    	        	 TxtProgresoBarra.setText(Integer.toString(NivelGlobalInt));      
+    	         }
+    	        });
+    		 
+    		 
+    		 
+    		 
             }
             
 	    	 pbarProgreso.setProgress(0);
 	    	 TxtProgresoBarra.setText("0");
+	    	 
+	    	 
+	    	 
+	    	 
 	        return true;
 	    }
 	 
 	    @Override
 	    protected void onProgressUpdate(Integer... values) {
-	  
+	   	
 	    }
 	 
 	    @Override
