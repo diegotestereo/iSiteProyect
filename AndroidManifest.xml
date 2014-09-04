@@ -40,6 +40,8 @@
               android:label="Proyecto iSite"></activity>
             <activity android:name="com.iSiteProyect.ll_Inicio_Login"
               android:label="Proyecto iSite"></activity>
+             <activity android:name="com.iSiteProyect.ll_Principal"
+              android:label="Proyecto iSite"></activity>
     </application>
 
 </manifest>

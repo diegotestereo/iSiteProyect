@@ -7,39 +7,39 @@
     android:orientation="vertical" >
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/btn_Info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/button1"
+        android:layout_below="@+id/btn_Cw"
         android:layout_marginLeft="74dp"
         android:text="Info" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/btn_Otros"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/button3"
-        android:layout_alignBottom="@+id/button3"
+        android:layout_alignBaseline="@+id/btn_Info"
+        android:layout_alignBottom="@+id/btn_Info"
         android:layout_marginLeft="31dp"
-        android:layout_toRightOf="@+id/button3"
+        android:layout_toRightOf="@+id/btn_Info"
         android:text="Otros" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/btn_Cw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/button2"
-        android:layout_alignBottom="@+id/button2"
-        android:layout_alignLeft="@+id/button3"
+        android:layout_alignBaseline="@+id/btn_Opt"
+        android:layout_alignBottom="@+id/btn_Opt"
+        android:layout_alignLeft="@+id/btn_Info"
         android:text="Cw" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btn_Opt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/button4"
+        android:layout_alignRight="@+id/btn_Otros"
         android:layout_marginTop="137dp"
         android:text="Opt" />
 

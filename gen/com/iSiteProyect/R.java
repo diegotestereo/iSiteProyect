@@ -51,12 +51,12 @@ public final class R {
         public static final int btnSearch=0x7f0b0002;
         public static final int btnSend=0x7f0b000c;
         public static final int btn_CargarOPT=0x7f0b0013;
+        public static final int btn_Cw=0x7f0b001f;
+        public static final int btn_Info=0x7f0b001e;
         public static final int btn_Ingresar=0x7f0b0010;
         public static final int btn_LogOut=0x7f0b0015;
-        public static final int button1=0x7f0b001f;
-        public static final int button2=0x7f0b0021;
-        public static final int button3=0x7f0b001e;
-        public static final int button4=0x7f0b0020;
+        public static final int btn_Opt=0x7f0b0021;
+        public static final int btn_Otros=0x7f0b0020;
         public static final int chkReceiveText=0x7f0b0007;
         public static final int chkScroll=0x7f0b0006;
         public static final int editSend=0x7f0b000a;

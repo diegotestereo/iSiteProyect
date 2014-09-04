@@ -32,13 +32,13 @@ public class ll_Inicio_Login extends Activity {
 	public static final String BUFFER_SIZE = "com.blueserial.buffersize";
 	
 	private static final String TAG = "ISITE PROYECTO";
-	private int mMaxChars   = 50000;//Default
+	public int mMaxChars   = 50000;//Default
 //	private MiTareaAsincrona tarea;
-	private BluetoothSocket mBTSocket;
-	private ReadInput mReadThread = null;
+	public BluetoothSocket mBTSocket;
+	public ReadInput mReadThread = null;
 
-	private boolean mIsUserInitiatedDisconnect = false;
- private Boolean Apuntamiento=false;
+	public boolean mIsUserInitiatedDisconnect = false;
+	public Boolean Apuntamiento=false;
 	// All controls here
 //	 TextView mTxtReceive,TxtProgresoBarra;
 //	private EditText mEditSend;
@@ -48,20 +48,20 @@ public class ll_Inicio_Login extends Activity {
 	 Spinner spin_TX,spin_RX,spin_Otros;
 	 ArrayAdapter<String> TxAdapter,RxAdapter,OtrosAdapter;
 	 ToggleButton TB_Apuntamiento;
-	private UUID mDeviceUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // Standard SPP UUID
+	 public UUID mDeviceUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // Standard SPP UUID
 	// (http://developer.android.com/reference/android/bluetooth/BluetoothDevice.html#createInsecureRfcommSocketToServiceRecord%28java.util.UUID%29)
     
-	private int mBufferSize = 50000; //Default
+	 public int mBufferSize = 50000; //Default
 //private ScrollView scrollView;
 
 	 Float NivelGlobal;
 	 int NivelGlobalInt=0;
 	 String strInputGlobal="";
-	private boolean mIsBluetoothConnected = false;
+	 public boolean mIsBluetoothConnected = false;
 
-	private BluetoothDevice mDevice;
+	 public BluetoothDevice mDevice;
 
-	private ProgressDialog progressDialog;
+	 public ProgressDialog progressDialog;
 
 	//////////////////////////////////////////////////////////////////
 	Button btn_Ingresar,btn_Cargar_OPT;
@@ -100,7 +100,7 @@ public class ll_Inicio_Login extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				
+			TB_Apuntamiento.setChecked(true);	
 			FuncionEnviar("telnet localhost");
 				
 			}
@@ -207,7 +207,7 @@ public class ll_Inicio_Login extends Activity {
 
 	}
 	
-	private void FuncionEnviar(String StringEnviado){
+	public void FuncionEnviar(String StringEnviado){
 		
 		try {
 			mBTSocket.getOutputStream().write((StringEnviado+"\r").getBytes());
@@ -221,7 +221,7 @@ public class ll_Inicio_Login extends Activity {
 	}
 
 		
-private void FuncionLogin(String detectorString,Boolean hab){
+	public void FuncionLogin(String detectorString,Boolean hab){
 		
 	if(hab){
 		
@@ -240,6 +240,10 @@ private void FuncionLogin(String detectorString,Boolean hab){
 		}
 		if(detectorString.contains(">")){
 		Log.d(TAG, "telnet >");
+		Intent intento =new Intent(this,ll_Principal.class);
+		
+		
+		startActivity(intento);
 		}}
 	
 		else
@@ -302,7 +306,7 @@ private void FuncionLogin(String detectorString,Boolean hab){
 
 	}
 
-	private void msg(String s) {
+	public void msg(String s) {
 		Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
 	}
 
