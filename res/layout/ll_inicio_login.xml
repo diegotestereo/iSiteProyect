@@ -6,23 +6,6 @@
     android:background="@drawable/fondo"
     android:orientation="vertical" >
 
-    <EditText
-        android:id="@+id/editText1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/button1"
-        android:layout_alignRight="@+id/button1"
-        android:layout_below="@+id/textView1"
-        android:layout_marginTop="23dp"
-        android:background="@color/gris"
-        android:ems="10"
-        android:inputType="textPassword"
-        android:gravity="center"
-        android:text="P@55w0rd!" >
-
-        <requestFocus />
-    </EditText>
-
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
@@ -34,7 +17,7 @@
         android:textSize="25dp" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/btn_Ingresar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView1"
@@ -42,14 +25,35 @@
         android:layout_centerVertical="true"
         android:text="Ingresar" />
 
-    <Button
-        android:id="@+id/button2"
+    <EditText
+        android:id="@+id/editText1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/button1"
-        android:layout_alignRight="@+id/button1"
-        android:layout_below="@+id/button1"
-        android:layout_marginTop="20dp"
+        android:layout_below="@+id/textView1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="26dp"
+        android:background="@color/gris"
+        android:ems="10"
+        android:gravity="center"
+        android:inputType="textPassword"
+        android:text="P@55w0rd!" />
+
+    <ToggleButton
+        android:id="@+id/TB_Apuntamiento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_Ingresar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="ToggleButton" />
+
+    <Button
+        android:id="@+id/btn_CargarOPT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/TB_Apuntamiento"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="19dp"
         android:text="Cargar OPT" />
 
 </RelativeLayout>

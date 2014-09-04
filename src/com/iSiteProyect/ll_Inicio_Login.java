@@ -14,9 +14,12 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -30,7 +33,7 @@ public class ll_Inicio_Login extends Activity {
 	
 	private static final String TAG = "ISITE PROYECTO";
 	private int mMaxChars   = 50000;//Default
-	private MiTareaAsincrona tarea;
+//	private MiTareaAsincrona tarea;
 	private BluetoothSocket mBTSocket;
 	private ReadInput mReadThread = null;
 
@@ -50,8 +53,7 @@ public class ll_Inicio_Login extends Activity {
     
 	private int mBufferSize = 50000; //Default
 //private ScrollView scrollView;
-	 CheckBox chkScroll;
-	 CheckBox chkReceiveText;
+
 	 Float NivelGlobal;
 	 int NivelGlobalInt=0;
 	 String strInputGlobal="";
@@ -61,7 +63,13 @@ public class ll_Inicio_Login extends Activity {
 
 	private ProgressDialog progressDialog;
 
-	//private String detectorString=null;
+	//////////////////////////////////////////////////////////////////
+	Button btn_Ingresar,btn_Cargar_OPT;
+	Boolean Habilitacion=false;
+	
+	
+	
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,39 +85,53 @@ public class ll_Inicio_Login extends Activity {
 		mMaxChars = b.getInt(Homescreen.BUFFER_SIZE);
 
 		Log.d(TAG, "Ready");
-	//	LevantarXML();
-	//	SeteoUI();
-		//Botones();
-	//	FuncionEnviar("");
+		Toast.makeText(getApplicationContext(), "arranca", Toast.LENGTH_LONG).show();
+		
+		LevantarXML();
+
+		Botones();
+	  //  FuncionEnviar("");
 
 	}
 
 	private void Botones() {
-	
+		
+		btn_Ingresar.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+			FuncionEnviar("telnet localhost");
+				
+			}
+		});
+		
+		
+		TB_Apuntamiento.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+				if (isChecked){
+					Toast.makeText(getApplicationContext(), "Log Telnet ", Toast.LENGTH_SHORT).show();
+				Habilitacion=isChecked;}
+				else{Habilitacion=isChecked;
+				Toast.makeText(getApplicationContext(), "Log Linux ", Toast.LENGTH_SHORT).show();}
+				
+			
+			}
+		});
+		
+		
 	}
 
-	private void SeteoUI() {
-		/*TxtProgresoBarra.setText("0");
-		
-		String[] TxCadena=new String[]{"tx cw","tx enable","tx freq","tx ifl10","tx iflDC","tx iflDC on","tx iflDC off","tx BER","tx power"};
-		String[] RxCadena=new String[]{"rx AGC","rx enable","rx disable","rx freq","rx ifl10","rx iflDC","rx iflDC on","rx iflDC off","rx pointing enable","rx pointing on","rx pointing off","rx power","rx SNR"};
-		String[] OtrosCadena=new String[]{"sn","remotestate","versions_report","reset board","exit",};
-		
-		
-		TxAdapter= new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,TxCadena );
-		RxAdapter= new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,RxCadena );
-		OtrosAdapter= new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,OtrosCadena );
-		
-		spin_TX.setAdapter(TxAdapter);
-		spin_RX.setAdapter(RxAdapter);
-		spin_Otros.setAdapter(OtrosAdapter);*/
-	}
 
 	private void  LevantarXML() {
+		btn_Ingresar=(Button) findViewById(R.id.btn_Ingresar);
 		
-		/*
-		TB_Apuntamiento=(ToggleButton) findViewById(R.id.toggleButtonApuntamiento);
-		mBtnDisconnect = (Button) findViewById(R.id.btnDisconnect);
+		
+		TB_Apuntamiento=(ToggleButton) findViewById(R.id.TB_Apuntamiento);
+		/*mBtnDisconnect = (Button) findViewById(R.id.btnDisconnect);
 		mBtnSend = (Button) findViewById(R.id.btnSend);
 		mBtnLoginTelnet = (Button) findViewById(R.id.btnLoginTelnet);
 		TxtProgresoBarra=(TextView)findViewById(R.id.TxtProgresoBarra);
@@ -163,7 +185,8 @@ public class ll_Inicio_Login extends Activity {
 						 * If checked then receive text, better design would probably be to stop thread if unchecked and free resources, but this is a quick fix
 						 */
 						Log.d(TAG, "eNTRO DATO");
-						FuncionLogLinux(strInput);
+						
+						FuncionLogin(strInput,Habilitacion);
 						
 						}
 					Thread.sleep(500);
@@ -197,9 +220,34 @@ public class ll_Inicio_Login extends Activity {
 		
 	}
 
-	private void FuncionLogLinux(String detectorString){
 		
-		if (detectorString.contains("iDirect login:")){
+private void FuncionLogin(String detectorString,Boolean hab){
+		
+	if(hab){
+		
+
+		Log.d(TAG, "Telnet");
+		
+	
+		if (detectorString.contains("Username:")){
+			Log.d(TAG, "Username:");
+			FuncionEnviar("admin");		
+		}
+		
+		if(detectorString.contains("Password:")){
+			Log.d(TAG, "Password:");
+			FuncionEnviar("P@55w0rd!");	
+		}
+		if(detectorString.contains(">")){
+		Log.d(TAG, "telnet >");
+		}}
+	
+		else
+			{
+
+			Log.d(TAG, "Linux");
+			
+			if (detectorString.contains("iDirect login:")){
 			Log.d(TAG, "iDirect login:");
 			FuncionEnviar("root");		
 		}
@@ -209,8 +257,9 @@ public class ll_Inicio_Login extends Activity {
 		FuncionEnviar("P@55w0rd!");	
 		}
 		if(detectorString.contains("#")){
-	//	Toast.makeText(getApplicationContext(), "Linux", Toast.LENGTH_SHORT).show();
+	
 		Log.d(TAG, "Linux  #");
+		}
 		}
 	
 	}
@@ -297,7 +346,6 @@ public class ll_Inicio_Login extends Activity {
 
 		@Override
 		protected Void doInBackground(Void... devices) {
-
 			try {
 				if (mBTSocket == null || !mIsBluetoothConnected) {
 					mBTSocket = mDevice.createInsecureRfcommSocketToServiceRecord(mDeviceUUID);
@@ -331,55 +379,4 @@ public class ll_Inicio_Login extends Activity {
 	}
 
 	
-	private class MiTareaAsincrona extends AsyncTask<Void, Integer, Boolean> {
-		 
-	    @Override
-	    protected Boolean doInBackground(Void... params) {
-	    	while(Apuntamiento){
-	   
-        	if (strInputGlobal.equals(""))
-    		{NivelGlobal=(float) 0;}
-    		else{
-    		
-    		NivelGlobal=Float.parseFloat(strInputGlobal);
-    					}
-  		NivelGlobalInt=(int) (NivelGlobal*10);
-    		pbarProgreso.setProgress(NivelGlobalInt);
-    		
-    		 runOnUiThread(new Runnable() {
-
-    	         @Override
-    	             public void run() {
-    	        	// TxtProgresoBarra.setText(Integer.toString(NivelGlobalInt));      
-    	         }
-    	        });
-        }
-      	 
-	        return true;
-	    }
-	 
-	    @Override
-	    protected void onProgressUpdate(Integer... values) {
-	   	
-	    }
-	 
-	    @Override
-	    protected void onPreExecute() {
-	        
-	    }
-	 
-	    @Override
-	    protected void onPostExecute(Boolean result) {
-	           
-	    }
-	 
-	    @Override
-	    protected void onCancelled() {
-	        
-	    }
-	}
-	
-	
-
-
 }

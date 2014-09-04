@@ -1,9 +1,3 @@
-/*
- * Released under MIT License http://opensource.org/licenses/MIT
- * Copyright (c) 2013 Plasty Grove
- * Refer to file LICENSE or URL above for full text 
- */
-
 package com.iSiteProyect;
 
 import java.util.ArrayList;
@@ -75,10 +69,7 @@ public class Homescreen extends Activity {
 		mBtnConnect = (Button) findViewById(R.id.btnConnect);
 
 		mLstDevices = (ListView) findViewById(R.id.lstDevices);
-		/*
-		 *Check if there is a savedInstanceState. If yes, that means the onCreate was probably triggered by a configuration change
-		 *like screen rotate etc. If that's the case then populate all the views that are necessary here 
-		 */
+		
 		if (savedInstanceState != null) {
 			ArrayList<BluetoothDevice> list = savedInstanceState.getParcelableArrayList(DEVICE_LIST);
 			if(list!=null){
