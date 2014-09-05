@@ -56,4 +56,12 @@
         android:layout_marginTop="19dp"
         android:text="Cargar OPT" />
 
+    <ProgressBar
+        android:id="@+id/progressBarBoot"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" />
+
 </RelativeLayout>

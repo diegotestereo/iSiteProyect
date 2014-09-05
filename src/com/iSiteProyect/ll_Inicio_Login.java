@@ -13,6 +13,8 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,45 +33,34 @@ public class ll_Inicio_Login extends Activity {
 	public static final String DEVICE_UUID = "com.blueserial.uuid";
 	public static final String BUFFER_SIZE = "com.blueserial.buffersize";
 	
-	private static final String TAG = "ISITE PROYECTO";
+	public static final String TAG = "ISITE PROYECTO";
 	public int mMaxChars   = 50000;//Default
-//	private MiTareaAsincrona tarea;
+
 	public BluetoothSocket mBTSocket;
 	public ReadInput mReadThread = null;
 
 	public boolean mIsUserInitiatedDisconnect = false;
-	public Boolean Apuntamiento=false;
-	// All controls here
-//	 TextView mTxtReceive,TxtProgresoBarra;
-//	private EditText mEditSend;
-	private ProgressBar pbarProgreso;
-//	private Button  mBtnDisconnect,mBtnSend,mBtnLoginTelnet,mBtnClearInput;
-	 Button btn_LogOut;
-	 Spinner spin_TX,spin_RX,spin_Otros;
-	 ArrayAdapter<String> TxAdapter,RxAdapter,OtrosAdapter;
-	 ToggleButton TB_Apuntamiento;
-	 public UUID mDeviceUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // Standard SPP UUID
-	// (http://developer.android.com/reference/android/bluetooth/BluetoothDevice.html#createInsecureRfcommSocketToServiceRecord%28java.util.UUID%29)
-    
-	 public int mBufferSize = 50000; //Default
-//private ScrollView scrollView;
+	public Boolean Apuntamiento=false,Booteo=true,Habilitacion=false;;
 
-	 Float NivelGlobal;
-	 int NivelGlobalInt=0;
-	 String strInputGlobal="";
-	 public boolean mIsBluetoothConnected = false;
+	public Button btn_LogOut;
+	public Spinner spin_TX,spin_RX,spin_Otros;
+	public ArrayAdapter<String> TxAdapter,RxAdapter,OtrosAdapter;
+	public ToggleButton TB_Apuntamiento;
+	public UUID mDeviceUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // Standard SPP UUID
+	
+	public int mBufferSize = 50000; //Default
 
-	 public BluetoothDevice mDevice;
+	public Float NivelGlobal;
+	public int NivelGlobalInt=0;
+	public String strInputGlobal="";
+	public boolean mIsBluetoothConnected = false;
 
-	 public ProgressDialog progressDialog;
-
+	public BluetoothDevice mDevice;
+	public ProgressBar progressBarBoot;
+	public ProgressDialog progressDialog;
+	
 	//////////////////////////////////////////////////////////////////
-	Button btn_Ingresar,btn_Cargar_OPT;
-	Boolean Habilitacion=false;
-	
-	
-	
-	
+	public Button btn_Ingresar,btn_Cargar_OPT;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,15 +77,25 @@ public class ll_Inicio_Login extends Activity {
 
 		Log.d(TAG, "Ready");
 		Toast.makeText(getApplicationContext(), "arranca", Toast.LENGTH_LONG).show();
-		
 		LevantarXML();
-
+		
 		Botones();
-	  //  FuncionEnviar("");
+		
+		progressBarBoot.setProgress(0);
+	//	SetupUI();
+		}
 
+	private void SetupUI() {
+	
+
+		btn_Cargar_OPT.setEnabled(false);
+		btn_Ingresar.setEnabled(false);
 	}
 
 	private void Botones() {
+		
+		
+		
 		
 		btn_Ingresar.setOnClickListener(new OnClickListener() {
 			
@@ -125,87 +126,13 @@ public class ll_Inicio_Login extends Activity {
 		
 	}
 
-
 	private void  LevantarXML() {
 		btn_Ingresar=(Button) findViewById(R.id.btn_Ingresar);
-		
-		
+		progressBarBoot=(ProgressBar) findViewById(R.id.progressBarBoot);
 		TB_Apuntamiento=(ToggleButton) findViewById(R.id.TB_Apuntamiento);
-		/*mBtnDisconnect = (Button) findViewById(R.id.btnDisconnect);
-		mBtnSend = (Button) findViewById(R.id.btnSend);
-		mBtnLoginTelnet = (Button) findViewById(R.id.btnLoginTelnet);
-		TxtProgresoBarra=(TextView)findViewById(R.id.TxtProgresoBarra);
-
-		btn_LogOut=(Button)findViewById(R.id.btn_LogOut);
-		spin_TX=(Spinner)findViewById(R.id.spin_TX);
-		spin_RX=(Spinner)findViewById(R.id.spin_RX);
-		spin_Otros=(Spinner)findViewById(R.id.spin_Otros);
-		mTxtReceive = (TextView) findViewById(R.id.txtReceive);
-		mEditSend = (EditText) findViewById(R.id.editSend);
-		scrollView = (ScrollView) findViewById(R.id.viewScrollcom);
-		chkScroll = (CheckBox) findViewById(R.id.chkScroll);
-		chkReceiveText = (CheckBox) findViewById(R.id.chkReceiveText);
-		mBtnClearInput = (Button) findViewById(R.id.btnClearInput);
-		pbarProgreso= (ProgressBar) findViewById(R.id.pbarProgreso);*/
+		
 	}
 
-	public class ReadInput implements Runnable {
-
-		private boolean bStop = false;
-		private Thread t;
-
-		public ReadInput() {
-			t = new Thread(this, "Input Thread");
-			t.start();
-		}
-
-		public boolean isRunning() {
-			return t.isAlive();
-		}
-
-		@Override
-		public void run() {
-			InputStream inputStream;
-
-			try {
-				inputStream = mBTSocket.getInputStream();
-				while (!bStop) {
-					byte[] buffer = new byte[256];
-					if (inputStream.available() > 0) {
-						inputStream.read(buffer);
-						int i = 0;
-						/*
-						 * This is needed because new String(buffer) is taking the entire buffer i.e. 256 chars on Android 2.3.4 http://stackoverflow.com/a/8843462/1287554
-						 */
-						for (i = 0; i < buffer.length && buffer[i] != 0; i++) {
-						}
-						final String strInput = new String(buffer, 0, i);
-
-						/*
-						 * If checked then receive text, better design would probably be to stop thread if unchecked and free resources, but this is a quick fix
-						 */
-						Log.d(TAG, "eNTRO DATO");
-						
-						FuncionLogin(strInput,Habilitacion);
-						
-						}
-					Thread.sleep(500);
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		}
-
-		public void stop() {
-			bStop = true;
-		}
-
-	}
 	
 	public void FuncionEnviar(String StringEnviado){
 		
@@ -219,18 +146,15 @@ public class ll_Inicio_Login extends Activity {
 		
 		
 	}
-
-		
+	
 	public void FuncionLogin(String detectorString,Boolean hab){
 		
 	if(hab){
-		
-
 		Log.d(TAG, "Telnet");
 		
 	
 		if (detectorString.contains("Username:")){
-			Log.d(TAG, "Username:");
+		Log.d(TAG, "Username:");
 			FuncionEnviar("admin");		
 		}
 		
@@ -240,6 +164,7 @@ public class ll_Inicio_Login extends Activity {
 		}
 		if(detectorString.contains(">")){
 		Log.d(TAG, "telnet >");
+		
 		Intent intento =new Intent(this,ll_Principal.class);
 		
 		
@@ -248,26 +173,49 @@ public class ll_Inicio_Login extends Activity {
 	
 		else
 			{
-
 			Log.d(TAG, "Linux");
+		
+			if (detectorString.contains("DRAM Test Successful")){
+			//	progressBarBoot.setProgress(10);
+			//tarea.execute();
+			Log.d(TAG, "DRAM Test Successful");
+			}
+					
+			if(detectorString.contains("Mounting local filesystems...")){
+			//	progressBarBoot.setProgress(50);
+				Log.d(TAG, "Mounting local filesystems...");
 			
+			}
+			if(detectorString.contains("NET4")){
+			//	progressBarBoot.setProgress(30);
+				Log.d(TAG, "NET4");
+				//
+			}
 			if (detectorString.contains("iDirect login:")){
 			Log.d(TAG, "iDirect login:");
+			
 			FuncionEnviar("root");		
-		}
-		
+			}
+			
+			
+			
 		if(detectorString.contains("Password:")){
+		//	progressBarBoot.setProgress(85);
 			Log.d(TAG, "Password:");
 		FuncionEnviar("P@55w0rd!");	
 		}
 		if(detectorString.contains("#")){
-	
+		//	progressBarBoot.setProgress(100);
+			//btn_Cargar_OPT.setEnabled(true);
+		//	btn_Ingresar.setEnabled(true);
 		Log.d(TAG, "Linux  #");
 		}
 		}
 	
 	}
 
+	////////////***   Bluetooth    INICIO ******///////////////////////////////
+	
 	public class DisConnectBT extends AsyncTask<Void, Void, Void> {
 
 		@Override
@@ -305,7 +253,7 @@ public class ll_Inicio_Login extends Activity {
 		}
 
 	}
-
+	
 	public void msg(String s) {
 		Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
 	}
@@ -313,7 +261,7 @@ public class ll_Inicio_Login extends Activity {
 	@Override
 	protected void onPause() {
 		if (mBTSocket != null && mIsBluetoothConnected) {
-			//new DisConnectBT().execute();desconecta bluetooth a pasar a segundo plano
+			new DisConnectBT().execute();
 		}
 		Log.d(TAG, "Paused");
 		super.onPause();
@@ -343,7 +291,7 @@ public class ll_Inicio_Login extends Activity {
 	public class ConnectBT extends AsyncTask<Void, Void, Void> {
 		private boolean mConnectSuccessful = true;
 
-		@Override
+		@Override 
 		protected void onPreExecute() {
 			progressDialog = ProgressDialog.show(ll_Inicio_Login.this, "Espere un momento...", "Conectando");// http://stackoverflow.com/a/11130220/1287554
 		}
@@ -382,5 +330,72 @@ public class ll_Inicio_Login extends Activity {
 
 	}
 
+	public class ReadInput implements Runnable {
+
+		private boolean bStop = false;
+		private Thread t;
+
+		public ReadInput() {
+			t = new Thread(this, "Input Thread");
+			t.start();
+		}
+
+		public boolean isRunning() {
+			return t.isAlive();
+		}
+
+		@Override
+		public void run() {
+			InputStream inputStream;
+
+			try {
+				inputStream = mBTSocket.getInputStream();
+				while (!bStop) {
+					byte[] buffer = new byte[256];
+					if (inputStream.available() > 0) {
+						inputStream.read(buffer);
+						int i = 0;
+						/*
+						 * This is needed because new String(buffer) is taking the entire buffer i.e. 256 chars on Android 2.3.4 http://stackoverflow.com/a/8843462/1287554
+						 */
+						for (i = 0; i < buffer.length && buffer[i] != 0; i++) {
+						}
+						final String strInput = new String(buffer, 0, i);
+
+						
+						
+						/*
+						 * If checked then receive text, better design would probably be to stop thread if unchecked and free resources, but this is a quick fix
+						 */
+						Log.d(TAG, "Entran datos del modem...");
+						
+						//FuncionLogin(strInput,Habilitacion);
+						
+						}
+					Thread.sleep(500);
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+		public void stop() {
+			bStop = true;
+		}
+
+	}
+
+	////////////***   Bluetooth    FIN ******///////////////////////////////
 	
-}
+	
+
+	}
+	
+	
+	
+
