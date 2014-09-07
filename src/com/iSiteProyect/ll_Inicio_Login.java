@@ -63,6 +63,7 @@ public class ll_Inicio_Login extends Activity {
 	//////////////////////////////////////////////////////////////////
 	public Button btn_Ingresar,btn_Cargar_OPT;
 	public TextView  textLinux;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -76,19 +77,15 @@ public class ll_Inicio_Login extends Activity {
 		mDeviceUUID = UUID.fromString(b.getString(Homescreen.DEVICE_UUID));
 		mMaxChars = b.getInt(Homescreen.BUFFER_SIZE);
 
-		Log.d(TAG, "Ready");
-		Toast.makeText(getApplicationContext(), "arranca", Toast.LENGTH_LONG).show();
+		Log.d(TAG, "OnCreate");
+		Toast.makeText(getApplicationContext(), "OnCreate", Toast.LENGTH_LONG).show();
 		LevantarXML();
 		
 		Botones();
-		
-		progressBarBoot.setProgress(0);
 		SetupUI();
 		}
 
 	private void SetupUI() {
-	
-		textLinux.setText("_____");
 	
 	}
 
@@ -109,15 +106,10 @@ public class ll_Inicio_Login extends Activity {
 		
 		
 		btn_Cargar_OPT.setOnClickListener(new OnClickListener() {
-			Intent intento =new Intent(getApplicationContext(),ll_Principal.class);
+			
 			@Override
 			public void onClick(View v) {
 		
-				startActivity(intento);
-				
-				if (mBTSocket != null && mIsBluetoothConnected) {
-					new DisConnectBT().execute();
-				}
 				Log.d(TAG, "boton opt");
 				
 			}
@@ -144,9 +136,8 @@ public class ll_Inicio_Login extends Activity {
 
 	private void  LevantarXML() {
 		btn_Ingresar=(Button) findViewById(R.id.btn_Ingresar);
-		progressBarBoot=(ProgressBar) findViewById(R.id.progressBarBoot);
 		TB_Apuntamiento=(ToggleButton) findViewById(R.id.TB_Apuntamiento);
-		textLinux =(TextView) findViewById(R.id.TextLinux);
+	
 		btn_Cargar_OPT=(Button) findViewById(R.id.btn_CargarOPT);
 	}
 
@@ -182,8 +173,7 @@ public class ll_Inicio_Login extends Activity {
 			
 			if(detectorString.contains(">")){
 				Log.d(TAG, "telnet >");
-				Intent intento =new Intent(this,ll_Principal.class);
-				startActivity(intento);
+				
 			}	
 			}
 		else

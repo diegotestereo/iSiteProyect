@@ -6,25 +6,6 @@
     android:background="@drawable/fondo"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="90dp"
-        android:text="Contraseña iSite"
-        android:textSize="25dp" />
-
-    <Button
-        android:id="@+id/btn_Ingresar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_alignRight="@+id/textView1"
-        android:layout_centerVertical="true"
-        android:text="Ingresar" />
-
     <EditText
         android:id="@+id/editText1"
         android:layout_width="wrap_content"
@@ -48,29 +29,104 @@
         android:text="ToggleButton" />
 
     <Button
-        android:id="@+id/btn_CargarOPT"
+        android:id="@+id/btn_Ingresar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/TB_Apuntamiento"
+        android:layout_below="@+id/editText1"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="19dp"
-        android:text="Cargar OPT" />
-
-    <ProgressBar
-        android:id="@+id/progressBarBoot"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" />
+        android:layout_marginTop="21dp"
+        android:text="Ingresar" />
 
     <TextView
-        android:id="@+id/TextLinux"
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/TB_Apuntamiento"
-        android:layout_below="@+id/btn_CargarOPT"
-        android:layout_marginTop="26dp"
-        android:text="TextView" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"
+        android:text="Contraseña iSite"
+        android:textSize="25dp" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/TB_Apuntamiento"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="46dp"
+            android:background="@drawable/fondo" >
+
+            <Button
+                android:id="@+id/btn_SetFreq"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:text="Setear Frecuencia" />
+
+            <EditText
+                android:id="@+id/EditFreq"
+                android:layout_width="183dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:ems="10"
+                android:inputType="numberDecimal" >
+
+                <requestFocus />
+            </EditText>
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Mhz" />
+
+            <ToggleButton
+                android:id="@+id/TB_CwOnOff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="ToggleButton" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/fondo" >
+
+            <Button
+                android:id="@+id/btnApuntamiento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Button" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_CargarOPT"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="76dp"
+            android:text="Cargar OPT" />
+
+        <Button
+            android:id="@+id/btn_Reset"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Reset" />
+
+    </LinearLayout>
 
 </RelativeLayout>

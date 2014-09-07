@@ -2,17 +2,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/fondo"
     android:orientation="vertical"
     tools:context=".Homescreen" >
     
-    <TextView 
+    <TextView
         android:id="@+id/txtListHeading"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Paired devices appear below"
-        android:textSize="20sp"
         android:gravity="center"
-        />
+        android:text="Lista de dispositivos Emparejados"
+        android:textSize="20sp" />
 
     <ListView
         android:id="@+id/lstDevices"
@@ -30,20 +30,17 @@
 
         <Button
             android:id="@+id/btnSearch"
-            android:layout_width="0dp"
+            android:layout_width="169dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_weight="2"
-            android:text="Search for paired devices" />
+            android:text="Buscar Dispositivos emparejados" />
 
         <Button
             android:id="@+id/btnConnect"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:enabled="false"
-            android:text="Connect" />
+            android:text="Conectar" />
 
     </LinearLayout>
 
