@@ -24,6 +24,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -61,7 +62,7 @@ public class ll_Inicio_Login extends Activity {
 	
 	//////////////////////////////////////////////////////////////////
 	public Button btn_Ingresar,btn_Cargar_OPT;
-	
+	public TextView  textLinux;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -82,14 +83,13 @@ public class ll_Inicio_Login extends Activity {
 		Botones();
 		
 		progressBarBoot.setProgress(0);
-	//	SetupUI();
+		SetupUI();
 		}
 
 	private void SetupUI() {
 	
-
-		btn_Cargar_OPT.setEnabled(false);
-		btn_Ingresar.setEnabled(false);
+		textLinux.setText("_____");
+	
 	}
 
 	private void Botones() {
@@ -103,6 +103,22 @@ public class ll_Inicio_Login extends Activity {
 			public void onClick(View v) {
 			TB_Apuntamiento.setChecked(true);	
 			FuncionEnviar("telnet localhost");
+				
+			}
+		});
+		
+		
+		btn_Cargar_OPT.setOnClickListener(new OnClickListener() {
+			Intent intento =new Intent(getApplicationContext(),ll_Principal.class);
+			@Override
+			public void onClick(View v) {
+		
+				startActivity(intento);
+				
+				if (mBTSocket != null && mIsBluetoothConnected) {
+					new DisConnectBT().execute();
+				}
+				Log.d(TAG, "boton opt");
 				
 			}
 		});
@@ -130,7 +146,8 @@ public class ll_Inicio_Login extends Activity {
 		btn_Ingresar=(Button) findViewById(R.id.btn_Ingresar);
 		progressBarBoot=(ProgressBar) findViewById(R.id.progressBarBoot);
 		TB_Apuntamiento=(ToggleButton) findViewById(R.id.TB_Apuntamiento);
-		
+		textLinux =(TextView) findViewById(R.id.TextLinux);
+		btn_Cargar_OPT=(Button) findViewById(R.id.btn_CargarOPT);
 	}
 
 	
@@ -148,67 +165,92 @@ public class ll_Inicio_Login extends Activity {
 	}
 	
 	public void FuncionLogin(String detectorString,Boolean hab){
+		Log.d(TAG, "Entrada General de Datos");
+		
 		
 	if(hab){
-		Log.d(TAG, "Telnet");
+			Log.d(TAG, "Telnet");
+			if (detectorString.contains("Username:")){
+				Log.d(TAG, "Username:");
+				FuncionEnviar("admin");		
+			}
 		
-	
-		if (detectorString.contains("Username:")){
-		Log.d(TAG, "Username:");
-			FuncionEnviar("admin");		
-		}
-		
-		if(detectorString.contains("Password:")){
-			Log.d(TAG, "Password:");
-			FuncionEnviar("P@55w0rd!");	
-		}
-		if(detectorString.contains(">")){
-		Log.d(TAG, "telnet >");
-		
-		Intent intento =new Intent(this,ll_Principal.class);
-		
-		
-		startActivity(intento);
-		}}
-	
+			if(detectorString.contains("Password:")){
+				Log.d(TAG, "Password:");
+				FuncionEnviar("P@55w0rd!");	
+			}
+			
+			if(detectorString.contains(">")){
+				Log.d(TAG, "telnet >");
+				Intent intento =new Intent(this,ll_Principal.class);
+				startActivity(intento);
+			}	
+			}
 		else
 			{
 			Log.d(TAG, "Linux");
-		
 			if (detectorString.contains("DRAM Test Successful")){
-			//	progressBarBoot.setProgress(10);
-			//tarea.execute();
-			Log.d(TAG, "DRAM Test Successful");
+				Log.d(TAG, "DRAM Test Successful antes");
+				
+				progressBarBoot.post(new Runnable() {
+			        public void run() {
+			        	progressBarBoot.setProgress(10);
+			        }
+			    });
+				
+				Log.d(TAG, "DRAM Test Successful despues");
 			}
-					
-			if(detectorString.contains("Mounting local filesystems...")){
-			//	progressBarBoot.setProgress(50);
-				Log.d(TAG, "Mounting local filesystems...");
+		
+			if(detectorString.contains("Uncompressing Linux")){
+				Log.d(TAG, "Uncompressing Linux");
+				 progressBarBoot.post(new Runnable() {
+			        public void run() {
+			        	progressBarBoot.setProgress(30);
+			        }
+			    });
 			
-			}
-			if(detectorString.contains("NET4")){
-			//	progressBarBoot.setProgress(30);
-				Log.d(TAG, "NET4");
-				//
+							}
+			if(detectorString.contains("Mounting local")){
+				
+				Log.d(TAG, "Mounting local filesystems...");
+				progressBarBoot.post(new Runnable() {
+			        public void run() {
+			        	progressBarBoot.setProgress(50);
+			        }
+			    });
 			}
 			if (detectorString.contains("iDirect login:")){
 			Log.d(TAG, "iDirect login:");
-			
+			progressBarBoot.post(new Runnable() {
+		        public void run() {
+		        	progressBarBoot.setProgress(70);
+		        }
+		    });
 			FuncionEnviar("root");		
 			}
 			
 			
 			
 		if(detectorString.contains("Password:")){
-		//	progressBarBoot.setProgress(85);
 			Log.d(TAG, "Password:");
+			progressBarBoot.post(new Runnable() {
+		        public void run() {
+		        	progressBarBoot.setProgress(85);
+		        }
+		    });
+		
 		FuncionEnviar("P@55w0rd!");	
 		}
 		if(detectorString.contains("#")){
-		//	progressBarBoot.setProgress(100);
-			//btn_Cargar_OPT.setEnabled(true);
-		//	btn_Ingresar.setEnabled(true);
+			
+			progressBarBoot.post(new Runnable() {
+		        public void run() {
+		        	progressBarBoot.setProgress(100);
+		        }
+		    });
+		
 		Log.d(TAG, "Linux  #");
+		
 		}
 		}
 	
@@ -278,6 +320,9 @@ public class ll_Inicio_Login extends Activity {
 
 	@Override
 	protected void onStop() {
+		if (mBTSocket != null && mIsBluetoothConnected) {
+			new DisConnectBT().execute();
+		}
 		Log.d(TAG, "Stopped");
 		super.onStop();
 	}
@@ -369,7 +414,7 @@ public class ll_Inicio_Login extends Activity {
 						 */
 						Log.d(TAG, "Entran datos del modem...");
 						
-						//FuncionLogin(strInput,Habilitacion);
+						FuncionLogin(strInput,Habilitacion);
 						
 						}
 					Thread.sleep(500);
