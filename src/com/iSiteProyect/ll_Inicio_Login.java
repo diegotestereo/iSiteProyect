@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
+
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -22,6 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -46,7 +49,7 @@ public class ll_Inicio_Login extends Activity {
 	public Button btn_LogOut;
 	public Spinner spin_TX,spin_RX,spin_Otros;
 	public ArrayAdapter<String> TxAdapter,RxAdapter,OtrosAdapter;
-	public ToggleButton TB_Apuntamiento;
+
 	public UUID mDeviceUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // Standard SPP UUID
 	
 	public int mBufferSize = 50000; //Default
@@ -61,8 +64,15 @@ public class ll_Inicio_Login extends Activity {
 	public ProgressDialog progressDialog;
 	
 	//////////////////////////////////////////////////////////////////
-	public Button btn_Ingresar,btn_Cargar_OPT;
-	public TextView  textLinux;
+	public Button btn_Ingresar,btn_Cargar_OPT,btn_SetFreq,btn_Reset,
+	btnApuntamiento;
+	public ToggleButton TB_Login,TB_CwOnOff;
+	public TextView  TextFrecuenciaLeida;
+	public EditText EditFreq,EditPass;
+	
+	public ProgressDialog progressDialogBooteo;
+	public ProgressBar progressBar_Apuntamiento;
+	public Handler puente;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,25 +90,52 @@ public class ll_Inicio_Login extends Activity {
 		Log.d(TAG, "OnCreate");
 		Toast.makeText(getApplicationContext(), "OnCreate", Toast.LENGTH_LONG).show();
 		LevantarXML();
-		
+	//	  MensajeArranque();
+			
+	//	handler();
 		Botones();
-		SetupUI();
+	//	Hilo();
+		
 		}
-
-	private void SetupUI() {
+	private void MensajeArranque() {
+		
+		progressDialog = new ProgressDialog(ll_Inicio_Login.this);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		progressDialog.setMessage("Equipo arrancando\nEspere 2 min aprox ...");
+		progressDialog.setMax(10);
+		progressDialog.setProgress(0);
+		progressDialog.setCancelable(true);
 	
+		
 	}
-
 	private void Botones() {
 		
+	
 		
+		btn_SetFreq.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				FuncionEnviar("tx freq "+Float.parseFloat(EditFreq.getText().toString()));
+			
+				
+			}
+		});
+		
+		btn_Reset.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				FuncionEnviar("reset board");
+			}
+		});
 		
 		
 		btn_Ingresar.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-			TB_Apuntamiento.setChecked(true);	
+				TB_Login.setChecked(true);	
 			FuncionEnviar("telnet localhost");
 				
 			}
@@ -109,19 +146,21 @@ public class ll_Inicio_Login extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-		
+				progressDialog.show();	
 				Log.d(TAG, "boton opt");
 				
 			}
 		});
 		
 		
-		TB_Apuntamiento.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		TB_Login.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
 				if (isChecked){
+					
+					
 					Toast.makeText(getApplicationContext(), "Log Telnet ", Toast.LENGTH_SHORT).show();
 				Habilitacion=isChecked;}
 				else{Habilitacion=isChecked;
@@ -131,14 +170,40 @@ public class ll_Inicio_Login extends Activity {
 			}
 		});
 		
+		TB_CwOnOff.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (isChecked){
+					FuncionEnviar("tx cw on");
+					Toast.makeText(getApplicationContext(), "CW ON"+strInputGlobal, Toast.LENGTH_SHORT).show();
+					
+				}
+				else{
+					FuncionEnviar("tx cw off");
+				Toast.makeText(getApplicationContext(), "CW OFF"+strInputGlobal, Toast.LENGTH_SHORT).show();}
+			
+			}
+		});
+		
+		
 		
 	}
 
 	private void  LevantarXML() {
+		TextFrecuenciaLeida=(TextView) findViewById(R.id.TextFrecuenciaLeida);
+		
 		btn_Ingresar=(Button) findViewById(R.id.btn_Ingresar);
-		TB_Apuntamiento=(ToggleButton) findViewById(R.id.TB_Apuntamiento);
-	
+		btn_SetFreq=(Button) findViewById(R.id.btn_SetFreq);
+		btn_Reset=(Button) findViewById(R.id.btn_Reset);
+		btnApuntamiento=(Button) findViewById(R.id.btnApuntamiento);
 		btn_Cargar_OPT=(Button) findViewById(R.id.btn_CargarOPT);
+
+		TB_CwOnOff=(ToggleButton) findViewById(R.id.TB_CwOnOff);
+		TB_Login=(ToggleButton) findViewById(R.id.TB_Login);
+	
+		EditFreq=(EditText) findViewById(R.id.EditFreq);
+		EditPass=(EditText) findViewById(R.id.EditPass);
 	}
 
 	
@@ -172,7 +237,20 @@ public class ll_Inicio_Login extends Activity {
 			}
 			
 			if(detectorString.contains(">")){
-				Log.d(TAG, "telnet >");
+				Log.d(TAG, "telnet >"+strInputGlobal);
+				
+			}	
+			if(detectorString.contains("Tx Frequency")){
+			//	Log.d(TAG, ""+strInputGlobal); // FRANCO GIOVANAZZI MAMA SOFIA DIEGO 
+				
+				TextFrecuenciaLeida.post(new Runnable() {
+					
+			        public void run() {
+			        	int cantidad=strInputGlobal.length();
+			        int posicion =strInputGlobal.indexOf("=");
+			        	TextFrecuenciaLeida.setText(strInputGlobal.substring(posicion+2,posicion+15));
+			        }
+			    });
 				
 			}	
 			}
@@ -405,6 +483,7 @@ public class ll_Inicio_Login extends Activity {
 						Log.d(TAG, "Entran datos del modem...");
 						
 						FuncionLogin(strInput,Habilitacion);
+						strInputGlobal=strInput;
 						
 						}
 					Thread.sleep(500);
@@ -426,6 +505,50 @@ public class ll_Inicio_Login extends Activity {
 	}
 
 	////////////***   Bluetooth    FIN ******///////////////////////////////
+
+	private void Hilo() {
+		Thread th1 = new Thread(new Runnable() {
+        	
+            @Override
+            public void run() {
+             for(int a=0;a<12;a++){
+              int contador = a;
+              
+              try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+              
+              
+              Message msg = new Message();
+           msg.obj = contador;
+           puente.sendMessage(msg);
+             }
+            }
+           });
+           th1.start();
+ }
+	
+	private void handler() {
+		puente = new Handler(){
+			
+			@Override
+		 public void handleMessage(Message msg) {
+				if ((Integer)msg.obj<11){
+					progressDialogBooteo.setProgress((Integer)msg.obj);
+				}
+				else{
+					progressDialogBooteo.dismiss();
+					
+				}
+			  }
+			};
+			
+			
+		
+	}
 	
 	
 

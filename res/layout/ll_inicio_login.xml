@@ -1,66 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/RelativeLayout1"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fondo"
     android:orientation="vertical" >
 
-    <EditText
-        android:id="@+id/editText1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="26dp"
-        android:background="@color/gris"
-        android:ems="10"
-        android:gravity="center"
-        android:inputType="textPassword"
-        android:text="P@55w0rd!" />
+   
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Contraseña iSite"
+            android:layout_gravity="center"
+            android:textSize="25dp" />
 
-    <ToggleButton
-        android:id="@+id/TB_Apuntamiento"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_Ingresar"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:text="ToggleButton" />
+        <EditText
+            android:id="@+id/EditPass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@color/gris"
+            android:ems="10"
+               android:layout_gravity="center"
+                   android:gravity="center"
+            android:inputType="textPassword"
+            android:text="P@55w0rd!" />
 
-    <Button
-        android:id="@+id/btn_Ingresar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/editText1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="21dp"
-        android:text="Ingresar" />
+        <Button
+            android:id="@+id/btn_Ingresar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+                 android:layout_gravity="center"
+            android:text="Ingresar" />
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="32dp"
-        android:text="Contraseña iSite"
-        android:textSize="25dp" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/TB_Apuntamiento"
-        android:orientation="vertical" >
+        <ToggleButton
+            android:id="@+id/TB_Login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+        
+                 android:layout_gravity="center"
+            android:text="ToggleButton" />
 
         <LinearLayout
             android:id="@+id/linearLayout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="46dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/fondo" >
 
             <Button
@@ -69,21 +57,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
                 android:layout_marginTop="20dp"
                 android:text="Setear Frecuencia" />
 
-            <EditText
-                android:id="@+id/EditFreq"
-                android:layout_width="183dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:ems="10"
-                android:inputType="numberDecimal" >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
 
-                <requestFocus />
-            </EditText>
+                <EditText
+                    android:id="@+id/EditFreq"
+                    android:layout_width="108dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:ems="10"
+                    android:inputType="numberDecimal"
+                    android:text="1000.0" />
+
+                <TextView
+                    android:id="@+id/TextFrecuenciaLeida"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1000.0 Mhz" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textView2"
@@ -110,8 +107,19 @@
                 android:id="@+id/btnApuntamiento"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="Button" />
+                android:layout_marginBottom="20dp"
+               android:layout_marginTop="20dp"
+                android:text="Apuntamiento" />
+
+            <ProgressBar
+                android:id="@+id/progressBar_Apuntamiento"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                    android:layout_gravity="center"
+                android:layout_marginTop="20dp" />
+
         </LinearLayout>
 
         <Button
@@ -127,6 +135,5 @@
             android:layout_height="wrap_content"
             android:text="Reset" />
 
-    </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>
