@@ -67,7 +67,7 @@ public class ll_Inicio_Login extends Activity {
 	public Button btn_Ingresar,btn_Cargar_OPT,btn_SetFreq,btn_Reset,
 	btnApuntamiento;
 	public ToggleButton TB_Login,TB_CwOnOff;
-	public TextView  TextFrecuenciaLeida;
+	public TextView  TextFrecuenciaLeida,TextCWEstado;
 	public EditText EditFreq,EditPass;
 	
 	public ProgressDialog progressDialogBooteo;
@@ -93,10 +93,7 @@ public class ll_Inicio_Login extends Activity {
 	  
 		
 		Botones();
-		handler();
-		Hilo();
-		MensajeArranque();
-		//
+		
 		
 		}
 	private void MensajeArranque() {
@@ -179,12 +176,12 @@ public class ll_Inicio_Login extends Activity {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if (isChecked){
 					FuncionEnviar("tx cw on");
-					Toast.makeText(getApplicationContext(), "CW ON "+isChecked+" "+strInputGlobal, Toast.LENGTH_SHORT).show();
+					Toast.makeText(getApplicationContext(), "CW ON", Toast.LENGTH_SHORT).show();
 					
 				}
 				else{
 					FuncionEnviar("tx cw off");
-				Toast.makeText(getApplicationContext(), "CW OFF "+isChecked+" "+strInputGlobal, Toast.LENGTH_SHORT).show();}
+				Toast.makeText(getApplicationContext(), "CW OFF", Toast.LENGTH_SHORT).show();}
 			
 			}
 		});
@@ -195,7 +192,7 @@ public class ll_Inicio_Login extends Activity {
 
 	private void  LevantarXML() {
 		TextFrecuenciaLeida=(TextView) findViewById(R.id.TextFrecuenciaLeida);
-		
+		TextCWEstado=(TextView) findViewById(R.id.TextCWEstado);
 		btn_Ingresar=(Button) findViewById(R.id.btn_Ingresar);
 		btn_SetFreq=(Button) findViewById(R.id.btn_SetFreq);
 		btn_Reset=(Button) findViewById(R.id.btn_Reset);
@@ -243,15 +240,42 @@ public class ll_Inicio_Login extends Activity {
 				Log.d(TAG, "telnet >"+strInputGlobal);
 				
 			}	
+			
+			
+			if(detectorString.contains(("tx cw on"))||detectorString.contains("tx cw off")){
+				FuncionEnviar("tx cw");
+					
+				Log.d(TAG, "CW solo"+strInputGlobal); // FRANCO GIOVANAZZI MAMA SOFIA DIEGO 
+				
+				
+				}	
+			
+			if(detectorString.contains("cw =")){
+				
+					Log.d(TAG, "CW ="+strInputGlobal); // FRANCO GIOVANAZZI MAMA SOFIA DIEGO 
+					
+				TextCWEstado.post(new Runnable() {
+						
+				        public void run() {
+				        
+				        int posicion =strInputGlobal.indexOf("=");
+				        TextCWEstado.setText("CW = "+strInputGlobal.substring(posicion+2,posicion+5));
+				        
+				        }
+				    });
+					
+				}	
+			
 			if(detectorString.contains("Tx Frequency")){
 			//	Log.d(TAG, ""+strInputGlobal); // FRANCO GIOVANAZZI MAMA SOFIA DIEGO 
 				
 				TextFrecuenciaLeida.post(new Runnable() {
 					
 			        public void run() {
-			        	int cantidad=strInputGlobal.length();
+			        
 			        int posicion =strInputGlobal.indexOf("=");
 			        	TextFrecuenciaLeida.setText(strInputGlobal.substring(posicion+2,posicion+15));
+			        
 			        }
 			    });
 				
@@ -262,9 +286,7 @@ public class ll_Inicio_Login extends Activity {
 			Log.d(TAG, "Linux");
 			if (detectorString.contains("DRAM Test Successful")){
 				Log.d(TAG, "DRAM Test Successful antes");
-				 MensajeArranque();
-				// handler();
-				// Hilo();
+				 
 			
 			}
 		

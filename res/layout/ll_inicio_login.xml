@@ -89,12 +89,25 @@
                 android:layout_marginTop="20dp"
                 android:text="Mhz" />
 
-            <ToggleButton
-                android:id="@+id/TB_CwOnOff"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="ToggleButton" />
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+
+                <ToggleButton
+                    android:id="@+id/TB_CwOnOff"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="ToggleButton" />
+
+                <TextView
+                    android:id="@+id/TextCWEstado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CW Apagada" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
