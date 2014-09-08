@@ -90,22 +90,24 @@ public class ll_Inicio_Login extends Activity {
 		Log.d(TAG, "OnCreate");
 		Toast.makeText(getApplicationContext(), "OnCreate", Toast.LENGTH_LONG).show();
 		LevantarXML();
-	//	  MensajeArranque();
-			
-	//	handler();
+	  
+		
 		Botones();
-	//	Hilo();
+		handler();
+		Hilo();
+		MensajeArranque();
+		//
 		
 		}
 	private void MensajeArranque() {
 		
 		progressDialog = new ProgressDialog(ll_Inicio_Login.this);
-		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		progressDialog.setMessage("Equipo arrancando\nEspere 2 min aprox ...");
 		progressDialog.setMax(10);
 		progressDialog.setProgress(0);
 		progressDialog.setCancelable(true);
-	
+	progressDialog.show();	
 		
 	}
 	private void Botones() {
@@ -126,7 +128,8 @@ public class ll_Inicio_Login extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				FuncionEnviar("reset board");
+				//FuncionEnviar("reset board");
+				progressDialog.cancel();
 			}
 		});
 		
@@ -176,12 +179,12 @@ public class ll_Inicio_Login extends Activity {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if (isChecked){
 					FuncionEnviar("tx cw on");
-					Toast.makeText(getApplicationContext(), "CW ON"+strInputGlobal, Toast.LENGTH_SHORT).show();
+					Toast.makeText(getApplicationContext(), "CW ON "+isChecked+" "+strInputGlobal, Toast.LENGTH_SHORT).show();
 					
 				}
 				else{
 					FuncionEnviar("tx cw off");
-				Toast.makeText(getApplicationContext(), "CW OFF"+strInputGlobal, Toast.LENGTH_SHORT).show();}
+				Toast.makeText(getApplicationContext(), "CW OFF "+isChecked+" "+strInputGlobal, Toast.LENGTH_SHORT).show();}
 			
 			}
 		});
@@ -259,41 +262,25 @@ public class ll_Inicio_Login extends Activity {
 			Log.d(TAG, "Linux");
 			if (detectorString.contains("DRAM Test Successful")){
 				Log.d(TAG, "DRAM Test Successful antes");
-				
-				progressBarBoot.post(new Runnable() {
-			        public void run() {
-			        	progressBarBoot.setProgress(10);
-			        }
-			    });
-				
-				Log.d(TAG, "DRAM Test Successful despues");
+				 MensajeArranque();
+				// handler();
+				// Hilo();
+			
 			}
 		
 			if(detectorString.contains("Uncompressing Linux")){
 				Log.d(TAG, "Uncompressing Linux");
-				 progressBarBoot.post(new Runnable() {
-			        public void run() {
-			        	progressBarBoot.setProgress(30);
-			        }
-			    });
+				
 			
 							}
 			if(detectorString.contains("Mounting local")){
 				
 				Log.d(TAG, "Mounting local filesystems...");
-				progressBarBoot.post(new Runnable() {
-			        public void run() {
-			        	progressBarBoot.setProgress(50);
-			        }
-			    });
+			
 			}
 			if (detectorString.contains("iDirect login:")){
 			Log.d(TAG, "iDirect login:");
-			progressBarBoot.post(new Runnable() {
-		        public void run() {
-		        	progressBarBoot.setProgress(70);
-		        }
-		    });
+		
 			FuncionEnviar("root");		
 			}
 			
@@ -301,23 +288,13 @@ public class ll_Inicio_Login extends Activity {
 			
 		if(detectorString.contains("Password:")){
 			Log.d(TAG, "Password:");
-			progressBarBoot.post(new Runnable() {
-		        public void run() {
-		        	progressBarBoot.setProgress(85);
-		        }
-		    });
+			
 		
 		FuncionEnviar("P@55w0rd!");	
 		}
 		if(detectorString.contains("#")){
 			
-			progressBarBoot.post(new Runnable() {
-		        public void run() {
-		        	progressBarBoot.setProgress(100);
-		        }
-		    });
-		
-		Log.d(TAG, "Linux  #");
+		Log.d(TAG, "Linux  #"+hab);
 		
 		}
 		}
@@ -370,9 +347,9 @@ public class ll_Inicio_Login extends Activity {
 
 	@Override
 	protected void onPause() {
-		if (mBTSocket != null && mIsBluetoothConnected) {
+	/*	if (mBTSocket != null && mIsBluetoothConnected) {
 			new DisConnectBT().execute();
-		}
+		}*/
 		Log.d(TAG, "Paused");
 		super.onPause();
 	}
@@ -529,6 +506,7 @@ public class ll_Inicio_Login extends Activity {
             }
            });
            th1.start();
+           
  }
 	
 	private void handler() {
@@ -537,10 +515,10 @@ public class ll_Inicio_Login extends Activity {
 			@Override
 		 public void handleMessage(Message msg) {
 				if ((Integer)msg.obj<11){
-					progressDialogBooteo.setProgress((Integer)msg.obj);
+					progressDialog.setProgress((Integer)msg.obj);
 				}
 				else{
-					progressDialogBooteo.dismiss();
+					progressDialog.dismiss();
 					
 				}
 			  }
