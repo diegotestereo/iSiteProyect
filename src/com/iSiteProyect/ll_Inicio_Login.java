@@ -435,6 +435,7 @@ public class ll_Inicio_Login extends Activity {
 				msg("Connected to device");
 				mIsBluetoothConnected = true;
 				mReadThread = new ReadInput(); // Kick off input reader
+				
 			}
 
 			progressDialog.dismiss();
@@ -473,14 +474,7 @@ public class ll_Inicio_Login extends Activity {
 						for (i = 0; i < buffer.length && buffer[i] != 0; i++) {
 						}
 						final String strInput = new String(buffer, 0, i);
-
-						
-						
-						/*
-						 * If checked then receive text, better design would probably be to stop thread if unchecked and free resources, but this is a quick fix
-						 */
 						Log.d(TAG, "Entran datos del modem...");
-						
 						FuncionLogin(strInput,Habilitacion);
 						strInputGlobal=strInput;
 						
