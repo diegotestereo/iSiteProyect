@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
-
-
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -17,7 +14,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -47,10 +43,6 @@ public class ll_Inicio_Login extends Activity {
 	public boolean mIsUserInitiatedDisconnect = false;
 	public Boolean Apuntamiento=false,Booteo=true,Habilitacion=false;;
 
-	public Button btn_LogOut;
-	public Spinner spin_TX,spin_RX,spin_Otros;
-	public ArrayAdapter<String> TxAdapter,RxAdapter,OtrosAdapter;
-
 	public UUID mDeviceUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // Standard SPP UUID
 	
 	public int mBufferSize = 50000; //Default
@@ -61,10 +53,15 @@ public class ll_Inicio_Login extends Activity {
 	public boolean mIsBluetoothConnected = false;
 
 	public BluetoothDevice mDevice;
+
+	//////////////////////////////////////////////////////////////////
 	public ProgressBar progressBarBoot;
 	public ProgressDialog progressDialog;
-	
-	//////////////////////////////////////////////////////////////////
+	public int NivelBaliza=5;
+	public Button btn_LogOut;
+	public Spinner spin_TX,spin_RX,spin_Otros;
+	public ArrayAdapter<String> TxAdapter,RxAdapter,OtrosAdapter;
+
 	public Button btn_Ingresar,btn_Cargar_OPT,btn_SetFreq,btn_Reset,
 	btn_Apuntamiento,btn_Prueba;
 	public ToggleButton TB_Login,TB_CwOnOff,TB_Pointing;
@@ -75,14 +72,13 @@ public class ll_Inicio_Login extends Activity {
 	public ProgressBar progressBar_Apuntamiento;
 	public Handler puente;
 	public MedirBaliza Apuntando;
-	public Boolean Lazo=true;
+	public VentanaDialogoNivel DialogoNivel;
+	public Boolean Bool_pointing=false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ll_inicio_login);
 		ActivityHelper.initialize(this);
-		
-		
 		Intent intent = getIntent();
 		Bundle b = intent.getExtras();
 		mDevice = b.getParcelable(Homescreen.DEVICE_EXTRA);
@@ -92,8 +88,6 @@ public class ll_Inicio_Login extends Activity {
 		Log.d(TAG, "OnCreate");
 		Toast.makeText(getApplicationContext(), "OnCreate", Toast.LENGTH_LONG).show();
 		LevantarXML();
-		
-		Apuntando=new MedirBaliza();
 		
 		Botones();
 		SetupUI();
@@ -128,8 +122,8 @@ public class ll_Inicio_Login extends Activity {
 		@Override
 		public void onClick(View v) {
 		
-			//Lazo=false;
-			Apuntando.execute();
+			DialogoNivel= new VentanaDialogoNivel();
+			DialogoNivel.execute();
 			
 		}
 	});
@@ -333,6 +327,23 @@ public class ll_Inicio_Login extends Activity {
 			    });
 				
 			}	
+			
+			if(detectorString.contains("pointing = on")){
+				
+							
+				Bool_pointing=true;
+				
+				
+				}	
+			if(detectorString.contains("pointing = off")){
+				
+				
+				Bool_pointing=false;
+				
+				
+				}	
+			
+			
 			if(detectorString.contains("Tx Frequency")){
 			//	Log.d(TAG, ""+strInputGlobal); // FRANCO GIOVANAZZI MAMA SOFIA DIEGO 
 				
@@ -531,6 +542,13 @@ public class ll_Inicio_Login extends Activity {
 						Log.d(TAG, "Entran datos del modem...");
 						FuncionDetectarComando(strInput,Habilitacion);
 						strInputGlobal=strInput;
+						Log.d(TAG, "antes de crear baliza");
+						 
+						Apuntando=new MedirBaliza();
+						Log.d(TAG, "luego de crear baliza");
+								
+						Apuntando.execute();
+						Log.d(TAG, "ejecucion");
 						
 						}
 					Thread.sleep(500);
@@ -557,34 +575,68 @@ public class ll_Inicio_Login extends Activity {
 		
 	@Override 
 		protected void onPreExecute() {
-		   Lazo=true;
-		    progressDialog = new ProgressDialog(ll_Inicio_Login.this);
-			progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			progressDialog.setMessage("Midiendo nivel de señal...");
-			progressDialog.setCancelable(true);
-			progressDialog.show();	
-			  try {
-					
-				   Thread.sleep(3000);
-				   
-					  progressDialog.dismiss();
-				
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-				
 		}
 
 		@Override
 		protected Void doInBackground(Void... devices) {
 		
+	
+	//	progressBar_Apuntamiento.setProgress((int)(nivel*10.0));
+		
+	float nivel;
+				try {
+									
+					nivel= Float.parseFloat(String.valueOf(strInputGlobal));
+					//progressBar_Apuntamiento.setProgress((int)(nivel*10.0));
+					Log.d(TAG, "progress bar apuntamiento strInputGlobal ="+strInputGlobal);
+					Log.d(TAG, "progress bar apuntamiento nivel =");
+					
+					
+				} catch (NumberFormatException nfe){
+					Log.d(TAG, "progress bar apuntamiento mal="+strInputGlobal);
+					
+			}
+			
+			
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-			Log.d(TAG, "onPostExecute"+strInputGlobal);
+			
+		}
+
+	}
+
+
+	public class VentanaDialogoNivel extends AsyncTask<Void, Void, Void> {
+		
+	@Override 
+		protected void onPreExecute() {
+		progressDialog = new ProgressDialog(ll_Inicio_Login.this);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		progressDialog.setMessage("Equipo arrancando\nEspere 2 min aprox ...");
+		progressDialog.setMax(10);
+		progressDialog.setProgress(NivelBaliza);
+		progressDialog.setCancelable(false);
+		progressDialog.show();	
+		
+		}
+
+		@Override
+		protected Void doInBackground(Void... devices) {
+		
+	
+	
+			
+			
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
 			
 		}
 
