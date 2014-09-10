@@ -7,6 +7,7 @@ import java.util.UUID;
 
 
 
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -16,7 +17,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
+
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -65,15 +66,16 @@ public class ll_Inicio_Login extends Activity {
 	
 	//////////////////////////////////////////////////////////////////
 	public Button btn_Ingresar,btn_Cargar_OPT,btn_SetFreq,btn_Reset,
-	btnApuntamiento;
-	public ToggleButton TB_Login,TB_CwOnOff;
-	public TextView  TextFrecuenciaLeida,TextCWEstado;
-	public EditText EditFreq,EditPass;
+	btn_Apuntamiento,btn_Prueba;
+	public ToggleButton TB_Login,TB_CwOnOff,TB_Pointing;
+	public TextView  TextFrecuenciaLeida,TextCWEstado,TextPointing,TextPrueba;
+	public EditText EditFreq,EditPass,EditPrueba;
 	
 	public ProgressDialog progressDialogBooteo;
 	public ProgressBar progressBar_Apuntamiento;
 	public Handler puente;
-	
+	public MedirBaliza Apuntando;
+	public Boolean Lazo=true;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -90,13 +92,17 @@ public class ll_Inicio_Login extends Activity {
 		Log.d(TAG, "OnCreate");
 		Toast.makeText(getApplicationContext(), "OnCreate", Toast.LENGTH_LONG).show();
 		LevantarXML();
-	  
+		
+		Apuntando=new MedirBaliza();
 		
 		Botones();
-		
+		SetupUI();
 		
 		}
-	private void MensajeArranque() {
+	
+	/*
+	 private void MensajeArranque() {
+	
 		
 		progressDialog = new ProgressDialog(ll_Inicio_Login.this);
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -104,12 +110,29 @@ public class ll_Inicio_Login extends Activity {
 		progressDialog.setMax(10);
 		progressDialog.setProgress(0);
 		progressDialog.setCancelable(true);
-	progressDialog.show();	
+	    progressDialog.show();	
 		
 	}
+	*/
+	
+	private void SetupUI() {
+		TB_Login.setChecked(true);
+		progressBar_Apuntamiento.setMax(10);
+		progressBar_Apuntamiento.setProgress(5);
+	}
+
 	private void Botones() {
 		
+	btn_Prueba.setOnClickListener(new OnClickListener() {
 	
+		@Override
+		public void onClick(View v) {
+		
+			//Lazo=false;
+			Apuntando.execute();
+			
+		}
+	});
 		
 		btn_SetFreq.setOnClickListener(new OnClickListener() {
 			
@@ -129,8 +152,7 @@ public class ll_Inicio_Login extends Activity {
 				progressDialog.cancel();
 			}
 		});
-		
-		
+				
 		btn_Ingresar.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -140,8 +162,7 @@ public class ll_Inicio_Login extends Activity {
 				
 			}
 		});
-		
-		
+				
 		btn_Cargar_OPT.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -152,6 +173,24 @@ public class ll_Inicio_Login extends Activity {
 			}
 		});
 		
+		btn_Apuntamiento.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				if(btn_Apuntamiento.getText().toString().equals("Disable")){
+					FuncionEnviar("rx pointing disable");
+					btn_Apuntamiento.setText("Enable");
+					
+				}
+				else{
+					FuncionEnviar("rx pointing enable");
+					btn_Apuntamiento.setText("Disable");
+					
+				}
+			
+			}
+		});
 		
 		TB_Login.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
@@ -186,24 +225,43 @@ public class ll_Inicio_Login extends Activity {
 			}
 		});
 		
-		
-		
+		TB_Pointing.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (isChecked){
+					FuncionEnviar("rx pointing on");
+				}else{
+					FuncionEnviar("rx pointing off");
+				}
+				
+			}
+		});
+	
 	}
 
 	private void  LevantarXML() {
+		
 		TextFrecuenciaLeida=(TextView) findViewById(R.id.TextFrecuenciaLeida);
 		TextCWEstado=(TextView) findViewById(R.id.TextCWEstado);
+		TextPointing=(TextView) findViewById(R.id.TextPointing);
+		TextPrueba=(TextView) findViewById(R.id.TextPrueba);
+		
 		btn_Ingresar=(Button) findViewById(R.id.btn_Ingresar);
 		btn_SetFreq=(Button) findViewById(R.id.btn_SetFreq);
 		btn_Reset=(Button) findViewById(R.id.btn_Reset);
-		btnApuntamiento=(Button) findViewById(R.id.btnApuntamiento);
+		btn_Apuntamiento=(Button) findViewById(R.id.btnPointingEnable);
 		btn_Cargar_OPT=(Button) findViewById(R.id.btn_CargarOPT);
+		btn_Prueba=(Button) findViewById(R.id.btn_Prueba);
 
 		TB_CwOnOff=(ToggleButton) findViewById(R.id.TB_CwOnOff);
 		TB_Login=(ToggleButton) findViewById(R.id.TB_Login);
-	
+		TB_Pointing=(ToggleButton) findViewById(R.id.TB_Pointing);
+		
 		EditFreq=(EditText) findViewById(R.id.EditFreq);
 		EditPass=(EditText) findViewById(R.id.EditPass);
+		EditPrueba=(EditText) findViewById(R.id.EditPrueba);
+		progressBar_Apuntamiento=(ProgressBar) findViewById(R.id.progressBar_Apuntamiento);
 	}
 
 	
@@ -220,12 +278,12 @@ public class ll_Inicio_Login extends Activity {
 		
 	}
 	
-	public void FuncionLogin(String detectorString,Boolean hab){
+	public void FuncionDetectarComando(String detectorString,Boolean hab){
 		Log.d(TAG, "Entrada General de Datos");
 		
 		
 	if(hab){
-			Log.d(TAG, "Telnet");
+		
 			if (detectorString.contains("Username:")){
 				Log.d(TAG, "Username:");
 				FuncionEnviar("admin");		
@@ -240,14 +298,10 @@ public class ll_Inicio_Login extends Activity {
 				Log.d(TAG, "telnet >"+strInputGlobal);
 				
 			}	
-			
-			
 			if(detectorString.contains(("tx cw on"))||detectorString.contains("tx cw off")){
 				FuncionEnviar("tx cw");
-					
+				
 				Log.d(TAG, "CW solo"+strInputGlobal); // FRANCO GIOVANAZZI MAMA SOFIA DIEGO 
-				
-				
 				}	
 			
 			if(detectorString.contains("cw =")){
@@ -266,6 +320,19 @@ public class ll_Inicio_Login extends Activity {
 					
 				}	
 			
+			if(detectorString.contains("pointing =")){
+				TextCWEstado.post(new Runnable() {
+					
+			        public void run() {
+			        
+			        int posicion =strInputGlobal.indexOf("=");
+			        TextPointing.setText("Point "+strInputGlobal.substring(posicion+2,posicion+5));
+			        Log.d(TAG, "Pointing = "+strInputGlobal.substring(posicion+2,posicion+5)); // FRANCO GIOVANAZZI MAMA SOFIA DIEGO 
+			     
+			        }
+			    });
+				
+			}	
 			if(detectorString.contains("Tx Frequency")){
 			//	Log.d(TAG, ""+strInputGlobal); // FRANCO GIOVANAZZI MAMA SOFIA DIEGO 
 				
@@ -278,37 +345,24 @@ public class ll_Inicio_Login extends Activity {
 			        
 			        }
 			    });
-				
-			}	
+				}	
 			}
-		else
+			else
 			{
 			Log.d(TAG, "Linux");
 			if (detectorString.contains("DRAM Test Successful")){
 				Log.d(TAG, "DRAM Test Successful antes");
-				 
-			
 			}
-		
 			if(detectorString.contains("Uncompressing Linux")){
 				Log.d(TAG, "Uncompressing Linux");
-				
-			
 							}
-			if(detectorString.contains("Mounting local")){
-				
-				Log.d(TAG, "Mounting local filesystems...");
 			
-			}
 			if (detectorString.contains("iDirect login:")){
 			Log.d(TAG, "iDirect login:");
 		
 			FuncionEnviar("root");		
 			}
-			
-			
-			
-		if(detectorString.contains("Password:")){
+			if(detectorString.contains("Password:")){
 			Log.d(TAG, "Password:");
 			
 		
@@ -316,7 +370,7 @@ public class ll_Inicio_Login extends Activity {
 		}
 		if(detectorString.contains("#")){
 			
-		Log.d(TAG, "Linux  #"+hab);
+		Log.d(TAG, "Linux  # "+hab);
 		
 		}
 		}
@@ -475,7 +529,7 @@ public class ll_Inicio_Login extends Activity {
 						}
 						final String strInput = new String(buffer, 0, i);
 						Log.d(TAG, "Entran datos del modem...");
-						FuncionLogin(strInput,Habilitacion);
+						FuncionDetectarComando(strInput,Habilitacion);
 						strInputGlobal=strInput;
 						
 						}
@@ -499,52 +553,43 @@ public class ll_Inicio_Login extends Activity {
 
 	////////////***   Bluetooth    FIN ******///////////////////////////////
 
-	private void Hilo() {
-		Thread th1 = new Thread(new Runnable() {
-        	
-            @Override
-            public void run() {
-             for(int a=0;a<12;a++){
-              int contador = a;
-              
-              try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-              
-              
-              Message msg = new Message();
-           msg.obj = contador;
-           puente.sendMessage(msg);
-             }
-            }
-           });
-           th1.start();
-           
- }
-	
-	private void handler() {
-		puente = new Handler(){
-			
-			@Override
-		 public void handleMessage(Message msg) {
-				if ((Integer)msg.obj<11){
-					progressDialog.setProgress((Integer)msg.obj);
-				}
-				else{
-					progressDialog.dismiss();
-					
-				}
-			  }
-			};
-			
-			
+	public class MedirBaliza extends AsyncTask<Void, Void, Void> {
 		
+	@Override 
+		protected void onPreExecute() {
+		   Lazo=true;
+		    progressDialog = new ProgressDialog(ll_Inicio_Login.this);
+			progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			progressDialog.setMessage("Midiendo nivel de señal...");
+			progressDialog.setCancelable(true);
+			progressDialog.show();	
+			  try {
+					
+				   Thread.sleep(3000);
+				   
+					  progressDialog.dismiss();
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+				
+		}
+
+		@Override
+		protected Void doInBackground(Void... devices) {
+		
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			Log.d(TAG, "onPostExecute"+strInputGlobal);
+			
+		}
+
 	}
-	
-	
+
 
 	}
 	
