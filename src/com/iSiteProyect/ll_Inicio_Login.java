@@ -57,7 +57,7 @@ public class ll_Inicio_Login extends Activity {
 	//////////////////////////////////////////////////////////////////
 	public ProgressBar progressBarBoot;
 	public ProgressDialog progressDialog;
-	public int NivelBaliza=5;
+
 	public Button btn_LogOut;
 	public Spinner spin_TX,spin_RX,spin_Otros;
 	public ArrayAdapter<String> TxAdapter,RxAdapter,OtrosAdapter;
@@ -91,6 +91,14 @@ public class ll_Inicio_Login extends Activity {
 		
 		Botones();
 		SetupUI();
+
+		progressDialog = new ProgressDialog(ll_Inicio_Login.this);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		progressDialog.setMessage("Detectando Nivel del Satelite...");
+		progressDialog.setMax(100);
+		progressDialog.setCancelable(true);
+		progressDialog.show();	
+	
 		
 		}
 	
@@ -121,7 +129,7 @@ public class ll_Inicio_Login extends Activity {
 	
 		@Override
 		public void onClick(View v) {
-		
+
 			DialogoNivel= new VentanaDialogoNivel();
 			DialogoNivel.execute();
 			
@@ -539,25 +547,19 @@ public class ll_Inicio_Login extends Activity {
 						for (i = 0; i < buffer.length && buffer[i] != 0; i++) {
 						}
 						final String strInput = new String(buffer, 0, i);
-						Log.d(TAG, "Entran datos del modem...");
+						Log.d(TAG, "strInput: " + strInput);
 						FuncionDetectarComando(strInput,Habilitacion);
 						strInputGlobal=strInput;
-						Log.d(TAG, "antes de crear baliza");
-						 
-						Apuntando=new MedirBaliza();
-						Log.d(TAG, "luego de crear baliza");
-								
-						Apuntando.execute();
-						Log.d(TAG, "ejecucion");
-						
+
+						DialogoNivel.execute();
 						}
 					Thread.sleep(500);
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 
@@ -575,6 +577,9 @@ public class ll_Inicio_Login extends Activity {
 		
 	@Override 
 		protected void onPreExecute() {
+		
+		//TextPrueba.setText(strInputGlobal);
+		
 		}
 
 		@Override
@@ -586,7 +591,7 @@ public class ll_Inicio_Login extends Activity {
 	float nivel;
 				try {
 									
-					nivel= Float.parseFloat(String.valueOf(strInputGlobal));
+				//	nivel= Float.parseFloat(String.valueOf(strInputGlobal));
 					//progressBar_Apuntamiento.setProgress((int)(nivel*10.0));
 					Log.d(TAG, "progress bar apuntamiento strInputGlobal ="+strInputGlobal);
 					Log.d(TAG, "progress bar apuntamiento nivel =");
@@ -614,14 +619,14 @@ public class ll_Inicio_Login extends Activity {
 		
 	@Override 
 		protected void onPreExecute() {
-		progressDialog = new ProgressDialog(ll_Inicio_Login.this);
-		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		progressDialog.setMessage("Equipo arrancando\nEspere 2 min aprox ...");
-		progressDialog.setMax(10);
-		progressDialog.setProgress(NivelBaliza);
-		progressDialog.setCancelable(false);
-		progressDialog.show();	
+		String[] NivelesAlmacenados = strInputGlobal.split("\r");
 		
+		float nivelFlotante= Float.parseFloat(NivelesAlmacenados[0])*100;
+		int NivelBaliza=(int)nivelFlotante;
+		TextPrueba.setText("String: "+NivelesAlmacenados[0]+" float * 10:  "+nivelFlotante +" integer:  "+NivelBaliza);
+		
+		progressDialog.setProgress(NivelBaliza);
+	
 		}
 
 		@Override
@@ -637,6 +642,8 @@ public class ll_Inicio_Login extends Activity {
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
+			
+			
 			
 		}
 
