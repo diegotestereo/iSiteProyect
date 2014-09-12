@@ -11,11 +11,11 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
-import android.content.res.Resources.Theme;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
+
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -64,8 +64,7 @@ public class ll_Inicio_Login extends Activity {
 	public Spinner spin_TX,spin_RX,spin_Otros;
 	public ArrayAdapter<String> TxAdapter,RxAdapter,OtrosAdapter;
 
-	public Button btn_Ingresar,btn_Cargar_OPT,btn_SetFreq,btn_Reset,
-	btn_Apuntamiento,btn_Prueba;
+	public Button btn_Ingresar,btn_Cargar_OPT,btn_SetFreq,btn_Reset,btn_Prueba;
 	public ToggleButton TB_Login,TB_CwOnOff,TB_Pointing;
 	public TextView  TextFrecuenciaLeida,TextCWEstado,TextPointing,TextPrueba,TextNivel;
 	public EditText EditFreq,EditPass,EditPrueba;
@@ -75,6 +74,7 @@ public class ll_Inicio_Login extends Activity {
 	public Handler puente;
 	
 	public VentanaDialogoNivel DialogoNivel;
+	
 	public Boolean Lectura_pointing=false;
 	public Thread th1;
 	@Override
@@ -155,25 +155,7 @@ public class ll_Inicio_Login extends Activity {
 			}
 		});
 		
-		btn_Apuntamiento.setOnClickListener(new OnClickListener() {
 			
-			@Override
-			public void onClick(View v) {
-				
-				if(btn_Apuntamiento.getText().toString().equals("Disable")){
-					FuncionEnviar("rx pointing disable");
-					btn_Apuntamiento.setText("Enable");
-				
-				}
-				else{
-					FuncionEnviar("rx pointing enable");
-					btn_Apuntamiento.setText("Disable");
-					
-				}
-			
-			}
-		});
-		
 		TB_Login.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
 			@Override
@@ -196,12 +178,14 @@ public class ll_Inicio_Login extends Activity {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if (isChecked){
+					FuncionEnviar("rx iflDC off");
 					FuncionEnviar("tx cw on");
 					Toast.makeText(getApplicationContext(), "CW ON", Toast.LENGTH_SHORT).show();
 					
 					
 				}
 				else{
+					FuncionEnviar("rx iflDC on");
 					FuncionEnviar("tx cw off");
 				Toast.makeText(getApplicationContext(), "CW OFF", Toast.LENGTH_SHORT).show();}
 			
@@ -210,17 +194,24 @@ public class ll_Inicio_Login extends Activity {
 		
 		TB_Pointing.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
+		
 			
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				
 				if (isChecked){
+					
+					FuncionEnviar("rx pointing enable");// habiulita el comando de ponting
 					FuncionEnviar("rx pointing on");
 					Lectura_pointing=true;
 					Hilo();
-				      th1.start();
+				    th1.start();
 					
 				}else{
-					FuncionEnviar("rx pointing off");
+				
+					FuncionEnviar("rx pointing off");// deshabilita el comando de ponting
+					FuncionEnviar("rx pointing disable");
+					progressBar_Apuntamiento.setProgress(0);
 					Lectura_pointing=false;
 					
 				}
@@ -241,7 +232,6 @@ public class ll_Inicio_Login extends Activity {
 		btn_Ingresar=(Button) findViewById(R.id.btn_Ingresar);
 		btn_SetFreq=(Button) findViewById(R.id.btn_SetFreq);
 		btn_Reset=(Button) findViewById(R.id.btn_Reset);
-		btn_Apuntamiento=(Button) findViewById(R.id.btnPointingEnable);
 		btn_Cargar_OPT=(Button) findViewById(R.id.btn_CargarOPT);
 		btn_Prueba=(Button) findViewById(R.id.btn_Prueba);
 
@@ -597,10 +587,24 @@ public class ll_Inicio_Login extends Activity {
 		
             @Override
             public void run() {
+            	 runOnUiThread(new Runnable() {
+            	        public void run() {
+            	    	progressDialog = new ProgressDialog(ll_Inicio_Login.this);
+            	    		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            	    		progressDialog.setMessage("Esperando medicion");
+            	    		progressDialog.setMax(10);
+            	    		progressDialog.setProgress(0);
+            	    		progressDialog.setCancelable(false);
+            	    		progressDialog.show();	
+            	        }
+            	    });
+            	
+            	
             	try {
             		Log.d("Hilo", "th1 = Thread.sleep(11000)");
-            		Thread.sleep(11000);
-					
+            		
+            		Thread.sleep(12000);
+            		progressDialog.cancel();	
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
@@ -610,7 +614,7 @@ public class ll_Inicio_Login extends Activity {
             	while(Lectura_pointing){
             		Log.d("Hilo", "while");
               try {
-            		Log.d("Hilo", "th1 = Thread.sleep(1000)");
+            	//	Log.d("Hilo", "th1 = Thread.sleep(1000)");
 				Thread.sleep(1000);
 				Log.d("Hilo", "DialogoNivel.execute()");
 				DialogoNivel= new VentanaDialogoNivel();
@@ -622,16 +626,16 @@ public class ll_Inicio_Login extends Activity {
 				e.printStackTrace();
 			}
             	}
-         
-          
+            	FuncionEnviar("tx iflDC on");
+            	progressBar_Apuntamiento.setProgress(0);
+        		
+            	
             }
-            
-			
-           });
-		
-	}
+          });
+		}
 	
 	
+
 	
 	}
 	

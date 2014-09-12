@@ -111,15 +111,6 @@
         android:layout_height="wrap_content"
         android:background="@drawable/fondo" >
 
-        <Button
-            android:id="@+id/btnPointingEnable"
-            android:layout_width="90dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:text="Disable" />
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
