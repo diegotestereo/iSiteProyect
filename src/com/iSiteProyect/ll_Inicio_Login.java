@@ -11,9 +11,11 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.content.res.Resources.Theme;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -41,7 +43,7 @@ public class ll_Inicio_Login extends Activity {
 	public ReadInput mReadThread = null;
 
 	public boolean mIsUserInitiatedDisconnect = false;
-	public Boolean Apuntamiento=false,Booteo=true,Habilitacion=false;;
+	public Boolean Apuntamiento=false,Booteo=true,Habilitacion=true;
 
 	public UUID mDeviceUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // Standard SPP UUID
 	
@@ -65,15 +67,16 @@ public class ll_Inicio_Login extends Activity {
 	public Button btn_Ingresar,btn_Cargar_OPT,btn_SetFreq,btn_Reset,
 	btn_Apuntamiento,btn_Prueba;
 	public ToggleButton TB_Login,TB_CwOnOff,TB_Pointing;
-	public TextView  TextFrecuenciaLeida,TextCWEstado,TextPointing,TextPrueba;
+	public TextView  TextFrecuenciaLeida,TextCWEstado,TextPointing,TextPrueba,TextNivel;
 	public EditText EditFreq,EditPass,EditPrueba;
 	
 	public ProgressDialog progressDialogBooteo;
 	public ProgressBar progressBar_Apuntamiento;
 	public Handler puente;
-	public MedirBaliza Apuntando;
+	
 	public VentanaDialogoNivel DialogoNivel;
-	public Boolean Bool_pointing=false;
+	public Boolean Lectura_pointing=false;
+	public Thread th1;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -88,39 +91,19 @@ public class ll_Inicio_Login extends Activity {
 		Log.d(TAG, "OnCreate");
 		Toast.makeText(getApplicationContext(), "OnCreate", Toast.LENGTH_LONG).show();
 		LevantarXML();
+		SetupUI();
 		
 		Botones();
-		SetupUI();
-
-		progressDialog = new ProgressDialog(ll_Inicio_Login.this);
-		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		progressDialog.setMessage("Detectando Nivel del Satelite...");
-		progressDialog.setMax(100);
-		progressDialog.setCancelable(true);
-		progressDialog.show();	
 	
-		
 		}
 	
-	/*
-	 private void MensajeArranque() {
-	
-		
-		progressDialog = new ProgressDialog(ll_Inicio_Login.this);
-		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		progressDialog.setMessage("Equipo arrancando\nEspere 2 min aprox ...");
-		progressDialog.setMax(10);
-		progressDialog.setProgress(0);
-		progressDialog.setCancelable(true);
-	    progressDialog.show();	
-		
-	}
-	*/
 	
 	private void SetupUI() {
 		TB_Login.setChecked(true);
-		progressBar_Apuntamiento.setMax(10);
-		progressBar_Apuntamiento.setProgress(5);
+		progressBar_Apuntamiento.setMax(100);
+		progressBar_Apuntamiento.setProgress(0);
+		
+		
 	}
 
 	private void Botones() {
@@ -130,9 +113,6 @@ public class ll_Inicio_Login extends Activity {
 		@Override
 		public void onClick(View v) {
 
-			DialogoNivel= new VentanaDialogoNivel();
-			DialogoNivel.execute();
-			
 		}
 	});
 		
@@ -183,7 +163,7 @@ public class ll_Inicio_Login extends Activity {
 				if(btn_Apuntamiento.getText().toString().equals("Disable")){
 					FuncionEnviar("rx pointing disable");
 					btn_Apuntamiento.setText("Enable");
-					
+				
 				}
 				else{
 					FuncionEnviar("rx pointing enable");
@@ -219,6 +199,7 @@ public class ll_Inicio_Login extends Activity {
 					FuncionEnviar("tx cw on");
 					Toast.makeText(getApplicationContext(), "CW ON", Toast.LENGTH_SHORT).show();
 					
+					
 				}
 				else{
 					FuncionEnviar("tx cw off");
@@ -229,12 +210,19 @@ public class ll_Inicio_Login extends Activity {
 		
 		TB_Pointing.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
+			
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if (isChecked){
 					FuncionEnviar("rx pointing on");
+					Lectura_pointing=true;
+					Hilo();
+				      th1.start();
+					
 				}else{
 					FuncionEnviar("rx pointing off");
+					Lectura_pointing=false;
+					
 				}
 				
 			}
@@ -248,6 +236,7 @@ public class ll_Inicio_Login extends Activity {
 		TextCWEstado=(TextView) findViewById(R.id.TextCWEstado);
 		TextPointing=(TextView) findViewById(R.id.TextPointing);
 		TextPrueba=(TextView) findViewById(R.id.TextPrueba);
+		TextNivel=(TextView) findViewById(R.id.TextNivel);
 		
 		btn_Ingresar=(Button) findViewById(R.id.btn_Ingresar);
 		btn_SetFreq=(Button) findViewById(R.id.btn_SetFreq);
@@ -336,20 +325,6 @@ public class ll_Inicio_Login extends Activity {
 				
 			}	
 			
-			if(detectorString.contains("pointing = on")){
-				
-							
-				Bool_pointing=true;
-				
-				
-				}	
-			if(detectorString.contains("pointing = off")){
-				
-				
-				Bool_pointing=false;
-				
-				
-				}	
 			
 			
 			if(detectorString.contains("Tx Frequency")){
@@ -368,7 +343,7 @@ public class ll_Inicio_Login extends Activity {
 			}
 			else
 			{
-			Log.d(TAG, "Linux");
+			Log.d(TAG, "Deshabilitado Telnet");
 			if (detectorString.contains("DRAM Test Successful")){
 				Log.d(TAG, "DRAM Test Successful antes");
 			}
@@ -550,8 +525,8 @@ public class ll_Inicio_Login extends Activity {
 						Log.d(TAG, "strInput: " + strInput);
 						FuncionDetectarComando(strInput,Habilitacion);
 						strInputGlobal=strInput;
-
-						DialogoNivel.execute();
+					
+						
 						}
 					Thread.sleep(500);
 				}
@@ -562,7 +537,10 @@ public class ll_Inicio_Login extends Activity {
 				
 				e.printStackTrace();
 			}
-
+			
+			
+			//DialogoNivel.execute();
+			
 		}
 
 		public void stop() {
@@ -573,83 +551,88 @@ public class ll_Inicio_Login extends Activity {
 
 	////////////***   Bluetooth    FIN ******///////////////////////////////
 
-	public class MedirBaliza extends AsyncTask<Void, Void, Void> {
-		
-	@Override 
-		protected void onPreExecute() {
-		
-		//TextPrueba.setText(strInputGlobal);
-		
-		}
-
-		@Override
-		protected Void doInBackground(Void... devices) {
-		
 	
-	//	progressBar_Apuntamiento.setProgress((int)(nivel*10.0));
-		
-	float nivel;
-				try {
-									
-				//	nivel= Float.parseFloat(String.valueOf(strInputGlobal));
-					//progressBar_Apuntamiento.setProgress((int)(nivel*10.0));
-					Log.d(TAG, "progress bar apuntamiento strInputGlobal ="+strInputGlobal);
-					Log.d(TAG, "progress bar apuntamiento nivel =");
-					
-					
-				} catch (NumberFormatException nfe){
-					Log.d(TAG, "progress bar apuntamiento mal="+strInputGlobal);
-					
-			}
-			
-			
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-			super.onPostExecute(result);
-			
-		}
-
-	}
-
 
 	public class VentanaDialogoNivel extends AsyncTask<Void, Void, Void> {
 		
 	@Override 
 		protected void onPreExecute() {
-		String[] NivelesAlmacenados = strInputGlobal.split("\r");
-		
-		float nivelFlotante= Float.parseFloat(NivelesAlmacenados[0])*100;
-		int NivelBaliza=(int)nivelFlotante;
-		TextPrueba.setText("String: "+NivelesAlmacenados[0]+" float * 10:  "+nivelFlotante +" integer:  "+NivelBaliza);
-		
-		progressDialog.setProgress(NivelBaliza);
-	
 		}
 
 		@Override
 		protected Void doInBackground(Void... devices) {
-		
-	
-	
-			
-			
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
+			//Toast.makeText(getApplicationContext(), "entro", Toast.LENGTH_SHORT).show();
 			
+			String[] NivelesAlmacenados = strInputGlobal.split("\r");
 			
+			try {
+				float nivelFlotante= Float.parseFloat(NivelesAlmacenados[0])*100;
+				int NivelBaliza=(int)nivelFlotante;
+				//TextPrueba.setText("String: "+NivelesAlmacenados[0]+" float * 10:  "+nivelFlotante +" integer:  "+NivelBaliza);
+				progressBar_Apuntamiento.setProgress(NivelBaliza);
+				TextNivel.setText("Nivel= -"+NivelBaliza+" dbm");
+				
+			} catch (Exception e) {
+				progressBar_Apuntamiento.setProgress(0);
+				TextNivel.setText("Nivel= -  dbm");
+			//	Toast.makeText(getApplicationContext(), "No hay medicion", Toast.LENGTH_SHORT).show();
+				
+			}
 			
+			strInputGlobal="";
 		}
 
 	}
 
-
+	public void Hilo() {
+		Log.d("Hilo", "th1 = new Thread(new Runnable()");
+		th1 = new Thread(new Runnable() {
+        	
+		
+            @Override
+            public void run() {
+            	try {
+            		Log.d("Hilo", "th1 = Thread.sleep(11000)");
+            		Thread.sleep(11000);
+					
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+            	
+            	
+            	
+            	while(Lectura_pointing){
+            		Log.d("Hilo", "while");
+              try {
+            		Log.d("Hilo", "th1 = Thread.sleep(1000)");
+				Thread.sleep(1000);
+				Log.d("Hilo", "DialogoNivel.execute()");
+				DialogoNivel= new VentanaDialogoNivel();
+				DialogoNivel.execute();
+				
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				Lectura_pointing=false;
+				e.printStackTrace();
+			}
+            	}
+         
+          
+            }
+            
+			
+           });
+		
+	}
+	
+	
+	
 	}
 	
 	
