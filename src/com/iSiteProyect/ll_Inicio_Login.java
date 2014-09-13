@@ -58,7 +58,7 @@ public class ll_Inicio_Login extends Activity {
 
 	//////////////////////////////////////////////////////////////////
 	public ProgressBar progressBarBoot;
-	public ProgressDialog progressDialog;
+	public ProgressDialog progressDialog,progressDialog2;
 
 	public Button btn_LogOut;
 	public Spinner spin_TX,spin_RX,spin_Otros;
@@ -112,7 +112,7 @@ public class ll_Inicio_Login extends Activity {
 	
 		@Override
 		public void onClick(View v) {
-
+		
 		}
 	});
 		
@@ -149,7 +149,7 @@ public class ll_Inicio_Login extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				progressDialog.show();	
+			
 				Log.d(TAG, "boton opt");
 				
 			}
@@ -566,10 +566,12 @@ public class ll_Inicio_Login extends Activity {
 				int NivelBaliza=(int)nivelFlotante;
 				//TextPrueba.setText("String: "+NivelesAlmacenados[0]+" float * 10:  "+nivelFlotante +" integer:  "+NivelBaliza);
 				progressBar_Apuntamiento.setProgress(NivelBaliza);
+				
 				TextNivel.setText("Nivel= -"+NivelBaliza+" dbm");
 				
 			} catch (Exception e) {
 				progressBar_Apuntamiento.setProgress(0);
+				
 				TextNivel.setText("Nivel= -  dbm");
 			//	Toast.makeText(getApplicationContext(), "No hay medicion", Toast.LENGTH_SHORT).show();
 				
@@ -609,26 +611,23 @@ public class ll_Inicio_Login extends Activity {
 					// TODO: handle exception
 				}
             	
-            	
+          
             	
             	while(Lectura_pointing){
             		Log.d("Hilo", "while");
-              try {
-            	//	Log.d("Hilo", "th1 = Thread.sleep(1000)");
-				Thread.sleep(1000);
+           try {
+            	Thread.sleep(1000);
 				Log.d("Hilo", "DialogoNivel.execute()");
 				DialogoNivel= new VentanaDialogoNivel();
 				DialogoNivel.execute();
 				
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				Lectura_pointing=false;
 				e.printStackTrace();
 			}
             	}
             	FuncionEnviar("tx iflDC on");
             	progressBar_Apuntamiento.setProgress(0);
-        		
             	
             }
           });
