@@ -52,11 +52,11 @@
         <Button
             android:id="@+id/btn_SetFreq"
             style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
+            android:layout_width="63dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:layout_marginTop="20dp"
-            android:text="Setear Frecuencia" />
+            android:text="Set Freq" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -65,11 +65,13 @@
 
             <EditText
                 android:id="@+id/EditFreq"
-                android:layout_width="108dp"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:ems="10"
                 android:inputType="numberDecimal"
+                android:maxLength="8"
+                android:maxWidth="7dp"
                 android:text="1000.0" />
 
             <TextView
@@ -104,6 +106,58 @@
                 android:layout_height="wrap_content"
                 android:text="CW Apagada" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Power" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="-" />
+
+                <EditText
+                    android:id="@+id/EditTxPower"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:includeFontPadding="true"
+                    android:inputType="number"
+                    android:maxLength="2" />
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="dbm" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_SetPower"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="63dp"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:text="Set" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout

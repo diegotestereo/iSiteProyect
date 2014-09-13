@@ -5,17 +5,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
+
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -57,25 +57,29 @@ public class ll_Inicio_Login extends Activity {
 	public BluetoothDevice mDevice;
 
 	//////////////////////////////////////////////////////////////////
+	// dialogos en progreso
 	public ProgressBar progressBarBoot;
 	public ProgressDialog progressDialog,progressDialog2;
+	public ProgressDialog progressDialogInicio;
+	public ProgressBar progressBar_Apuntamiento;
+	
 
 	public Button btn_LogOut;
 	public Spinner spin_TX,spin_RX,spin_Otros;
 	public ArrayAdapter<String> TxAdapter,RxAdapter,OtrosAdapter;
 
-	public Button btn_Ingresar,btn_Cargar_OPT,btn_SetFreq,btn_Reset,btn_Prueba;
+	public Button btn_Ingresar,btn_Cargar_OPT,btn_SetFreq,btn_Reset,btn_Prueba,btn_SetPower;
 	public ToggleButton TB_Login,TB_CwOnOff,TB_Pointing;
 	public TextView  TextFrecuenciaLeida,TextCWEstado,TextPointing,TextPrueba,TextNivel;
-	public EditText EditFreq,EditPass,EditPrueba;
+	public EditText EditFreq,EditPass,EditPrueba,EditTxPower;
 	
-	public ProgressDialog progressDialogBooteo;
-	public ProgressBar progressBar_Apuntamiento;
+	
+	// hilos
 	public Handler puente;
-	
+	public PantallaInicio Inicio;
 	public VentanaDialogoNivel DialogoNivel;
 	
-	public Boolean Lectura_pointing=false;
+	public Boolean Lectura_pointing=false,boolPassword=true;
 	public Thread th1;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,12 +91,10 @@ public class ll_Inicio_Login extends Activity {
 		mDevice = b.getParcelable(Homescreen.DEVICE_EXTRA);
 		mDeviceUUID = UUID.fromString(b.getString(Homescreen.DEVICE_UUID));
 		mMaxChars = b.getInt(Homescreen.BUFFER_SIZE);
-
 		Log.d(TAG, "OnCreate");
-		Toast.makeText(getApplicationContext(), "OnCreate", Toast.LENGTH_LONG).show();
 		LevantarXML();
 		SetupUI();
-		
+	
 		Botones();
 	
 		}
@@ -102,7 +104,7 @@ public class ll_Inicio_Login extends Activity {
 		TB_Login.setChecked(true);
 		progressBar_Apuntamiento.setMax(100);
 		progressBar_Apuntamiento.setProgress(0);
-		
+	
 		
 	}
 
@@ -191,6 +193,25 @@ public class ll_Inicio_Login extends Activity {
 			
 			}
 		});
+	
+		btn_SetPower.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				try {
+					int power=Integer.parseInt(EditTxPower.getText().toString());
+					FuncionEnviar("tx power -"+EditTxPower.getText().toString());
+						
+					
+					
+				} catch (Exception epower) {
+					Toast.makeText(getApplicationContext(), "Ingrese Potencia de Tx !!!", Toast.LENGTH_SHORT).show();
+				}
+			
+			
+			}
+		});
 		
 		TB_Pointing.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
@@ -234,7 +255,8 @@ public class ll_Inicio_Login extends Activity {
 		btn_Reset=(Button) findViewById(R.id.btn_Reset);
 		btn_Cargar_OPT=(Button) findViewById(R.id.btn_CargarOPT);
 		btn_Prueba=(Button) findViewById(R.id.btn_Prueba);
-
+		btn_SetPower=(Button) findViewById(R.id.btn_SetPower);
+		
 		TB_CwOnOff=(ToggleButton) findViewById(R.id.TB_CwOnOff);
 		TB_Login=(ToggleButton) findViewById(R.id.TB_Login);
 		TB_Pointing=(ToggleButton) findViewById(R.id.TB_Pointing);
@@ -242,6 +264,7 @@ public class ll_Inicio_Login extends Activity {
 		EditFreq=(EditText) findViewById(R.id.EditFreq);
 		EditPass=(EditText) findViewById(R.id.EditPass);
 		EditPrueba=(EditText) findViewById(R.id.EditPrueba);
+		EditTxPower=(EditText) findViewById(R.id.EditTxPower);
 		progressBar_Apuntamiento=(ProgressBar) findViewById(R.id.progressBar_Apuntamiento);
 	}
 
@@ -260,7 +283,9 @@ public class ll_Inicio_Login extends Activity {
 	}
 	
 	public void FuncionDetectarComando(String detectorString,Boolean hab){
-		Log.d(TAG, "Entrada General de Datos");
+	
+		
+		
 		
 		
 	if(hab){
@@ -270,11 +295,7 @@ public class ll_Inicio_Login extends Activity {
 				FuncionEnviar("admin");		
 			}
 		
-			if(detectorString.contains("Password:")){
-				Log.d(TAG, "Password:");
-				FuncionEnviar("P@55w0rd!");	
-			}
-			
+				
 			if(detectorString.contains(">")){
 				Log.d(TAG, "telnet >"+strInputGlobal);
 				
@@ -282,12 +303,12 @@ public class ll_Inicio_Login extends Activity {
 			if(detectorString.contains(("tx cw on"))||detectorString.contains("tx cw off")){
 				FuncionEnviar("tx cw");
 				
-				Log.d(TAG, "CW solo"+strInputGlobal); // FRANCO GIOVANAZZI MAMA SOFIA DIEGO 
+				Log.d(TAG, "CW solo"+strInputGlobal); // 
 				}	
 			
 			if(detectorString.contains("cw =")){
 				
-					Log.d(TAG, "CW ="+strInputGlobal); // FRANCO GIOVANAZZI MAMA SOFIA DIEGO 
+					Log.d(TAG, "CW ="+strInputGlobal); //
 					
 				TextCWEstado.post(new Runnable() {
 						
@@ -318,7 +339,7 @@ public class ll_Inicio_Login extends Activity {
 			
 			
 			if(detectorString.contains("Tx Frequency")){
-			//	Log.d(TAG, ""+strInputGlobal); // FRANCO GIOVANAZZI MAMA SOFIA DIEGO 
+			//	Log.d(TAG, ""+strInputGlobal); // 
 				
 				TextFrecuenciaLeida.post(new Runnable() {
 					
@@ -349,14 +370,24 @@ public class ll_Inicio_Login extends Activity {
 			if(detectorString.contains("Password:")){
 			Log.d(TAG, "Password:");
 			
-		
-		FuncionEnviar("P@55w0rd!");	
-		}
-		if(detectorString.contains("#")){
+			if(boolPassword){
+				FuncionEnviar("P@55w0rd!");
+				Log.d(TAG, "BoolPassword: "+boolPassword);}
 			
-		Log.d(TAG, "Linux  # "+hab);
+			else{
+				FuncionEnviar("iDirect");
+				Log.d(TAG, "BoolPassword: "+boolPassword);}
+			}
+			if(detectorString.contains("Login incorrect")){
+				boolPassword=false;
+				Log.d(TAG, "BoolPassword: "+boolPassword);
 		
-		}
+			}
+			if(detectorString.contains("#")){
+			
+				Log.d(TAG, "Esta logueado en Linux  # "+hab);
+		
+			}
 		}
 	
 	}
@@ -443,7 +474,9 @@ public class ll_Inicio_Login extends Activity {
 
 		@Override 
 		protected void onPreExecute() {
-			progressDialog = ProgressDialog.show(ll_Inicio_Login.this, "Espere un momento...", "Conectando");// http://stackoverflow.com/a/11130220/1287554
+			progressDialog = ProgressDialog.show(ll_Inicio_Login.this, "Modulo Bluetooth...", "Conectando");// http://stackoverflow.com/a/11130220/1287554
+
+			
 		}
 
 		@Override
@@ -477,6 +510,12 @@ public class ll_Inicio_Login extends Activity {
 			}
 
 			progressDialog.dismiss();
+			Inicio= new PantallaInicio();
+			Inicio.execute();
+			
+			
+			
+			
 		}
 
 	}
@@ -557,7 +596,6 @@ public class ll_Inicio_Login extends Activity {
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-			//Toast.makeText(getApplicationContext(), "entro", Toast.LENGTH_SHORT).show();
 			
 			String[] NivelesAlmacenados = strInputGlobal.split("\r");
 			
@@ -633,7 +671,51 @@ public class ll_Inicio_Login extends Activity {
           });
 		}
 	
-	
+	public class PantallaInicio extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected void onPreExecute() {
+			progressDialogInicio = ProgressDialog.show(ll_Inicio_Login.this, "Conectado al Modem iDirect", "Espere un momento por favor...", true, false);
+
+		
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			String[] cadena = strInputGlobal.split("\r");
+			try {
+				
+				FuncionEnviar("\n");
+				try {
+					Thread.sleep(1000);
+					
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+				if(cadena[3].equals(">")){
+					Log.d("Asinc PantallaInicio cadena: ",cadena[3] );
+				}
+				Log.d("Asinc PantallaInicio cadena 0 : ",cadena[0] );
+				Log.d("Asinc PantallaInicio cadena 1 : ",cadena[1] );
+				Log.d("Asinc PantallaInicio cadena 2 : ",cadena[2] );
+				Log.d("Asinc PantallaInicio cadena 3 : ",cadena[3] );
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			progressDialogInicio.dismiss();
+			
+		
+		}
+
+	}
 
 	
 	}
