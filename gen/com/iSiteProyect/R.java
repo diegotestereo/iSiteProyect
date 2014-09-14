@@ -20,6 +20,10 @@ public final class R {
         public static final int blanco=0x7f060003;
         public static final int gris=0x7f060004;
         public static final int negro=0x7f060002;
+        public static final int rojoclaro=0x7f060006;
+        public static final int rojofuerte=0x7f060005;
+        public static final int verdeclaro=0x7f060008;
+        public static final int verdefuerte=0x7f060007;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -34,8 +38,11 @@ public final class R {
     public static final class drawable {
         public static final int back=0x7f020000;
         public static final int fondo=0x7f020001;
-        public static final int ic_launcher=0x7f020002;
-        public static final int logo=0x7f020003;
+        public static final int fondo_rojo=0x7f020002;
+        public static final int fondo_verde=0x7f020003;
+        public static final int ic_launcher=0x7f020004;
+        public static final int logo=0x7f020005;
+        public static final int selectorboton=0x7f020006;
     }
     public static final class id {
         public static final int EditFrecuencia=0x7f0b0029;

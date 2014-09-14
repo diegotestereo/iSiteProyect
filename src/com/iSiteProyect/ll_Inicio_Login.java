@@ -7,12 +7,14 @@ import java.util.UUID;
 
 
 
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -43,7 +45,7 @@ public class ll_Inicio_Login extends Activity {
 	public ReadInput mReadThread = null;
 
 	public boolean mIsUserInitiatedDisconnect = false;
-	public Boolean Apuntamiento=false,Booteo=true,Habilitacion=true;
+	public Boolean Apuntamiento=false,Booteo=true,Habilitacion=false;
 
 	public UUID mDeviceUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // Standard SPP UUID
 	
@@ -111,7 +113,8 @@ public class ll_Inicio_Login extends Activity {
 	
 		@Override
 		public void onClick(View v) {
-		
+		FuncionEnviar("exit");
+		TB_Login.setChecked(false);
 		}
 	});
 		
@@ -138,8 +141,7 @@ public class ll_Inicio_Login extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				TB_Login.setChecked(true);	
-			FuncionEnviar("telnet localhost");
+				FuncionEnviar("telnet localhost");
 				
 			}
 		});
@@ -199,10 +201,8 @@ public class ll_Inicio_Login extends Activity {
 			public void onClick(View v) {
 				
 				try {
-					int power=Integer.parseInt(EditTxPower.getText().toString());
-					FuncionEnviar("tx power -"+EditTxPower.getText().toString());
-						
 					
+					FuncionEnviar("tx power -"+EditTxPower.getText().toString());
 					
 				} catch (Exception epower) {
 					Toast.makeText(getApplicationContext(), "Ingrese Potencia de Tx !!!", Toast.LENGTH_SHORT).show();
@@ -254,7 +254,7 @@ public class ll_Inicio_Login extends Activity {
 		btn_Cargar_OPT=(Button) findViewById(R.id.btn_CargarOPT);
 		btn_Prueba=(Button) findViewById(R.id.btn_Prueba);
 		btn_SetPower=(Button) findViewById(R.id.btn_SetPower);
-		
+	
 		TB_CwOnOff=(ToggleButton) findViewById(R.id.TB_CwOnOff);
 		TB_Login=(ToggleButton) findViewById(R.id.TB_Login);
 		TB_Pointing=(ToggleButton) findViewById(R.id.TB_Pointing);
@@ -281,8 +281,6 @@ public class ll_Inicio_Login extends Activity {
 	}
 	
 	public void FuncionDetectarComando(String detectorString,Boolean hab){
-	
-		
 		
 		Log.d("FuncionDetectarComando", "detector string: "+detectorString+" Boolean: "+hab);
 		String[] CadenaPartida = detectorString.split("\r");
@@ -294,37 +292,49 @@ public class ll_Inicio_Login extends Activity {
 				}
 
 		
-	if(hab){
+	if(hab){	//btn_telnet.setBackgroundColor(Color.GREEN);
+				//btn_linux.setBackgroundColor(Color.RED);
 		
 			if (detectorString.contains("Username:")){
 			
 				FuncionEnviar("admin");		
 			}
+			
 			if(detectorString.contains("Password:")){
-			//	Log.d(TAG, "Telnet Password:");
-				FuncionEnviar(""+EditPass.getText().toString());		
-			}
 				
+				final String pass=EditPass.getText().toString();
+				
+				 runOnUiThread(new Runnable() {
+				       
+							        public void run() {
+							        	Log.d("FuncionDetectarComando","PASS EDIT: "+pass);
+										  }
+							    });
+				 FuncionEnviar(pass);	
+						}	
+				
+				//FuncionEnviar(""+EditPass.getText().toString());		
+					
+							
 			if(detectorString.contains(">")){
-				//Log.d(TAG, "telnet >"+strInputGlobal);
 				
-			}	
+				 runOnUiThread(new Runnable() {
+				      
+							        public void run() {
+										  Toast.makeText(getApplicationContext(), " telnet !! ", Toast.LENGTH_SHORT).show();
+									       }
+							    });
+			
+				}	
 			if(detectorString.contains(("tx cw on"))||detectorString.contains("tx cw off")){
 				FuncionEnviar("tx cw");
-				
-				//Log.d(TAG, "CW solo"+strInputGlobal); // 
 				}	
 			
 			if(detectorString.contains("cw =")){
-				
-				//	Log.d(TAG, "CW ="+strInputGlobal); //
 				 	  runOnUiThread(new Runnable() {
-
-					        int posicion =strInputGlobal.indexOf("=");
-					    
+		        int posicion =strInputGlobal.indexOf("=");
 					        public void run() {
-					            
-								  Toast.makeText(getApplicationContext(), " Clean Carrier = "+strInputGlobal.substring(posicion+2,posicion+5), Toast.LENGTH_SHORT).show();
+								  Toast.makeText(getApplicationContext(), " Clean Carrier = "+strInputGlobal.substring(posicion+2,posicion+5), Toast.LENGTH_LONG).show();
 							       }
 					    });
 					
@@ -332,56 +342,38 @@ public class ll_Inicio_Login extends Activity {
 			
 			if(detectorString.contains("pointing =")){
 				 runOnUiThread(new Runnable() {
-
-					        int posicion =strInputGlobal.indexOf("=");
-					    
+		        int posicion =strInputGlobal.indexOf("=");
 					        public void run() {
-					        	 Toast.makeText(getApplicationContext(), "Point = "+strInputGlobal.substring(posicion+2,posicion+5), Toast.LENGTH_SHORT).show();
-							      
-							    //    Log.d(TAG, "Pointing = "+strInputGlobal.substring(posicion+2,posicion+5)); 
+					        	 Toast.makeText(getApplicationContext(), "Point = "+strInputGlobal.substring(posicion+2,posicion+5), Toast.LENGTH_LONG).show();
 							        }
 					    });
 			}	
 			
 			if(detectorString.contains("power =")){
 				 runOnUiThread(new Runnable() {
-
-					        int posicion =strInputGlobal.indexOf("=");
-					    
+					 int posicion =strInputGlobal.indexOf("=");
 					        public void run() {
-					        
-					        	 Toast.makeText(getApplicationContext(), "Tx Power = "+strInputGlobal.substring(posicion+2,posicion+5)+" dbm", Toast.LENGTH_SHORT).show();
-						        	
+					        	 Toast.makeText(getApplicationContext(), "Tx Power = "+strInputGlobal.substring(posicion+2,posicion+5)+" dbm", Toast.LENGTH_LONG).show();
 					        }
 					    });
 			}	
-			
-			
 			if(detectorString.contains("Tx Frequency")){
-				
-				
 				 runOnUiThread(new Runnable() {
 
 				        int posicion =strInputGlobal.indexOf("=");
 				    
 				        public void run() {
-				        	   Toast.makeText(getApplicationContext(), "Freq = "+strInputGlobal.substring(posicion+2,posicion+15), Toast.LENGTH_SHORT).show();
+				        	   Toast.makeText(getApplicationContext(), "Freq = "+strInputGlobal.substring(posicion+2,posicion+15), Toast.LENGTH_LONG).show();
 							       }
 				    });
 				}	
-			
-			
-			
 			}
 	
 			else
 			{
-		//	Log.d("Linux", "Deshabilitado Telnet");
+			
 				
 			if (detectorString.contains("iDirect login:")){
-		//	Log.d("Linux", "iDirect login:");
-     	//	Log.d("Linux", ""+strInputGlobal); // 
-			
 			FuncionEnviar("root");		
 			}
 			if(detectorString.contains("Password:")){
@@ -389,25 +381,35 @@ public class ll_Inicio_Login extends Activity {
 			
 			if(boolPassword){
 				FuncionEnviar("P@55w0rd!");
-				//Log.d("Linux", "BoolPassword: "+boolPassword);
+				Log.d("FuncionDetectarComando","FuncionEnviar(P@55w0rd!);");
+				
 				}
 			
 			else{
 				FuncionEnviar("iDirect");
-				//	Log.d("Linux", "BoolPassword: "+boolPassword);
-				
+				Log.d("FuncionDetectarComando","FuncionEnviar(iDirect);");
 			
 			}
 			}
 			if(detectorString.contains("Login incorrect")){
-				boolPassword=false;
-				//	Log.d("Linux", "BoolPassword: "+boolPassword);
-		
+				
+				if (boolPassword){
+					boolPassword=false;
+				}else{
+					boolPassword=true;
+				}
+				
+			
 			}
-			if(detectorString.contains("#")){
-				TB_Login.setChecked(true);
-				//	Log.d("Linux", "Esta logueado en Linux  # "+hab);
-		
+			if(detectorString.contains(("Linux iDirect"))||detectorString.contains("#")){
+				 runOnUiThread(new Runnable() {
+         	        public void run() {
+         	       	TB_Login.setChecked(true);
+    				
+         	        }
+         	    });
+				
+			
 			}
 		}
 	

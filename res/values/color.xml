@@ -5,5 +5,9 @@
      <color name="negro">#000000</color>
      <color name="blanco">#FFFFFF</color>
       <color name="gris">#E6E6E6</color>
+     <color name="rojofuerte">#FF0000</color>
+     <color name="rojoclaro">#FA5858</color>
+     <color name="verdefuerte">#40FF00</color>
+     <color name="verdeclaro">#82FA58</color>
    
 </resources>
