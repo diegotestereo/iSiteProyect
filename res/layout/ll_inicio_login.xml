@@ -27,71 +27,70 @@
         android:inputType="textPassword"
         android:text="P@55w0rd!" />
 
-    <Button
-        android:id="@+id/btn_Ingresar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:text="Login Telnet" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
 
-    <ToggleButton
-        android:id="@+id/TB_Login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="ToggleButton" />
+        <ToggleButton
+            android:id="@+id/TB_Login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ToggleButton" />
+
+        <Button
+            android:id="@+id/btn_Ingresar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Login Telnet" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="113dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/fondo" >
-
-        <Button
-            android:id="@+id/btn_SetFreq"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="63dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp"
-            android:text="Set Freq" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/btn_SetFreq"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="63dp"
+                android:layout_height="wrap_content"
+              
+                android:text="Set Freq" />
 
             <EditText
                 android:id="@+id/EditFreq"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+               
                 android:ems="10"
                 android:inputType="numberDecimal"
                 android:maxLength="8"
                 android:maxWidth="7dp"
-                android:text="1000.0" />
+                android:text="1000.0" >
 
-            <TextView
-                android:id="@+id/TextFrecuenciaLeida"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1000.0 Mhz" />
+                <requestFocus />
+            </EditText>
+
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Mhz" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="CW" />
 
             <ToggleButton
                 android:id="@+id/TB_CwOnOff"
@@ -99,12 +98,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="ToggleButton" />
-
-            <TextView
-                android:id="@+id/TextCWEstado"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="CW Apagada" />
         </LinearLayout>
 
         <LinearLayout
@@ -145,19 +138,16 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="dbm" />
-
             </LinearLayout>
 
             <Button
                 android:id="@+id/btn_SetPower"
                 style="?android:attr/buttonStyleSmall"
                 android:layout_width="63dp"
-                android:layout_gravity="center"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:text="Set" />
-
         </LinearLayout>
-
     </LinearLayout>
 
     <LinearLayout
@@ -204,42 +194,44 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="TextView" />
-
         </LinearLayout>
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/EditPrueba"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10" >
+        android:orientation="vertical" >
 
-        <requestFocus />
-    </EditText>
+        <Button
+            android:id="@+id/btn_CargarOPT"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cargar OPT" />
 
-    <TextView
-        android:id="@+id/TextPrueba"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
+        <Button
+            android:id="@+id/btn_Reset"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Reset" />
 
-    <Button
-        android:id="@+id/btn_Prueba"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button" />
+        <EditText
+            android:id="@+id/EditPrueba"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Prueba" />
 
-    <Button
-        android:id="@+id/btn_CargarOPT"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="76dp"
-        android:text="Cargar OPT" />
+        <TextView
+            android:id="@+id/TextPrueba"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Prueba" />
 
-    <Button
-        android:id="@+id/btn_Reset"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Reset" />
+        <Button
+            android:id="@+id/btn_Prueba"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="prueba" />
+    </LinearLayout>
 
 </LinearLayout>

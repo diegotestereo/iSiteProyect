@@ -70,15 +70,13 @@ public class ll_Inicio_Login extends Activity {
 
 	public Button btn_Ingresar,btn_Cargar_OPT,btn_SetFreq,btn_Reset,btn_Prueba,btn_SetPower;
 	public ToggleButton TB_Login,TB_CwOnOff,TB_Pointing;
-	public TextView  TextFrecuenciaLeida,TextCWEstado,TextPointing,TextPrueba,TextNivel;
+	public TextView  TextPointing,TextPrueba,TextNivel;
 	public EditText EditFreq,EditPass,EditPrueba,EditTxPower;
-	
-	
+		
 	// hilos
-	public Handler puente;
-	public PantallaInicio Inicio;
-	public VentanaDialogoNivel DialogoNivel;
 	
+	public Handler puente;
+	public VentanaDialogoNivel DialogoNivel;
 	public Boolean Lectura_pointing=false,boolPassword=true;
 	public Thread th1;
 	@Override
@@ -101,11 +99,10 @@ public class ll_Inicio_Login extends Activity {
 	
 	
 	private void SetupUI() {
-		TB_Login.setChecked(true);
+		TB_Login.setChecked(false);
 		progressBar_Apuntamiento.setMax(100);
 		progressBar_Apuntamiento.setProgress(0);
 	
-		
 	}
 
 	private void Botones() {
@@ -132,7 +129,7 @@ public class ll_Inicio_Login extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				//FuncionEnviar("reset board");
+				FuncionEnviar("reset board");
 				progressDialog.cancel();
 			}
 		});
@@ -182,14 +179,16 @@ public class ll_Inicio_Login extends Activity {
 				if (isChecked){
 					FuncionEnviar("rx iflDC off");
 					FuncionEnviar("tx cw on");
-					Toast.makeText(getApplicationContext(), "CW ON", Toast.LENGTH_SHORT).show();
+					//Toast.makeText(getApplicationContext(), "CW ON", Toast.LENGTH_SHORT).show();
 					
 					
 				}
 				else{
-					FuncionEnviar("rx iflDC on");
 					FuncionEnviar("tx cw off");
-				Toast.makeText(getApplicationContext(), "CW OFF", Toast.LENGTH_SHORT).show();}
+					FuncionEnviar("rx iflDC on");
+				
+				//Toast.makeText(getApplicationContext(), "CW OFF", Toast.LENGTH_SHORT).show();
+				}
 			
 			}
 		});
@@ -242,10 +241,9 @@ public class ll_Inicio_Login extends Activity {
 	
 	}
 
+	
 	private void  LevantarXML() {
-		
-		TextFrecuenciaLeida=(TextView) findViewById(R.id.TextFrecuenciaLeida);
-		TextCWEstado=(TextView) findViewById(R.id.TextCWEstado);
+	
 		TextPointing=(TextView) findViewById(R.id.TextPointing);
 		TextPrueba=(TextView) findViewById(R.id.TextPrueba);
 		TextNivel=(TextView) findViewById(R.id.TextNivel);
@@ -286,106 +284,129 @@ public class ll_Inicio_Login extends Activity {
 	
 		
 		
-		
+		Log.d("FuncionDetectarComando", "detector string: "+detectorString+" Boolean: "+hab);
+		String[] CadenaPartida = detectorString.split("\r");
+		int longitug =CadenaPartida.length;
+		Log.d("FuncionDetectarComando","Esta es la longitud  "+longitug);
+
+		for(int i=0;i<longitug;i++){
+		Log.d("FuncionDetectarComando","Esta es la cadena "+i+": "+CadenaPartida[i]+"-");
+				}
+
 		
 	if(hab){
 		
 			if (detectorString.contains("Username:")){
-				Log.d(TAG, "Username:");
+			
 				FuncionEnviar("admin");		
 			}
-		
+			if(detectorString.contains("Password:")){
+			//	Log.d(TAG, "Telnet Password:");
+				FuncionEnviar(""+EditPass.getText().toString());		
+			}
 				
 			if(detectorString.contains(">")){
-				Log.d(TAG, "telnet >"+strInputGlobal);
+				//Log.d(TAG, "telnet >"+strInputGlobal);
 				
 			}	
 			if(detectorString.contains(("tx cw on"))||detectorString.contains("tx cw off")){
 				FuncionEnviar("tx cw");
 				
-				Log.d(TAG, "CW solo"+strInputGlobal); // 
+				//Log.d(TAG, "CW solo"+strInputGlobal); // 
 				}	
 			
 			if(detectorString.contains("cw =")){
 				
-					Log.d(TAG, "CW ="+strInputGlobal); //
-					
-				TextCWEstado.post(new Runnable() {
-						
-				        public void run() {
-				        
-				        int posicion =strInputGlobal.indexOf("=");
-				        TextCWEstado.setText("CW = "+strInputGlobal.substring(posicion+2,posicion+5));
-				        
-				        }
-				    });
+				//	Log.d(TAG, "CW ="+strInputGlobal); //
+				 	  runOnUiThread(new Runnable() {
+
+					        int posicion =strInputGlobal.indexOf("=");
+					    
+					        public void run() {
+					            
+								  Toast.makeText(getApplicationContext(), " Clean Carrier = "+strInputGlobal.substring(posicion+2,posicion+5), Toast.LENGTH_SHORT).show();
+							       }
+					    });
 					
 				}	
 			
 			if(detectorString.contains("pointing =")){
-				TextCWEstado.post(new Runnable() {
-					
-			        public void run() {
-			        
-			        int posicion =strInputGlobal.indexOf("=");
-			        TextPointing.setText("Point "+strInputGlobal.substring(posicion+2,posicion+5));
-			        Log.d(TAG, "Pointing = "+strInputGlobal.substring(posicion+2,posicion+5)); // FRANCO GIOVANAZZI MAMA SOFIA DIEGO 
-			     
-			        }
-			    });
-				
+				 runOnUiThread(new Runnable() {
+
+					        int posicion =strInputGlobal.indexOf("=");
+					    
+					        public void run() {
+					        	 Toast.makeText(getApplicationContext(), "Point = "+strInputGlobal.substring(posicion+2,posicion+5), Toast.LENGTH_SHORT).show();
+							      
+							    //    Log.d(TAG, "Pointing = "+strInputGlobal.substring(posicion+2,posicion+5)); 
+							        }
+					    });
+			}	
+			
+			if(detectorString.contains("power =")){
+				 runOnUiThread(new Runnable() {
+
+					        int posicion =strInputGlobal.indexOf("=");
+					    
+					        public void run() {
+					        
+					        	 Toast.makeText(getApplicationContext(), "Tx Power = "+strInputGlobal.substring(posicion+2,posicion+5)+" dbm", Toast.LENGTH_SHORT).show();
+						        	
+					        }
+					    });
 			}	
 			
 			
-			
 			if(detectorString.contains("Tx Frequency")){
-			//	Log.d(TAG, ""+strInputGlobal); // 
 				
-				TextFrecuenciaLeida.post(new Runnable() {
-					
-			        public void run() {
-			        
-			        int posicion =strInputGlobal.indexOf("=");
-			        	TextFrecuenciaLeida.setText(strInputGlobal.substring(posicion+2,posicion+15));
-			        
-			        }
-			    });
+				
+				 runOnUiThread(new Runnable() {
+
+				        int posicion =strInputGlobal.indexOf("=");
+				    
+				        public void run() {
+				        	   Toast.makeText(getApplicationContext(), "Freq = "+strInputGlobal.substring(posicion+2,posicion+15), Toast.LENGTH_SHORT).show();
+							       }
+				    });
 				}	
+			
+			
+			
 			}
+	
 			else
 			{
-			Log.d(TAG, "Deshabilitado Telnet");
-			if (detectorString.contains("DRAM Test Successful")){
-				Log.d(TAG, "DRAM Test Successful antes");
-			}
-			if(detectorString.contains("Uncompressing Linux")){
-				Log.d(TAG, "Uncompressing Linux");
-							}
-			
+		//	Log.d("Linux", "Deshabilitado Telnet");
+				
 			if (detectorString.contains("iDirect login:")){
-			Log.d(TAG, "iDirect login:");
-		
+		//	Log.d("Linux", "iDirect login:");
+     	//	Log.d("Linux", ""+strInputGlobal); // 
+			
 			FuncionEnviar("root");		
 			}
 			if(detectorString.contains("Password:")){
-			Log.d(TAG, "Password:");
+			Log.d("Linux", "Password:");
 			
 			if(boolPassword){
 				FuncionEnviar("P@55w0rd!");
-				Log.d(TAG, "BoolPassword: "+boolPassword);}
+				//Log.d("Linux", "BoolPassword: "+boolPassword);
+				}
 			
 			else{
 				FuncionEnviar("iDirect");
-				Log.d(TAG, "BoolPassword: "+boolPassword);}
+				//	Log.d("Linux", "BoolPassword: "+boolPassword);
+				
+			
+			}
 			}
 			if(detectorString.contains("Login incorrect")){
 				boolPassword=false;
-				Log.d(TAG, "BoolPassword: "+boolPassword);
+				//	Log.d("Linux", "BoolPassword: "+boolPassword);
 		
 			}
 			if(detectorString.contains("#")){
-			
-				Log.d(TAG, "Esta logueado en Linux  # "+hab);
+				TB_Login.setChecked(true);
+				//	Log.d("Linux", "Esta logueado en Linux  # "+hab);
 		
 			}
 		}
@@ -505,19 +526,13 @@ public class ll_Inicio_Login extends Activity {
 			} else {
 				msg("Connected to device");
 				mIsBluetoothConnected = true;
-				mReadThread = new ReadInput(); // Kick off input reader
-				
+				mReadThread = new ReadInput(); // Kick off input reader	
 			}
-
 			progressDialog.dismiss();
-			Inicio= new PantallaInicio();
-			Inicio.execute();
 			
-			
-			
+			FuncionEnviar("\r");
 			
 		}
-
 	}
 
 	public class ReadInput implements Runnable {
@@ -545,16 +560,11 @@ public class ll_Inicio_Login extends Activity {
 					if (inputStream.available() > 0) {
 						inputStream.read(buffer);
 						int i = 0;
-						/*
-						 * This is needed because new String(buffer) is taking the entire buffer i.e. 256 chars on Android 2.3.4 http://stackoverflow.com/a/8843462/1287554
-						 */
 						for (i = 0; i < buffer.length && buffer[i] != 0; i++) {
 						}
 						final String strInput = new String(buffer, 0, i);
-						Log.d(TAG, "strInput: " + strInput);
-						FuncionDetectarComando(strInput,Habilitacion);
 						strInputGlobal=strInput;
-					
+						FuncionDetectarComando(strInputGlobal,Habilitacion);
 						
 						}
 					Thread.sleep(500);
@@ -568,7 +578,7 @@ public class ll_Inicio_Login extends Activity {
 			}
 			
 			
-			//DialogoNivel.execute();
+			
 			
 		}
 
@@ -579,8 +589,6 @@ public class ll_Inicio_Login extends Activity {
 	}
 
 	////////////***   Bluetooth    FIN ******///////////////////////////////
-
-	
 
 	public class VentanaDialogoNivel extends AsyncTask<Void, Void, Void> {
 		
@@ -598,7 +606,7 @@ public class ll_Inicio_Login extends Activity {
 			super.onPostExecute(result);
 			
 			String[] NivelesAlmacenados = strInputGlobal.split("\r");
-			
+		
 			try {
 				float nivelFlotante= Float.parseFloat(NivelesAlmacenados[0])*100;
 				int NivelBaliza=(int)nivelFlotante;
@@ -670,53 +678,6 @@ public class ll_Inicio_Login extends Activity {
             }
           });
 		}
-	
-	public class PantallaInicio extends AsyncTask<Void, Void, Void> {
-
-		@Override
-		protected void onPreExecute() {
-			progressDialogInicio = ProgressDialog.show(ll_Inicio_Login.this, "Conectado al Modem iDirect", "Espere un momento por favor...", true, false);
-
-		
-		}
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			String[] cadena = strInputGlobal.split("\r");
-			try {
-				
-				FuncionEnviar("\n");
-				try {
-					Thread.sleep(1000);
-					
-				} catch (Exception e) {
-					// TODO: handle exception
-				}
-				if(cadena[3].equals(">")){
-					Log.d("Asinc PantallaInicio cadena: ",cadena[3] );
-				}
-				Log.d("Asinc PantallaInicio cadena 0 : ",cadena[0] );
-				Log.d("Asinc PantallaInicio cadena 1 : ",cadena[1] );
-				Log.d("Asinc PantallaInicio cadena 2 : ",cadena[2] );
-				Log.d("Asinc PantallaInicio cadena 3 : ",cadena[3] );
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-
-
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-			super.onPostExecute(result);
-			progressDialogInicio.dismiss();
-			
-		
-		}
-
-	}
-
 	
 	}
 	
