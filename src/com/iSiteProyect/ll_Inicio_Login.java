@@ -79,7 +79,8 @@ public class ll_Inicio_Login extends Activity {
 	
 	public Handler puente;
 	public VentanaDialogoNivel DialogoNivel;
-	public Boolean Lectura_pointing=false,boolPassword=true;
+	public Boolean Lectura_pointing=false,boolPassword=true, telnet=true;
+	;
 	public Thread th1;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -282,6 +283,7 @@ public class ll_Inicio_Login extends Activity {
 	
 	public void FuncionDetectarComando(String detectorString,Boolean hab){
 		
+		
 		Log.d("FuncionDetectarComando", "detector string: "+detectorString+" Boolean: "+hab);
 		String[] CadenaPartida = detectorString.split("\r");
 		int longitug =CadenaPartida.length;
@@ -292,8 +294,9 @@ public class ll_Inicio_Login extends Activity {
 				}
 
 		
-	if(hab){	//btn_telnet.setBackgroundColor(Color.GREEN);
-				//btn_linux.setBackgroundColor(Color.RED);
+	if(hab){	
+		
+		  
 		
 			if (detectorString.contains("Username:")){
 			
@@ -308,20 +311,20 @@ public class ll_Inicio_Login extends Activity {
 				       
 							        public void run() {
 							        	Log.d("FuncionDetectarComando","PASS EDIT: "+pass);
+							        	Toast.makeText(getApplicationContext(), "Password: "+pass, Toast.LENGTH_SHORT).show();
 										  }
 							    });
 				 FuncionEnviar(pass);	
 						}	
-				
-				//FuncionEnviar(""+EditPass.getText().toString());		
 					
 							
-			if(detectorString.contains(">")){
+			if(detectorString.contains(">")&telnet){
 				
+				telnet=false;
 				 runOnUiThread(new Runnable() {
-				      
+				       
 							        public void run() {
-										  Toast.makeText(getApplicationContext(), " telnet !! ", Toast.LENGTH_SHORT).show();
+										  Toast.makeText(getApplicationContext(), " Logueado en Telnet", Toast.LENGTH_SHORT).show();
 									       }
 							    });
 			
@@ -371,6 +374,7 @@ public class ll_Inicio_Login extends Activity {
 	
 			else
 			{
+				telnet =true;
 			
 				
 			if (detectorString.contains("iDirect login:")){
@@ -401,7 +405,7 @@ public class ll_Inicio_Login extends Activity {
 				
 			
 			}
-			if(detectorString.contains(("Linux iDirect"))||detectorString.contains("#")){
+		/*	if(detectorString.contains(("Linux iDirect"))||CadenaPartida[2]==("#")){
 				 runOnUiThread(new Runnable() {
          	        public void run() {
          	       	TB_Login.setChecked(true);
@@ -410,7 +414,7 @@ public class ll_Inicio_Login extends Activity {
          	    });
 				
 			
-			}
+			}*/
 		}
 	
 	}
