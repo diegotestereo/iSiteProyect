@@ -1,9 +1,15 @@
 package com.iSiteProyect;
 
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
+
+
+
 
 
 
@@ -94,6 +100,9 @@ public class ll_Inicio_Login extends Activity {
 	
 	EditText EditPath;
 	
+	/// archivo procesamiento
+	 File f;
+	 FileReader lectorArchivo;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -163,11 +172,22 @@ public class ll_Inicio_Login extends Activity {
 		});
 				
 		btn_Cargar_OPT.setOnClickListener(new OnClickListener() {
+			 String p;
+			 String[] CadenaPartida;
+			 int longitudArchivo; 
 			
 			@Override
 			public void onClick(View v) {
 			
-				Log.d(TAG, "boton opt");
+				Log.d("OPT", "boton opt");
+				Log.d("OPT", EditPath.getText().toString());
+				p=LeerArchivo(EditPath.getText().toString());
+				CadenaPartida = p.split("\n");
+				longitudArchivo=CadenaPartida.length;
+				Log.d("OPT", "lineas= "+longitudArchivo);
+				for(int i=0;i<longitudArchivo;i++){
+					Log.d("OPT cargado: ",CadenaPartida[i]+" Linea N° "+i);
+				}
 				
 			}
 		});
@@ -303,10 +323,10 @@ public class ll_Inicio_Login extends Activity {
 		
 		Log.d("FuncionDetectarComando", "detector string: "+detectorString+" Boolean: "+hab);
 		String[] CadenaPartida = detectorString.split("\r");
-		int longitug =CadenaPartida.length;
-		Log.d("FuncionDetectarComando","Esta es la longitud  "+longitug);
+		int longitud =CadenaPartida.length;
+		Log.d("FuncionDetectarComando","Esta es la longitud  "+longitud);
 
-		for(int i=0;i<longitug;i++){
+		for(int i=0;i<longitud;i++){
 		Log.d("FuncionDetectarComando","Esta es la cadena "+i+": "+CadenaPartida[i]+"-");
 				}
 
@@ -718,6 +738,57 @@ public class ll_Inicio_Login extends Activity {
     	 }
     }
 	
+    public static String LeerArchivo(String nombre)
+
+	//El parametro nombre indica el nombre del archivo por ejemplo "prueba.txt" 
+
+	{
+
+	try{
+
+	File f;
+	FileReader lectorArchivo;
+
+	//Creamos el objeto del archivo que vamos a leer
+	f = new File(nombre);
+
+	//Creamos el objeto FileReader que abrira el flujo(Stream) de datos para realizar la lectura
+	lectorArchivo = new FileReader(f);
+
+	//Creamos un lector en buffer para recopilar datos a travez del flujo "lectorArchivo" que hemos creado
+	BufferedReader br = new BufferedReader(lectorArchivo);
+
+	String l="";
+	//Esta variable "l" la utilizamos para guardar mas adelante toda la lectura del archivo
+
+	String aux="";/*variable auxiliar*/
+
+	while(true)
+	//este ciclo while se usa para repetir el proceso de lectura, ya que se lee solo 1 linea de texto a la vez
+	{
+		aux=br.readLine();
+		//leemos una linea de texto y la guardamos en la variable auxiliar
+		if(aux!=null)
+		l=l+aux+"\n";
+		/*si la variable aux tiene datos se va acumulando en la variable l,
+		* en caso de ser nula quiere decir que ya nos hemos leido todo
+		* el archivo de texto*/
+
+		else
+		break;
+		}
+
+		br.close();
+
+		lectorArchivo.close();
+
+		return l;
+
+		}catch(IOException e){
+		System.out.println("Error:"+e.getMessage());
+		}
+		return null;
+		}
 	
 	
 	}
