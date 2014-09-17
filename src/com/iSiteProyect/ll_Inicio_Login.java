@@ -8,6 +8,9 @@ import java.util.UUID;
 
 
 
+
+
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -70,7 +73,7 @@ public class ll_Inicio_Login extends Activity {
 	public Spinner spin_TX,spin_RX,spin_Otros;
 	public ArrayAdapter<String> TxAdapter,RxAdapter,OtrosAdapter;
 
-	public Button btn_Ingresar,btn_Cargar_OPT,btn_SetFreq,btn_Reset,btn_Prueba,btn_SetPower;
+	public Button btn_Ingresar,btn_Cargar_OPT,btn_SetFreq,btn_Reset,btn_Browser,btn_SetPower;
 	public ToggleButton TB_Login,TB_CwOnOff,TB_Pointing;
 	public TextView  TextPointing,TextPrueba,TextNivel;
 	public EditText EditFreq,EditPass,EditPrueba,EditTxPower;
@@ -82,6 +85,16 @@ public class ll_Inicio_Login extends Activity {
 	public Boolean Lectura_pointing=false,boolPassword=true, telnet=true;
 	;
 	public Thread th1;
+	//
+	////// opt 
+	
+	private static final int REQUEST_PATH = 1;
+	 
+	String curFileName,curFilePath;
+	
+	EditText EditPath;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -110,12 +123,14 @@ public class ll_Inicio_Login extends Activity {
 
 	private void Botones() {
 		
-	btn_Prueba.setOnClickListener(new OnClickListener() {
-	
+		btn_Browser.setOnClickListener(new OnClickListener() {
+		
 		@Override
 		public void onClick(View v) {
-		FuncionEnviar("exit");
-		TB_Login.setChecked(false);
+		
+			Intent intent1 = new Intent(getApplicationContext(), FileChooser.class);
+	        startActivityForResult(intent1,REQUEST_PATH);
+		
 		}
 	});
 		
@@ -253,7 +268,7 @@ public class ll_Inicio_Login extends Activity {
 		btn_SetFreq=(Button) findViewById(R.id.btn_SetFreq);
 		btn_Reset=(Button) findViewById(R.id.btn_Reset);
 		btn_Cargar_OPT=(Button) findViewById(R.id.btn_CargarOPT);
-		btn_Prueba=(Button) findViewById(R.id.btn_Prueba);
+		btn_Browser=(Button) findViewById(R.id.btn_Browser);
 		btn_SetPower=(Button) findViewById(R.id.btn_SetPower);
 	
 		TB_CwOnOff=(ToggleButton) findViewById(R.id.TB_CwOnOff);
@@ -262,7 +277,7 @@ public class ll_Inicio_Login extends Activity {
 		
 		EditFreq=(EditText) findViewById(R.id.EditFreq);
 		EditPass=(EditText) findViewById(R.id.EditPass);
-		EditPrueba=(EditText) findViewById(R.id.EditPrueba);
+		EditPath=(EditText) findViewById(R.id.EditPath);
 		EditTxPower=(EditText) findViewById(R.id.EditTxPower);
 		progressBar_Apuntamiento=(ProgressBar) findViewById(R.id.progressBar_Apuntamiento);
 	}
@@ -684,6 +699,24 @@ public class ll_Inicio_Login extends Activity {
             }
           });
 		}
+	
+	//////////////////////// cargar opt
+	
+	
+	
+	 // Listen for results.
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        // See which child activity is calling us back.
+    	if (requestCode == REQUEST_PATH){
+    		if (resultCode == RESULT_OK) { 
+    			curFileName = data.getStringExtra("GetFileName"); 
+    			curFilePath = data.getStringExtra("GetPath"); 
+    			EditPath.setText(curFilePath+"/"+curFileName);
+    		}
+    	 }
+    }
+	
+	
 	
 	}
 	

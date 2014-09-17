@@ -6,7 +6,8 @@
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="17" />
@@ -40,7 +41,13 @@
               android:label="Proyecto iSite"></activity>
             <activity android:name="com.iSiteProyect.ll_Inicio_Login"
               android:label="Proyecto iSite"></activity>
-             
+               
+        <activity
+            android:name=".FileChooser"
+            android:label="Choose File" 
+            > 
+            
+        </activity>
     </application>
 
 </manifest>

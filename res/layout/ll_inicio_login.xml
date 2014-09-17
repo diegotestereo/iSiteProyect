@@ -217,23 +217,23 @@
             android:text="Reset" />
 
         <EditText
-            android:id="@+id/EditPrueba"
+            android:id="@+id/EditPath"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Prueba" />
+            android:hint="Path OPT" />
 
         <TextView
             android:id="@+id/TextPrueba"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Prueba" />
+            android:text="Path" />
 
         <Button
-            android:id="@+id/btn_Prueba"
-            android:layout_width="wrap_content"
+            android:id="@+id/btn_Browser"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="prueba" />
+            android:text="Buscar OPT descargado" />
     </LinearLayout>
 
 </LinearLayout>
