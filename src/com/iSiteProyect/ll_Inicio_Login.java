@@ -105,12 +105,12 @@ public class ll_Inicio_Login extends Activity {
 		mDevice = b.getParcelable(Homescreen.DEVICE_EXTRA);
 		mDeviceUUID = UUID.fromString(b.getString(Homescreen.DEVICE_UUID));
 		mMaxChars = b.getInt(Homescreen.BUFFER_SIZE);
-		Log.d(TAG, "OnCreate");
+		
 		LevantarXML();
 		SetupUI();
 	
 		Botones();
-	
+		Log.d(TAG, "OnCreate");
 		}
 	
 	
@@ -216,14 +216,16 @@ public class ll_Inicio_Login extends Activity {
 			@Override
 			public void onClick(View v) {
 				
-				try {
+				if(EditTxPower.getText().toString().equals(""))
+				{
+					Toast.makeText(getApplicationContext(), "Ingrese potencia !!", Toast.LENGTH_SHORT).show();
 					
-					FuncionEnviar("tx power -"+EditTxPower.getText().toString());
-					
-				} catch (Exception epower) {
-					Toast.makeText(getApplicationContext(), "Ingrese Potencia de Tx !!!", Toast.LENGTH_SHORT).show();
 				}
-			
+				else{FuncionEnviar("tx power -"+EditTxPower.getText().toString());}
+					
+					
+					
+					
 			
 			}
 		});
