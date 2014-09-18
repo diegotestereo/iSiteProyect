@@ -186,8 +186,19 @@ public class ll_Inicio_Login extends Activity {
 				longitudArchivo=CadenaPartida.length;
 				Log.d("OPT", "lineas= "+longitudArchivo);
 				for(int i=0;i<longitudArchivo;i++){
-					Log.d("OPT cargado: ",CadenaPartida[i]+" Linea N° "+i);
+					Log.d("OPT cargado: ",CadenaPartida[i]);
 				}
+				
+				FuncionEnviar("exit");
+				Log.d("	FuncionEnviar exit;",strInputGlobal);
+				TB_Login.setChecked(false);
+				Habilitacion=false;
+				FuncionEnviar("cd /etc/idirect/falcon");
+				Log.d("	FuncionEnviar cd /etc/idirect/falcon ;",strInputGlobal);
+				//FuncionEnviar("pwd");
+				
+				
+				
 				
 			}
 		});
@@ -412,7 +423,17 @@ public class ll_Inicio_Login extends Activity {
 			else
 			{
 				telnet =true;
-			
+				
+				
+				if (detectorString.contains("pwd")){
+					
+
+					        int posicion =strInputGlobal.indexOf("pwd");
+					    
+					       
+					        	Log.d("PWD","Directorio Linux pwd"+strInputGlobal.substring(posicion,posicion+15));
+									
+					}
 				
 			if (detectorString.contains("iDirect login:")){
 			FuncionEnviar("root");		
@@ -608,7 +629,7 @@ public class ll_Inicio_Login extends Activity {
 						final String strInput = new String(buffer, 0, i);
 						strInputGlobal=strInput;
 						FuncionDetectarComando(strInputGlobal,Habilitacion);
-						
+						Log.d("entrada de dato", strInput);
 						}
 					Thread.sleep(500);
 				}
