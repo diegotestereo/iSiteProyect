@@ -79,7 +79,7 @@ public class ll_Inicio_Login extends Activity {
 	public Spinner spin_TX,spin_RX,spin_Otros;
 	public ArrayAdapter<String> TxAdapter,RxAdapter,OtrosAdapter;
 
-	public Button btn_Ingresar,btn_Cargar_OPT,btn_SetFreq,btn_Reset,btn_Browser,btn_SetPower;
+	public Button btn_EnviarOPT,btn_exit,btn_Ingresar,btn_Cargar_OPT,btn_SetFreq,btn_Reset,btn_Browser,btn_SetPower;
 	public ToggleButton TB_Login,TB_CwOnOff,TB_Pointing;
 	public TextView  TextPointing,TextPrueba,TextNivel;
 	public EditText EditFreq,EditPass,EditPrueba,EditTxPower;
@@ -103,6 +103,11 @@ public class ll_Inicio_Login extends Activity {
 	/// archivo procesamiento
 	 File f;
 	 FileReader lectorArchivo;
+	 
+	 String p;
+	 String[] CadenaPartida;
+	 int longitudArchivo; 
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +136,16 @@ public class ll_Inicio_Login extends Activity {
 	}
 
 	private void Botones() {
+		
+		btn_exit.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+			FuncionEnviar("exit");
+			TB_Login.setChecked(false);
+			Habilitacion=false;
+			}
+		});
 		
 		btn_Browser.setOnClickListener(new OnClickListener() {
 		
@@ -166,44 +181,35 @@ public class ll_Inicio_Login extends Activity {
 			
 			@Override
 			public void onClick(View v) {
+				Habilitacion=true;
+				TB_Login.setChecked(true);
 				FuncionEnviar("telnet localhost");
 				
 			}
 		});
 				
 		btn_Cargar_OPT.setOnClickListener(new OnClickListener() {
-			 String p;
-			 String[] CadenaPartida;
-			 int longitudArchivo; 
 			
 			@Override
 			public void onClick(View v) {
 			
 				Log.d("OPT", "boton opt");
-				Log.d("OPT", EditPath.getText().toString());
+				
 				p=LeerArchivo(EditPath.getText().toString());
+				
 				CadenaPartida = p.split("\n");
 				longitudArchivo=CadenaPartida.length;
+				
 				Log.d("OPT", "lineas= "+longitudArchivo);
+				
 				for(int i=0;i<longitudArchivo;i++){
 					Log.d("OPT cargado: ",CadenaPartida[i]);
 				}
-				
-				FuncionEnviar("exit");
-				Log.d("	FuncionEnviar exit;",strInputGlobal);
-				TB_Login.setChecked(false);
-				Habilitacion=false;
-				FuncionEnviar("cd /etc/idirect/falcon");
-				Log.d("	FuncionEnviar cd /etc/idirect/falcon ;",strInputGlobal);
-				//FuncionEnviar("pwd");
-				
-				
-				
-				
+			
+			
 			}
 		});
 		
-			
 		TB_Login.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
 			@Override
@@ -288,6 +294,19 @@ public class ll_Inicio_Login extends Activity {
 			}
 		});
 	
+		btn_EnviarOPT.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				FuncionEnviar("cd /etc/idirect/falcon");
+				FuncionEnviar("mv falcon.opt falcon.opt.old");
+				FuncionEnviar("cat> falcon.opt");
+				for(int i=0;i<longitudArchivo;i++){
+					FuncionEnviar(CadenaPartida[i]);
+				}
+				FuncionEnviar("service idirect_falcon restart");
+			}
+		});
 	}
 
 	
@@ -303,6 +322,8 @@ public class ll_Inicio_Login extends Activity {
 		btn_Cargar_OPT=(Button) findViewById(R.id.btn_CargarOPT);
 		btn_Browser=(Button) findViewById(R.id.btn_Browser);
 		btn_SetPower=(Button) findViewById(R.id.btn_SetPower);
+		btn_exit=(Button) findViewById(R.id.btn_exit);
+		btn_EnviarOPT=(Button) findViewById(R.id.btn_EnviarOPT);
 	
 		TB_CwOnOff=(ToggleButton) findViewById(R.id.TB_CwOnOff);
 		TB_Login=(ToggleButton) findViewById(R.id.TB_Login);
@@ -385,7 +406,7 @@ public class ll_Inicio_Login extends Activity {
 				 	  runOnUiThread(new Runnable() {
 		        int posicion =strInputGlobal.indexOf("=");
 					        public void run() {
-								  Toast.makeText(getApplicationContext(), " Clean Carrier = "+strInputGlobal.substring(posicion+2,posicion+5), Toast.LENGTH_LONG).show();
+								  Toast.makeText(getApplicationContext(), " Clean Carrier = "+strInputGlobal.substring(posicion+2,posicion+5), Toast.LENGTH_SHORT).show();
 							       }
 					    });
 					
@@ -395,16 +416,16 @@ public class ll_Inicio_Login extends Activity {
 				 runOnUiThread(new Runnable() {
 		        int posicion =strInputGlobal.indexOf("=");
 					        public void run() {
-					        	 Toast.makeText(getApplicationContext(), "Point = "+strInputGlobal.substring(posicion+2,posicion+5), Toast.LENGTH_LONG).show();
+					        	 Toast.makeText(getApplicationContext(), "Point = "+strInputGlobal.substring(posicion+2,posicion+5), Toast.LENGTH_SHORT).show();
 							        }
 					    });
 			}	
 			
-			if(detectorString.contains("power =")){
+			if(detectorString.contains("power =")||detectorString.contains("Tx Power   =")){
 				 runOnUiThread(new Runnable() {
 					 int posicion =strInputGlobal.indexOf("=");
 					        public void run() {
-					        	 Toast.makeText(getApplicationContext(), "Tx Power = "+strInputGlobal.substring(posicion+2,posicion+5)+" dbm", Toast.LENGTH_LONG).show();
+					        	 Toast.makeText(getApplicationContext(), "Tx Power = "+strInputGlobal.substring(posicion+2,posicion+5)+" dbm", Toast.LENGTH_SHORT).show();
 					        }
 					    });
 			}	
@@ -463,16 +484,7 @@ public class ll_Inicio_Login extends Activity {
 				
 			
 			}
-		/*	if(detectorString.contains(("Linux iDirect"))||CadenaPartida[2]==("#")){
-				 runOnUiThread(new Runnable() {
-         	        public void run() {
-         	       	TB_Login.setChecked(true);
-    				
-         	        }
-         	    });
-				
-			
-			}*/
+		
 		}
 	
 	}
@@ -744,9 +756,7 @@ public class ll_Inicio_Login extends Activity {
 		}
 	
 	//////////////////////// cargar opt
-	
-	
-	
+		
 	 // Listen for results.
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         // See which child activity is calling us back.

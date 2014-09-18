@@ -45,6 +45,12 @@
           
             android:text="Login Telnet" />
 
+        <Button
+            android:id="@+id/btn_exit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Exit" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -204,37 +210,54 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <Button
-            android:id="@+id/btn_CargarOPT"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Cargar OPT" />
-
-        <Button
-            android:id="@+id/btn_Reset"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Reset" />
-
         <EditText
             android:id="@+id/EditPath"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Path OPT"
-            android:text="/sdcard/Download/SN[16290].opt" />
+            android:text="/sdcard/Download/R28588.opt" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/btn_Browser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Buscar OPT descargado" />
+
+            <Button
+                android:id="@+id/btn_CargarOPT"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cargar OPT" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/btn_Reset"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Reset" />
+
+            <Button
+                android:id="@+id/btn_EnviarOPT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enviar OPT" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/TextPrueba"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Path" />
-
-        <Button
-            android:id="@+id/btn_Browser"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Buscar OPT descargado" />
     </LinearLayout>
 
 </LinearLayout>
