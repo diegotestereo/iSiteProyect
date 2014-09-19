@@ -293,18 +293,25 @@ public class ll_Inicio_Login extends Activity {
 				
 			}
 		});
-	
-		btn_EnviarOPT.setOnClickListener(new OnClickListener() {
-			
+			btn_EnviarOPT.setOnClickListener(new OnClickListener() {
+			char finCadena=0x03;
 			@Override
 			public void onClick(View v) {
 				FuncionEnviar("cd /etc/idirect/falcon");
 				FuncionEnviar("mv falcon.opt falcon.opt.old");
-				FuncionEnviar("cat> falcon.opt");
+				
+			//	FuncionEnviar("cat> falcon.opt");
+				FuncionEnviar("cat> pepe.opt");
 				for(int i=0;i<longitudArchivo;i++){
 					FuncionEnviar(CadenaPartida[i]);
 				}
-				FuncionEnviar("service idirect_falcon restart");
+				
+				FuncionEnviar(""+finCadena);
+			//	FuncionEnviar("service idirect_falcon restart");
+				
+				
+				
+				
 			}
 		});
 	}
