@@ -300,14 +300,15 @@ public class ll_Inicio_Login extends Activity {
 				FuncionEnviar("cd /etc/idirect/falcon");
 				FuncionEnviar("mv falcon.opt falcon.opt.old");
 				
-			//	FuncionEnviar("cat> falcon.opt");
-				FuncionEnviar("cat> pepe.opt");
+				FuncionEnviar("cat> falcon.opt");
+			//	FuncionEnviar("cat> pepe.opt");
 				for(int i=0;i<longitudArchivo;i++){
 					FuncionEnviar(CadenaPartida[i]);
 				}
 				
 				FuncionEnviar(""+finCadena);
-			//	FuncionEnviar("service idirect_falcon restart");
+			
+				FuncionEnviar("service idirect_falcon restart");
 				
 				
 				
