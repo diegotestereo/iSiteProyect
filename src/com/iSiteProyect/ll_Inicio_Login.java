@@ -4,6 +4,7 @@ package com.iSiteProyect;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
@@ -17,16 +18,28 @@ import java.util.UUID;
 
 
 
+
+
+
+
+
+
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.InputType;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -83,7 +96,7 @@ public class ll_Inicio_Login extends Activity {
 	public ToggleButton TB_Login,TB_CwOnOff,TB_Pointing;
 	public TextView  TextPointing,TextPrueba,TextNivel;
 	public EditText EditFreq,EditPass,EditPrueba,EditTxPower;
-		
+	public String password;
 	// hilos
 	
 	public Handler puente;
@@ -122,12 +135,48 @@ public class ll_Inicio_Login extends Activity {
 		
 		LevantarXML();
 		SetupUI();
-	
 		Botones();
 		Log.d(TAG, "OnCreate");
 		}
 	
 	
+	private void DialogoInicioPassword() {
+		
+		 AlertDialog.Builder alert = new AlertDialog.Builder(this);                 
+		 alert.setTitle("Login");  
+		 alert.setMessage("Ingrese la contraseña del equipo :");                
+
+		  // Set an EditText view to get user input   
+		  final EditText PasswordTelnet = new EditText(this); 
+		  PasswordTelnet.setTransformationMethod(PasswordTransformationMethod.getInstance());
+		  alert.setView(PasswordTelnet);
+		  
+		     alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {  
+		     public void onClick(DialogInterface dialog, int whichButton) {  
+		         String value = PasswordTelnet.getText().toString();
+		         password=PasswordTelnet.getText().toString();
+		         Log.d( TAG, "Password ingresada: " + value);
+		         
+		         Habilitacion=true;
+					TB_Login.setChecked(true);
+					FuncionEnviar("telnet localhost");
+		         return;                  
+		        }  
+		      });  
+
+		     alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+		         public void onClick(DialogInterface dialog, int which) {
+		             finish();
+		             return;   
+		         }
+		     });
+		             alert.show();
+		
+		
+	}
+
+
 	private void SetupUI() {
 		TB_Login.setChecked(false);
 		progressBar_Apuntamiento.setMax(100);
@@ -181,9 +230,9 @@ public class ll_Inicio_Login extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				Habilitacion=true;
-				TB_Login.setChecked(true);
-				FuncionEnviar("telnet localhost");
+				
+				DialogoInicioPassword();
+				
 				
 			}
 		});
@@ -216,9 +265,7 @@ public class ll_Inicio_Login extends Activity {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
 				if (isChecked){
-					
-					
-					Toast.makeText(getApplicationContext(), "Log Telnet ", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "Log Telnet ", Toast.LENGTH_SHORT).show();
 				Habilitacion=isChecked;}
 				else{Habilitacion=isChecked;
 				Toast.makeText(getApplicationContext(), "Log Linux ", Toast.LENGTH_SHORT).show();}
@@ -293,6 +340,7 @@ public class ll_Inicio_Login extends Activity {
 				
 			}
 		});
+		
 			btn_EnviarOPT.setOnClickListener(new OnClickListener() {
 			char finCadena=0x03;
 			@Override
@@ -382,7 +430,7 @@ public class ll_Inicio_Login extends Activity {
 			
 			if(detectorString.contains("Password:")){
 				
-				final String pass=EditPass.getText().toString();
+				final String pass=password;//EditPass.getText().toString();
 				
 				 runOnUiThread(new Runnable() {
 				       
@@ -402,6 +450,18 @@ public class ll_Inicio_Login extends Activity {
 				       
 							        public void run() {
 										  Toast.makeText(getApplicationContext(), " Logueado en Telnet", Toast.LENGTH_SHORT).show();
+									       }
+							    });
+			
+				}
+              if(detectorString.contains("Access Denied")){
+				
+				telnet=false;
+				 runOnUiThread(new Runnable() {
+				       
+							        public void run() {
+										  Toast.makeText(getApplicationContext(), " Error de Password", Toast.LENGTH_SHORT).show();
+										  finish();
 									       }
 							    });
 			
@@ -453,13 +513,20 @@ public class ll_Inicio_Login extends Activity {
 			{
 				telnet =true;
 				
+				if(detectorString.contains("#")){
+					 runOnUiThread(new Runnable() {
+						
+						        public void run() {
+						       
+						        	DialogoInicioPassword();
+						        }
+						    });
+				}	
+				
+				
 				
 				if (detectorString.contains("pwd")){
-					
-
 					        int posicion =strInputGlobal.indexOf("pwd");
-					    
-					       
 					        	Log.d("PWD","Directorio Linux pwd"+strInputGlobal.substring(posicion,posicion+15));
 									
 					}
@@ -467,6 +534,8 @@ public class ll_Inicio_Login extends Activity {
 			if (detectorString.contains("iDirect login:")){
 			FuncionEnviar("root");		
 			}
+			
+
 			if(detectorString.contains("Password:")){
 			Log.d("Linux", "Password:");
 			
@@ -474,14 +543,15 @@ public class ll_Inicio_Login extends Activity {
 				FuncionEnviar("P@55w0rd!");
 				Log.d("FuncionDetectarComando","FuncionEnviar(P@55w0rd!);");
 				
-				}
-			
-			else{
+				}else{
 				FuncionEnviar("iDirect");
 				Log.d("FuncionDetectarComando","FuncionEnviar(iDirect);");
 			
 			}
 			}
+			
+			
+			
 			if(detectorString.contains("Login incorrect")){
 				
 				if (boolPassword){
@@ -829,6 +899,11 @@ public class ll_Inicio_Login extends Activity {
 		return null;
 		}
 	
+   
+
+       
+    
+    
 	
 	}
 	
