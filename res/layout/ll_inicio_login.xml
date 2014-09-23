@@ -18,8 +18,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_margin="3dp"
+        android:background="@color/amarillo"
+        android:gravity="center"
         android:orientation="vertical" >
 
         <LinearLayout
@@ -36,14 +37,14 @@
                     android:id="@+id/TextView04"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="SN: "
+                    android:text="SN:        "
                     android:textColor="@color/rojofuerte" />
 
                 <TextView
                     android:id="@+id/Text_Serial"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="------" />
+                    android:text="          " />
 
             </LinearLayout>
 
@@ -62,7 +63,7 @@
                     android:id="@+id/Text_Modelo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="-------" />
+                    android:text="          " />
 
             </LinearLayout>
         </LinearLayout>
@@ -87,7 +88,7 @@
                     android:id="@+id/Text_Firmware"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="------" />
+                    android:text="          " />
             </LinearLayout>
 
             <LinearLayout
@@ -105,7 +106,7 @@
                     android:id="@+id/Text_VersionLinux"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="------" />
+                    android:text="          " />
             </LinearLayout>
         </LinearLayout>
 
@@ -146,6 +147,14 @@
                 android:text="Exit" />
 
         </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_Led"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selectorled"
+            android:text="Data" />
 
     </LinearLayout>
 

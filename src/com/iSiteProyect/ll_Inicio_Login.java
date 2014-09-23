@@ -92,7 +92,7 @@ public class ll_Inicio_Login extends Activity {
 	public Spinner spin_TX,spin_RX,spin_Otros;
 	public ArrayAdapter<String> TxAdapter,RxAdapter,OtrosAdapter;
 
-	public Button btn_EnviarOPT,btn_exit,btn_Ingresar,btn_Cargar_OPT,btn_SetFreq,btn_Reset,btn_Browser,btn_SetPower;
+	public Button btn_Led,btn_EnviarOPT,btn_exit,btn_Ingresar,btn_Cargar_OPT,btn_SetFreq,btn_Reset,btn_Browser,btn_SetPower;
 	public ToggleButton TB_Login,TB_CwOnOff,TB_Pointing;
 	public TextView  TextPointing,TextPrueba,TextNivel,Text_Serial,Text_Modelo,Text_Firmware,Text_VersionLinux;
 	public EditText EditFreq,EditPass,EditPrueba,EditTxPower;
@@ -192,6 +192,10 @@ public class ll_Inicio_Login extends Activity {
 			@Override
 			public void onClick(View v) {
 			FuncionEnviar("exit");
+			Text_Firmware.setText("        ");
+			Text_VersionLinux.setText("        ");
+			Text_Modelo.setText("        ");
+			Text_Serial.setText("        ");
 			TB_Login.setChecked(false);
 			Habilitacion=false;
 			}
@@ -266,6 +270,7 @@ public class ll_Inicio_Login extends Activity {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
 				if (isChecked){
+				 
 				Toast.makeText(getApplicationContext(), "Log Telnet ", Toast.LENGTH_SHORT).show();
 				Habilitacion=isChecked;}
 				else{Habilitacion=isChecked;
@@ -342,26 +347,24 @@ public class ll_Inicio_Login extends Activity {
 			}
 		});
 		
-			btn_EnviarOPT.setOnClickListener(new OnClickListener() {
+		btn_EnviarOPT.setOnClickListener(new OnClickListener() {
 			char finCadena=0x03;
+			
 			@Override
 			public void onClick(View v) {
+				
 				FuncionEnviar("cd /etc/idirect/falcon");
 				FuncionEnviar("mv falcon.opt falcon.opt.old");
 				
 				FuncionEnviar("cat> falcon.opt");
-			//	FuncionEnviar("cat> pepe.opt");
+			
 				for(int i=0;i<longitudArchivo;i++){
 					FuncionEnviar(CadenaPartida[i]);
 				}
-				
-				FuncionEnviar(""+finCadena);
 			
+				FuncionEnviar(""+finCadena);
 				FuncionEnviar("service idirect_falcon restart");
-				
-				
-				
-				
+			
 			}
 		});
 	}
@@ -377,7 +380,7 @@ public class ll_Inicio_Login extends Activity {
 		Text_Firmware=(TextView) findViewById(R.id.Text_Firmware);
 		Text_VersionLinux=(TextView) findViewById(R.id.Text_VersionLinux);
 		
-		
+		btn_Led=(Button) findViewById(R.id.btn_Led);
 		btn_Ingresar=(Button) findViewById(R.id.btn_Ingresar);
 		btn_SetFreq=(Button) findViewById(R.id.btn_SetFreq);
 		btn_Reset=(Button) findViewById(R.id.btn_Reset);
@@ -413,7 +416,6 @@ public class ll_Inicio_Login extends Activity {
 	
 	public void FuncionDetectarComando(String detectorString,Boolean hab){
 		
-		
 		Log.d("FuncionDetectarComando", "detector string: "+detectorString+" Boolean: "+hab);
 		String[] CadenaPartida = detectorString.split("\r");
 		int longitud =CadenaPartida.length;
@@ -422,8 +424,18 @@ public class ll_Inicio_Login extends Activity {
 		for(int i=0;i<longitud;i++){
 		Log.d("FuncionDetectarComando","Esta es la cadena "+i+": "+CadenaPartida[i]+"-");
 				}
-	
-	if(hab){	
+		
+		
+		if(detectorString.contains("[ErrorStack]")){
+			
+			FuncionEnviar("exit");
+			 runOnUiThread(new Runnable() {
+        public void run() {
+			       	   Toast.makeText(getApplicationContext(), "Necesita el OPT !!!", Toast.LENGTH_SHORT).show();
+		        	   }
+			    });
+			}	
+		if(hab){	
 		
 		if(detectorString.contains("SN: ")){
 			 runOnUiThread(new Runnable() {
@@ -461,7 +473,7 @@ public class ll_Inicio_Login extends Activity {
 
 			        int posicion =strInputGlobal.indexOf("Code Version:");
 			        public void run() {
-			        	   Text_Firmware.setText(strInputGlobal.substring(posicion+13,posicion+21));
+			        	   Text_Firmware.setText(strInputGlobal.substring(posicion+13,posicion+23));
 		        	   }
 			    });
 			}
@@ -499,15 +511,16 @@ public class ll_Inicio_Login extends Activity {
 			
 				}
               if(detectorString.contains("Access Denied")){
-				
+            	  char excapeLog1=0x5E;
+      			char excapeLog2=0x5D;
 				telnet=false;
 				 runOnUiThread(new Runnable() {
 							        public void run() {
 										  Toast.makeText(getApplicationContext(), " Error de Password", Toast.LENGTH_SHORT).show();
-										  finish();
+										 
 									       }
 							    });
-			
+			//	 FuncionEnviar(""+excapeLog1+excapeLog2);
 				}	
 			if(detectorString.contains(("tx cw on"))||detectorString.contains("tx cw off")){
 				FuncionEnviar("tx cw");
@@ -557,13 +570,7 @@ public class ll_Inicio_Login extends Activity {
 		
 				telnet =true;
 				
-				if(detectorString.contains("Linux iDirect")||detectorString.contains("#")){
-					 runOnUiThread(new Runnable() {
-						   public void run() {
-						        	DialogoInicioPassword();
-						        }
-						    });
-				}	
+				
 			
 			if (detectorString.contains("iDirect login:")){
 			FuncionEnviar("root");
@@ -870,6 +877,23 @@ public class ll_Inicio_Login extends Activity {
     			curFileName = data.getStringExtra("GetFileName"); 
     			curFilePath = data.getStringExtra("GetPath"); 
     			EditPath.setText(curFilePath+"/"+curFileName);
+    			
+    			/////////// carga opt
+    			Log.d("OPT", "boton opt");
+				
+				p=LeerArchivo(EditPath.getText().toString());
+				
+				CadenaPartida = p.split("\n");
+				longitudArchivo=CadenaPartida.length;
+				
+				Log.d("OPT", "lineas= "+longitudArchivo);
+				
+				for(int i=0;i<longitudArchivo;i++){
+					Log.d("OPT cargado: ",CadenaPartida[i]);
+				}
+				FuncionEnviar("exit");// para ir a linux
+				Habilitacion=false;
+			
     		}
     	 }
     }
