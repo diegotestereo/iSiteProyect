@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/gris"
+    android:layout_margin="2dp"
     android:orientation="vertical" >
 
     <TextView
@@ -16,6 +17,7 @@
         android:textSize="20dp" />
 
     <LinearLayout
+       android:baselineAligned="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="3dp"
@@ -149,13 +151,21 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_Led"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/selectorled"
-            android:text="Data" />
+        <LinearLayout
+            android:baselineAligned="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="left"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/btn_Led"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selectorled"
+                android:text="Data" />
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -179,15 +189,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:gravity="center"
             android:orientation="vertical" >
-
-            <Button
-                android:id="@+id/btn_SetFreq"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="63dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/selectorboton"
-                android:text="Set Freq" />
 
             <EditText
                 android:id="@+id/EditFreq"
@@ -203,17 +206,27 @@
                 <requestFocus />
             </EditText>
 
+            <Button
+                android:id="@+id/btn_SetFreq"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="63dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selectorboton"
+                android:text="Set Freq" />
+
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:gravity="center"
             android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:text="CW" />
 
             <ToggleButton
@@ -227,6 +240,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+             android:gravity="center"
             android:orientation="vertical" >
 
             <TextView
@@ -234,7 +248,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Power" />
+                android:text="Nivel de TX" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -244,13 +258,16 @@
                     android:id="@+id/textView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="-"
+                    
                     android:layout_weight="1"
-                    android:text="-" />
+                    android:textSize="20dp" />
 
                 <EditText
                     android:id="@+id/EditTxPower"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                 
                     android:layout_weight="1"
                     android:includeFontPadding="true"
                     android:inputType="number"
@@ -294,6 +311,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:layout_margin="2dp"
             android:orientation="vertical" >
 
             <ToggleButton
@@ -328,7 +346,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="TextView" />
+                android:text="-70 dbm" />
         </LinearLayout>
     </LinearLayout>
 
@@ -360,12 +378,14 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:orientation="horizontal"
+            
             android:layout_height="wrap_content" >
 
             <Button
                 android:id="@+id/btn_Browser"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+               
                 android:background="@drawable/selectorboton"
                 android:padding="2dp"
                 android:text="Buscar OPT" />
@@ -374,17 +394,17 @@
                 android:id="@+id/btn_EnviarOPT"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+               
                 android:background="@drawable/selectorboton"
                 android:padding="2dp"
                 android:text="Enviar OPT" />
 
             <Button
-                android:id="@+id/btn_Reset"
-                android:layout_width="match_parent"
+                android:id="@+id/btn_Backup"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/selectorboton"
-                android:padding="2dp"
-                android:text="Reset" />
+                android:text="Copiar OPT" />
 
         </LinearLayout>
 

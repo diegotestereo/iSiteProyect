@@ -140,6 +140,43 @@ public class ll_Inicio_Login extends Activity {
 		}
 	
 	
+	private void DialogoErrorPassword() {
+		
+		 AlertDialog.Builder alert = new AlertDialog.Builder(this);                 
+		 alert.setTitle("Login");  
+		 alert.setMessage("Ingrese la contraseña Nuevamente :");                
+
+		  // Set an EditText view to get user input   
+		  final EditText PasswordTelnet = new EditText(this); 
+		  PasswordTelnet.setTransformationMethod(PasswordTransformationMethod.getInstance());
+		  alert.setView(PasswordTelnet);
+		  
+		     alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {  
+		     public void onClick(DialogInterface dialog, int whichButton) {  
+		         String value = PasswordTelnet.getText().toString();
+		         password=PasswordTelnet.getText().toString();
+		         Log.d( TAG, "Password ingresada: " + value);
+		         
+		         Habilitacion=true;
+					TB_Login.setChecked(true);
+					FuncionEnviar("");
+					
+		         return;                  
+		        }  
+		      });  
+
+		     alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+
+		         public void onClick(DialogInterface dialog, int which) {
+		             finish();
+		             return;   
+		         }
+		     });
+		             alert.show();
+		
+		
+	}
+	
 	private void DialogoInicioPassword() {
 		
 		 AlertDialog.Builder alert = new AlertDialog.Builder(this);                 
@@ -182,6 +219,17 @@ public class ll_Inicio_Login extends Activity {
 		TB_Login.setChecked(false);
 		progressBar_Apuntamiento.setMax(100);
 		progressBar_Apuntamiento.setProgress(0);
+		
+		btn_Browser.setEnabled(false);
+		btn_EnviarOPT.setEnabled(false);
+		btn_exit.setEnabled(false);
+		btn_Ingresar.setEnabled(false);
+		btn_SetFreq.setEnabled(false);
+		btn_SetPower.setEnabled(false);
+		
+		TB_Login.setEnabled(false);
+		TB_Pointing.setEnabled(false);
+		TB_CwOnOff.setEnabled(false);
 	
 	}
 
@@ -198,6 +246,17 @@ public class ll_Inicio_Login extends Activity {
 			Text_Serial.setText("        ");
 			TB_Login.setChecked(false);
 			Habilitacion=false;
+			
+			btn_Browser.setEnabled(true);
+			btn_EnviarOPT.setEnabled(true);
+		
+			btn_Ingresar.setEnabled(true);
+			btn_SetFreq.setEnabled(false);
+			btn_SetPower.setEnabled(false);
+			
+			TB_Login.setEnabled(false);
+			TB_Pointing.setEnabled(false);
+			TB_CwOnOff.setEnabled(false);
 			}
 		});
 		
@@ -222,14 +281,7 @@ public class ll_Inicio_Login extends Activity {
 			}
 		});
 		
-		btn_Reset.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				FuncionEnviar("reset board");
-				progressDialog.cancel();
-			}
-		});
+		
 				
 		btn_Ingresar.setOnClickListener(new OnClickListener() {
 			
@@ -287,15 +339,10 @@ public class ll_Inicio_Login extends Activity {
 				if (isChecked){
 					FuncionEnviar("rx iflDC off");
 					FuncionEnviar("tx cw on");
-					//Toast.makeText(getApplicationContext(), "CW ON", Toast.LENGTH_SHORT).show();
-					
-					
 				}
 				else{
 					FuncionEnviar("tx cw off");
 					FuncionEnviar("rx iflDC on");
-				
-				//Toast.makeText(getApplicationContext(), "CW OFF", Toast.LENGTH_SHORT).show();
 				}
 			
 			}
@@ -309,21 +356,12 @@ public class ll_Inicio_Login extends Activity {
 				if(EditTxPower.getText().toString().equals(""))
 				{
 					Toast.makeText(getApplicationContext(), "Ingrese potencia !!", Toast.LENGTH_SHORT).show();
-					
 				}
 				else{FuncionEnviar("tx power -"+EditTxPower.getText().toString());}
-					
-					
-					
-					
-			
 			}
 		});
 		
 		TB_Pointing.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
-		
-			
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				
@@ -383,7 +421,7 @@ public class ll_Inicio_Login extends Activity {
 		btn_Led=(Button) findViewById(R.id.btn_Led);
 		btn_Ingresar=(Button) findViewById(R.id.btn_Ingresar);
 		btn_SetFreq=(Button) findViewById(R.id.btn_SetFreq);
-		btn_Reset=(Button) findViewById(R.id.btn_Reset);
+	//	btn_Reset=(Button) findViewById(R.id.btn_Reset);
 	//	btn_Cargar_OPT=(Button) findViewById(R.id.btn_CargarOPT);
 		btn_Browser=(Button) findViewById(R.id.btn_Browser);
 		btn_SetPower=(Button) findViewById(R.id.btn_SetPower);
@@ -457,6 +495,9 @@ public class ll_Inicio_Login extends Activity {
 			    });
 			}
 		
+		
+		
+		
 		if(detectorString.contains("iDirect Linux-BSP Release")){
 			 runOnUiThread(new Runnable() {
 
@@ -502,25 +543,36 @@ public class ll_Inicio_Login extends Activity {
 			if(detectorString.contains(">")&telnet){
 				
 				telnet=false;
+				
 				 runOnUiThread(new Runnable() {
 				       
 							        public void run() {
+							        	btn_Browser.setEnabled(false);
+							    		btn_EnviarOPT.setEnabled(false);
+							        	btn_exit.setEnabled(true);
+										btn_Ingresar.setEnabled(false);
+										btn_SetFreq.setEnabled(true);
+										btn_SetPower.setEnabled(true);
+										TB_Pointing.setEnabled(true);
+										TB_CwOnOff.setEnabled(true);
 										  Toast.makeText(getApplicationContext(), " Logueado en Telnet", Toast.LENGTH_SHORT).show();
 									       }
 							    });
 			
 				}
               if(detectorString.contains("Access Denied")){
-            	  char excapeLog1=0x5E;
-      			char excapeLog2=0x5D;
+            	
 				telnet=false;
 				 runOnUiThread(new Runnable() {
 							        public void run() {
 										  Toast.makeText(getApplicationContext(), " Error de Password", Toast.LENGTH_SHORT).show();
-										 
+										  Habilitacion=false;
+										  DialogoErrorPassword();
+										  
+							  
 									       }
 							    });
-			//	 FuncionEnviar(""+excapeLog1+excapeLog2);
+				// FuncionEnviar(""+excapeLog1+excapeLog2);
 				}	
 			if(detectorString.contains(("tx cw on"))||detectorString.contains("tx cw off")){
 				FuncionEnviar("tx cw");
@@ -569,7 +621,15 @@ public class ll_Inicio_Login extends Activity {
 			{
 		
 				telnet =true;
-				
+				if(detectorString.contains("DRAM Test")){
+					 runOnUiThread(new Runnable() {
+
+					        public void run() {
+					        	Toast.makeText(getApplicationContext(), "Reiniciando equipo", Toast.LENGTH_LONG).show();
+					        	btn_Ingresar.setEnabled(false);
+					        	  }
+					    });
+					}
 				
 			
 			if (detectorString.contains("iDirect login:")){
@@ -583,9 +643,21 @@ public class ll_Inicio_Login extends Activity {
 			if(boolPassword){
 				FuncionEnviar("P@55w0rd!");
 				Log.d("FuncionDetectarComando","FuncionEnviar(P@55w0rd!);");
+				 runOnUiThread(new Runnable() {
+
+				        public void run() {
+				       	btn_Ingresar.setEnabled(true);
+				        	  }
+				    });
 				
 				}else{
 				FuncionEnviar("iDirect");
+				 runOnUiThread(new Runnable() {
+
+				        public void run() {
+				       	btn_Ingresar.setEnabled(true);
+				        	  }
+				    });
 				Log.d("FuncionDetectarComando","FuncionEnviar(iDirect);");
 			
 			}

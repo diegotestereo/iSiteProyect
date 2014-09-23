@@ -56,7 +56,7 @@ public final class R {
     }
     public static final class id {
         public static final int EditFrecuencia=0x7f0b0038;
-        public static final int EditFreq=0x7f0b0023;
+        public static final int EditFreq=0x7f0b0022;
         public static final int EditPath=0x7f0b0032;
         public static final int EditTxPower=0x7f0b0028;
         public static final int LinearLayout1=0x7f0b0014;
@@ -83,13 +83,13 @@ public final class R {
         public static final int btnLoginTelnet=0x7f0b0036;
         public static final int btnSearch=0x7f0b0002;
         public static final int btnSend=0x7f0b000c;
+        public static final int btn_Backup=0x7f0b0035;
         public static final int btn_Browser=0x7f0b0033;
         public static final int btn_EnviarOPT=0x7f0b0034;
         public static final int btn_Ingresar=0x7f0b001d;
         public static final int btn_Led=0x7f0b001f;
         public static final int btn_LogOut=0x7f0b0037;
-        public static final int btn_Reset=0x7f0b0035;
-        public static final int btn_SetFreq=0x7f0b0022;
+        public static final int btn_SetFreq=0x7f0b0023;
         public static final int btn_SetPower=0x7f0b002a;
         public static final int btn_exit=0x7f0b001e;
         public static final int chkReceiveText=0x7f0b0007;
