@@ -87,14 +87,14 @@ public class ll_Inicio_Login extends Activity {
 	public ProgressDialog progressDialogInicio;
 	public ProgressBar progressBar_Apuntamiento;
 	
-
+	boolean rootBool=false;
 	public Button btn_LogOut;
 	public Spinner spin_TX,spin_RX,spin_Otros;
 	public ArrayAdapter<String> TxAdapter,RxAdapter,OtrosAdapter;
 
 	public Button btn_EnviarOPT,btn_exit,btn_Ingresar,btn_Cargar_OPT,btn_SetFreq,btn_Reset,btn_Browser,btn_SetPower;
 	public ToggleButton TB_Login,TB_CwOnOff,TB_Pointing;
-	public TextView  TextPointing,TextPrueba,TextNivel;
+	public TextView  TextPointing,TextPrueba,TextNivel,Text_Serial,Text_Modelo,Text_Firmware,Text_VersionLinux;
 	public EditText EditFreq,EditPass,EditPrueba,EditTxPower;
 	public String password;
 	// hilos
@@ -160,11 +160,12 @@ public class ll_Inicio_Login extends Activity {
 		         Habilitacion=true;
 					TB_Login.setChecked(true);
 					FuncionEnviar("telnet localhost");
+					
 		         return;                  
 		        }  
 		      });  
 
-		     alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		     alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
 
 		         public void onClick(DialogInterface dialog, int which) {
 		             finish();
@@ -364,13 +365,18 @@ public class ll_Inicio_Login extends Activity {
 			}
 		});
 	}
-
 	
 	private void  LevantarXML() {
 	
 		TextPointing=(TextView) findViewById(R.id.TextPointing);
-		TextPrueba=(TextView) findViewById(R.id.TextPrueba);
+		//TextPrueba=(TextView) findViewById(R.id.TextPrueba);
 		TextNivel=(TextView) findViewById(R.id.TextNivel);
+		//,,,;
+		Text_Serial=(TextView) findViewById(R.id.Text_Serial);
+		Text_Modelo=(TextView) findViewById(R.id.Text_Modelo);
+		Text_Firmware=(TextView) findViewById(R.id.Text_Firmware);
+		Text_VersionLinux=(TextView) findViewById(R.id.Text_VersionLinux);
+		
 		
 		btn_Ingresar=(Button) findViewById(R.id.btn_Ingresar);
 		btn_SetFreq=(Button) findViewById(R.id.btn_SetFreq);
@@ -386,12 +392,11 @@ public class ll_Inicio_Login extends Activity {
 		TB_Pointing=(ToggleButton) findViewById(R.id.TB_Pointing);
 		
 		EditFreq=(EditText) findViewById(R.id.EditFreq);
-		EditPass=(EditText) findViewById(R.id.EditPass);
+	//	EditPass=(EditText) findViewById(R.id.EditPass);
 		EditPath=(EditText) findViewById(R.id.EditPath);
 		EditTxPower=(EditText) findViewById(R.id.EditTxPower);
 		progressBar_Apuntamiento=(ProgressBar) findViewById(R.id.progressBar_Apuntamiento);
 	}
-
 	
 	public void FuncionEnviar(String StringEnviado){
 		
@@ -417,17 +422,55 @@ public class ll_Inicio_Login extends Activity {
 		for(int i=0;i<longitud;i++){
 		Log.d("FuncionDetectarComando","Esta es la cadena "+i+": "+CadenaPartida[i]+"-");
 				}
-
-		
+	
 	if(hab){	
 		
-		  
+		if(detectorString.contains("SN: ")){
+			 runOnUiThread(new Runnable() {
+
+			        int posicion =strInputGlobal.indexOf("SN:");
+			        public void run() {
+			        	   Text_Serial.setText(strInputGlobal.substring(posicion+3,posicion+15));
+			        	   Toast.makeText(getApplicationContext(), "Serial: "+strInputGlobal.substring(posicion+3,posicion+15), Toast.LENGTH_SHORT).show();
+		        	   }
+			    });
+			}	
+		if(detectorString.contains("Model: ")){
+			 runOnUiThread(new Runnable() {
+
+			        int posicion =strInputGlobal.indexOf("Model:");
+			        public void run() {
+			        	   Text_Modelo.setText(strInputGlobal.substring(posicion+6,posicion+15));
+		        	   }
+			    });
+			}
 		
-			if (detectorString.contains("Username:")){
-			
+		if(detectorString.contains("iDirect Linux-BSP Release")){
+			 runOnUiThread(new Runnable() {
+
+			        int posicion =strInputGlobal.indexOf("iDirect Linux-BSP Release");
+			        public void run() {
+			        	   Text_VersionLinux.setText(strInputGlobal.substring(posicion+25,posicion+35));
+		        	   }
+			    });
+			}
+		   
+		//Code Version:
+		if(detectorString.contains("Code Version:")){
+			 runOnUiThread(new Runnable() {
+
+			        int posicion =strInputGlobal.indexOf("Code Version:");
+			        public void run() {
+			        	   Text_Firmware.setText(strInputGlobal.substring(posicion+13,posicion+21));
+		        	   }
+			    });
+			}
+		
+			////////// Usuario Admin
+		 	if (detectorString.contains("Username:")){
 				FuncionEnviar("admin");		
 			}
-			
+			/////////Password
 			if(detectorString.contains("Password:")){
 				
 				final String pass=password;//EditPass.getText().toString();
@@ -440,6 +483,7 @@ public class ll_Inicio_Login extends Activity {
 										  }
 							    });
 				 FuncionEnviar(pass);	
+				 FuncionEnviar("versions_report");
 						}	
 					
 							
@@ -458,7 +502,6 @@ public class ll_Inicio_Login extends Activity {
 				
 				telnet=false;
 				 runOnUiThread(new Runnable() {
-				       
 							        public void run() {
 										  Toast.makeText(getApplicationContext(), " Error de Password", Toast.LENGTH_SHORT).show();
 										  finish();
@@ -511,33 +554,24 @@ public class ll_Inicio_Login extends Activity {
 	
 			else
 			{
+		
 				telnet =true;
 				
-				if(detectorString.contains("#")){
+				if(detectorString.contains("Linux iDirect")||detectorString.contains("#")){
 					 runOnUiThread(new Runnable() {
-						
-						        public void run() {
-						       
+						   public void run() {
 						        	DialogoInicioPassword();
 						        }
 						    });
 				}	
-				
-				
-				
-				if (detectorString.contains("pwd")){
-					        int posicion =strInputGlobal.indexOf("pwd");
-					        	Log.d("PWD","Directorio Linux pwd"+strInputGlobal.substring(posicion,posicion+15));
-									
-					}
-				
-			if (detectorString.contains("iDirect login:")){
-			FuncionEnviar("root");		
-			}
 			
-
+			if (detectorString.contains("iDirect login:")){
+			FuncionEnviar("root");
+			
+			}
+		
 			if(detectorString.contains("Password:")){
-			Log.d("Linux", "Password:");
+			Log.d("Linux", "Password Linux:");
 			
 			if(boolPassword){
 				FuncionEnviar("P@55w0rd!");
@@ -549,10 +583,7 @@ public class ll_Inicio_Login extends Activity {
 			
 			}
 			}
-			
-			
-			
-			if(detectorString.contains("Login incorrect")){
+		if(detectorString.contains("Login incorrect")){
 				
 				if (boolPassword){
 					boolPassword=false;
@@ -683,6 +714,7 @@ public class ll_Inicio_Login extends Activity {
 				mReadThread = new ReadInput(); // Kick off input reader	
 			}
 			progressDialog.dismiss();
+			FuncionEnviar("exit");
 			
 			FuncionEnviar("\r");
 			
@@ -730,11 +762,7 @@ public class ll_Inicio_Login extends Activity {
 				
 				e.printStackTrace();
 			}
-			
-			
-			
-			
-		}
+	}
 
 		public void stop() {
 			bStop = true;
@@ -834,8 +862,7 @@ public class ll_Inicio_Login extends Activity {
 		}
 	
 	//////////////////////// cargar opt
-		
-	 // Listen for results.
+	// Listen for results.
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         // See which child activity is calling us back.
     	if (requestCode == REQUEST_PATH){
@@ -848,19 +875,14 @@ public class ll_Inicio_Login extends Activity {
     }
 	
     public static String LeerArchivo(String nombre)
-
-	//El parametro nombre indica el nombre del archivo por ejemplo "prueba.txt" 
-
+    //El parametro nombre indica el nombre del archivo por ejemplo "prueba.txt" 
 	{
 
 	try{
-
 	File f;
 	FileReader lectorArchivo;
-
 	//Creamos el objeto del archivo que vamos a leer
 	f = new File(nombre);
-
 	//Creamos el objeto FileReader que abrira el flujo(Stream) de datos para realizar la lectura
 	lectorArchivo = new FileReader(f);
 
@@ -882,8 +904,7 @@ public class ll_Inicio_Login extends Activity {
 		/*si la variable aux tiene datos se va acumulando en la variable l,
 		* en caso de ser nula quiere decir que ya nos hemos leido todo
 		* el archivo de texto*/
-
-		else
+	else
 		break;
 		}
 
@@ -899,13 +920,7 @@ public class ll_Inicio_Login extends Activity {
 		return null;
 		}
 	
-   
-
-       
-    
-    
-	
-	}
+ 	}
 	
 	
 	
