@@ -242,7 +242,7 @@ public class ll_Inicio_Login extends Activity {
 			}
 		});
 				
-		btn_Cargar_OPT.setOnClickListener(new OnClickListener() {
+	/*	btn_Cargar_OPT.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -262,7 +262,7 @@ public class ll_Inicio_Login extends Activity {
 			
 			
 			}
-		});
+		});*/
 		
 		TB_Login.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
@@ -384,7 +384,7 @@ public class ll_Inicio_Login extends Activity {
 		btn_Ingresar=(Button) findViewById(R.id.btn_Ingresar);
 		btn_SetFreq=(Button) findViewById(R.id.btn_SetFreq);
 		btn_Reset=(Button) findViewById(R.id.btn_Reset);
-		btn_Cargar_OPT=(Button) findViewById(R.id.btn_CargarOPT);
+	//	btn_Cargar_OPT=(Button) findViewById(R.id.btn_CargarOPT);
 		btn_Browser=(Button) findViewById(R.id.btn_Browser);
 		btn_SetPower=(Button) findViewById(R.id.btn_SetPower);
 		btn_exit=(Button) findViewById(R.id.btn_exit);

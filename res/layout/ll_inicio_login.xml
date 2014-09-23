@@ -3,7 +3,7 @@
     android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blanco"
+    android:background="@color/gris"
     android:orientation="vertical" >
 
     <TextView
@@ -114,7 +114,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:padding="5dp" >
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -172,7 +173,8 @@
         android:layout_width="match_parent"
         android:layout_height="113dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/fondo" >
+        android:background="@drawable/fondo"
+        android:padding="5dp" >
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -342,7 +344,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:background="@drawable/fondo"
+        android:focusable="false"
+        android:orientation="vertical"
+        android:padding="5dp" >
 
         <EditText
             android:id="@+id/EditPath"
@@ -363,15 +368,23 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/selectorboton"
                 android:padding="2dp"
-                android:text="Buscar OPT descargado" />
+                android:text="Buscar OPT" />
 
             <Button
-                android:id="@+id/btn_CargarOPT"
+                android:id="@+id/btn_EnviarOPT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selectorboton"
+                android:padding="2dp"
+                android:text="Enviar OPT" />
+
+            <Button
+                android:id="@+id/btn_Reset"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                 android:padding="2dp"
                 android:background="@drawable/selectorboton"
-                android:text="Cargar OPT" />
+                android:padding="2dp"
+                android:text="Reset" />
 
         </LinearLayout>
 
@@ -379,22 +392,6 @@
             android:layout_width="wrap_content"
               android:orientation="horizontal"
             android:layout_height="wrap_content" >
-
-            <Button
-                android:id="@+id/btn_Reset"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                 android:padding="2dp"
-                android:background="@drawable/selectorboton"
-                android:text="Reset" />
-
-            <Button
-                android:id="@+id/btn_EnviarOPT"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/selectorboton"
-                 android:padding="2dp"
-                android:text="Enviar OPT" />
 
         </LinearLayout>
     </LinearLayout>
