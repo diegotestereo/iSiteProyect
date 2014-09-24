@@ -24,6 +24,8 @@ import java.util.UUID;
 
 
 
+
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -32,6 +34,7 @@ import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -43,6 +46,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -144,7 +148,7 @@ public class ll_Inicio_Login extends Activity {
 		
 		 AlertDialog.Builder alert = new AlertDialog.Builder(this);                 
 		 alert.setTitle("Login");  
-		 alert.setMessage("Ingrese la contraseña Nuevamente :");                
+		 alert.setMessage("Error de contraseña ingresela nuevamente:");                
 
 		  // Set an EditText view to get user input   
 		  final EditText PasswordTelnet = new EditText(this); 
@@ -276,7 +280,8 @@ public class ll_Inicio_Login extends Activity {
 			@Override
 			public void onClick(View v) {
 				FuncionEnviar("tx freq "+Float.parseFloat(EditFreq.getText().toString()));
-			
+				InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(EditFreq.getWindowToken(), 0);
 				
 			}
 		});
@@ -339,10 +344,12 @@ public class ll_Inicio_Login extends Activity {
 				if (isChecked){
 					FuncionEnviar("rx iflDC off");
 					FuncionEnviar("tx cw on");
+				    TB_Pointing.setEnabled(false);
 				}
 				else{
 					FuncionEnviar("tx cw off");
 					FuncionEnviar("rx iflDC on");
+					TB_Pointing.setEnabled(true);
 				}
 			
 			}
@@ -357,7 +364,10 @@ public class ll_Inicio_Login extends Activity {
 				{
 					Toast.makeText(getApplicationContext(), "Ingrese potencia !!", Toast.LENGTH_SHORT).show();
 				}
-				else{FuncionEnviar("tx power -"+EditTxPower.getText().toString());}
+				else{FuncionEnviar("tx power -"+EditTxPower.getText().toString());
+				InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(EditTxPower.getWindowToken(), 0);}
+				
 			}
 		});
 		
@@ -366,7 +376,9 @@ public class ll_Inicio_Login extends Activity {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				
 				if (isChecked){
-					
+					 TB_CwOnOff.setEnabled(false);
+					 btn_SetFreq.setEnabled(false);
+					 btn_SetPower.setEnabled(false);
 					FuncionEnviar("rx pointing enable");// habiulita el comando de ponting
 					FuncionEnviar("rx pointing on");
 					Lectura_pointing=true;
@@ -374,11 +386,14 @@ public class ll_Inicio_Login extends Activity {
 				    th1.start();
 					
 				}else{
-				
+					
 					FuncionEnviar("rx pointing off");// deshabilita el comando de ponting
 					FuncionEnviar("rx pointing disable");
 					progressBar_Apuntamiento.setProgress(0);
 					Lectura_pointing=false;
+					 TB_CwOnOff.setEnabled(true);
+					 btn_SetFreq.setEnabled(true);
+					 btn_SetPower.setEnabled(true);
 					
 				}
 				
@@ -872,6 +887,8 @@ public class ll_Inicio_Login extends Activity {
 				float nivelFlotante= Float.parseFloat(NivelesAlmacenados[0])*100;
 				int NivelBaliza=(int)nivelFlotante;
 				//TextPrueba.setText("String: "+NivelesAlmacenados[0]+" float * 10:  "+nivelFlotante +" integer:  "+NivelBaliza);
+				progressBar_Apuntamiento.setMinimumHeight(20);
+				 progressBar_Apuntamiento.setMinimumWidth(100);
 				progressBar_Apuntamiento.setProgress(NivelBaliza);
 				
 				TextNivel.setText("Nivel= -"+NivelBaliza+" dbm");
