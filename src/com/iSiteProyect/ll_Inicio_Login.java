@@ -10,26 +10,9 @@ import java.io.InputStream;
 import java.util.UUID;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
+
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -37,11 +20,11 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.InputType;
+
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
@@ -87,7 +70,7 @@ public class ll_Inicio_Login extends Activity {
 	//////////////////////////////////////////////////////////////////
 	// dialogos en progreso
 	public ProgressBar progressBarBoot;
-	public ProgressDialog progressDialog,progressDialog2;
+	public ProgressDialog progressDialog,progressDialog2,progressDialogOPT;
 	public ProgressDialog progressDialogInicio;
 	public ProgressBar progressBar_Apuntamiento;
 	
@@ -98,7 +81,7 @@ public class ll_Inicio_Login extends Activity {
 
 	public Button btn_Led,btn_EnviarOPT,btn_exit,btn_Ingresar,btn_Cargar_OPT,btn_SetFreq,btn_Reset,btn_Browser,btn_SetPower;
 	public ToggleButton TB_Login,TB_CwOnOff,TB_Pointing;
-	public TextView  TextPointing,TextPrueba,TextNivel,Text_Serial,Text_Modelo,Text_Firmware,Text_VersionLinux;
+	public TextView  Text_Path,TextPointing,TextPrueba,TextNivel,Text_Serial,Text_Modelo,Text_Firmware,Text_VersionLinux;
 	public EditText EditFreq,EditPass,EditPrueba,EditTxPower;
 	public String password;
 	// hilos
@@ -224,9 +207,9 @@ public class ll_Inicio_Login extends Activity {
 		progressBar_Apuntamiento.setMax(100);
 		progressBar_Apuntamiento.setProgress(0);
 		
-		btn_Browser.setEnabled(false);
+		btn_Browser.setEnabled(true);
 		btn_EnviarOPT.setEnabled(false);
-		btn_exit.setEnabled(false);
+		btn_exit.setEnabled(true);
 		btn_Ingresar.setEnabled(false);
 		btn_SetFreq.setEnabled(false);
 		btn_SetPower.setEnabled(false);
@@ -268,7 +251,8 @@ public class ll_Inicio_Login extends Activity {
 		
 		@Override
 		public void onClick(View v) {
-		
+			FuncionEnviar("exit");
+			btn_Ingresar.setEnabled(false);
 			Intent intent1 = new Intent(getApplicationContext(), FileChooser.class);
 	        startActivityForResult(intent1,REQUEST_PATH);
 		
@@ -285,9 +269,7 @@ public class ll_Inicio_Login extends Activity {
 				
 			}
 		});
-		
-		
-				
+					
 		btn_Ingresar.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -295,32 +277,18 @@ public class ll_Inicio_Login extends Activity {
 				
 				DialogoInicioPassword();
 				
-				
 			}
 		});
 				
-	/*	btn_Cargar_OPT.setOnClickListener(new OnClickListener() {
+		btn_Reset.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-			
-				Log.d("OPT", "boton opt");
-				
-				p=LeerArchivo(EditPath.getText().toString());
-				
-				CadenaPartida = p.split("\n");
-				longitudArchivo=CadenaPartida.length;
-				
-				Log.d("OPT", "lineas= "+longitudArchivo);
-				
-				for(int i=0;i<longitudArchivo;i++){
-					Log.d("OPT cargado: ",CadenaPartida[i]);
-				}
-			
-			
+				FuncionEnviar("reboot");
+				FuncionEnviar("reset board");
 			}
-		});*/
-		
+		});
+			
 		TB_Login.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
 			@Override
@@ -405,19 +373,27 @@ public class ll_Inicio_Login extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				
+				Toast.makeText(getApplicationContext(), "Transmitiendo Archivo...", Toast.LENGTH_SHORT).show();
 				FuncionEnviar("cd /etc/idirect/falcon");
 				FuncionEnviar("mv falcon.opt falcon.opt.old");
-				
 				FuncionEnviar("cat> falcon.opt");
-			
+				
 				for(int i=0;i<longitudArchivo;i++){
 					FuncionEnviar(CadenaPartida[i]);
 				}
 			
 				FuncionEnviar(""+finCadena);
+				Text_Path.setText("El OPT fue seleccionado.");
 				FuncionEnviar("service idirect_falcon restart");
-			
+				Toast.makeText(getApplicationContext(), "Cargando y Reiniciando Servicios...", Toast.LENGTH_SHORT).show();
+				progressDialogOPT = new ProgressDialog(ll_Inicio_Login.this);
+				progressDialogOPT.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+				progressDialogOPT.setMessage("Reiniciando OPT");
+				progressDialogOPT.setMax(10);
+				progressDialogOPT.setProgress(0);
+				progressDialogOPT.setCancelable(false);
+				progressDialogOPT.show();	
+				
 			}
 		});
 	}
@@ -427,6 +403,7 @@ public class ll_Inicio_Login extends Activity {
 		TextPointing=(TextView) findViewById(R.id.TextPointing);
 		//TextPrueba=(TextView) findViewById(R.id.TextPrueba);
 		TextNivel=(TextView) findViewById(R.id.TextNivel);
+		Text_Path=(TextView) findViewById(R.id.text_Path);
 		//,,,;
 		Text_Serial=(TextView) findViewById(R.id.Text_Serial);
 		Text_Modelo=(TextView) findViewById(R.id.Text_Modelo);
@@ -436,7 +413,7 @@ public class ll_Inicio_Login extends Activity {
 		btn_Led=(Button) findViewById(R.id.btn_Led);
 		btn_Ingresar=(Button) findViewById(R.id.btn_Ingresar);
 		btn_SetFreq=(Button) findViewById(R.id.btn_SetFreq);
-	//	btn_Reset=(Button) findViewById(R.id.btn_Reset);
+		btn_Reset=(Button) findViewById(R.id.btn_Reset);
 	//	btn_Cargar_OPT=(Button) findViewById(R.id.btn_CargarOPT);
 		btn_Browser=(Button) findViewById(R.id.btn_Browser);
 		btn_SetPower=(Button) findViewById(R.id.btn_SetPower);
@@ -448,8 +425,7 @@ public class ll_Inicio_Login extends Activity {
 		TB_Pointing=(ToggleButton) findViewById(R.id.TB_Pointing);
 		
 		EditFreq=(EditText) findViewById(R.id.EditFreq);
-	//	EditPass=(EditText) findViewById(R.id.EditPass);
-		EditPath=(EditText) findViewById(R.id.EditPath);
+	
 		EditTxPower=(EditText) findViewById(R.id.EditTxPower);
 		progressBar_Apuntamiento=(ProgressBar) findViewById(R.id.progressBar_Apuntamiento);
 	}
@@ -496,8 +472,7 @@ public class ll_Inicio_Login extends Activity {
 			        int posicion =strInputGlobal.indexOf("SN:");
 			        public void run() {
 			        	   Text_Serial.setText(strInputGlobal.substring(posicion+3,posicion+15));
-			        	   Toast.makeText(getApplicationContext(), "Serial: "+strInputGlobal.substring(posicion+3,posicion+15), Toast.LENGTH_SHORT).show();
-		        	   }
+			        	     }
 			    });
 			}	
 		if(detectorString.contains("Model: ")){
@@ -562,7 +537,7 @@ public class ll_Inicio_Login extends Activity {
 				 runOnUiThread(new Runnable() {
 				       
 							        public void run() {
-							        	btn_Browser.setEnabled(false);
+							        	btn_Browser.setEnabled(true);
 							    		btn_EnviarOPT.setEnabled(false);
 							        	btn_exit.setEnabled(true);
 										btn_Ingresar.setEnabled(false);
@@ -571,6 +546,7 @@ public class ll_Inicio_Login extends Activity {
 										TB_Pointing.setEnabled(true);
 										TB_CwOnOff.setEnabled(true);
 										  Toast.makeText(getApplicationContext(), " Logueado en Telnet", Toast.LENGTH_SHORT).show();
+											
 									       }
 							    });
 			
@@ -632,10 +608,31 @@ public class ll_Inicio_Login extends Activity {
 				}	
 			}
 	
+		
+		///////// *****   LINUX *****//////////////////////
 			else
 			{
 		
 				telnet =true;
+				
+				
+		//		overwrite 'falcon.opt.old'?Starting falcon_monitor:OK	
+				
+				if (detectorString.contains("overwrite 'falcon.opt.old'?")){
+					FuncionEnviar("y");
+					
+					}
+				if(detectorString.contains("falcon_monitor:OK")){
+					 runOnUiThread(new Runnable() {
+
+					        public void run() {
+					        	progressDialogOPT.dismiss();
+					        	Toast.makeText(getApplicationContext(), "Archivo OPT Inicializado satisfactoriamente!!!", Toast.LENGTH_LONG).show();
+					        	
+					        	  }
+					    });
+					}
+				
 				if(detectorString.contains("DRAM Test")){
 					 runOnUiThread(new Runnable() {
 
@@ -886,19 +883,13 @@ public class ll_Inicio_Login extends Activity {
 			try {
 				float nivelFlotante= Float.parseFloat(NivelesAlmacenados[0])*100;
 				int NivelBaliza=(int)nivelFlotante;
-				//TextPrueba.setText("String: "+NivelesAlmacenados[0]+" float * 10:  "+nivelFlotante +" integer:  "+NivelBaliza);
-				progressBar_Apuntamiento.setMinimumHeight(20);
-				 progressBar_Apuntamiento.setMinimumWidth(100);
 				progressBar_Apuntamiento.setProgress(NivelBaliza);
-				
 				TextNivel.setText("Nivel= -"+NivelBaliza+" dbm");
 				
 			} catch (Exception e) {
 				progressBar_Apuntamiento.setProgress(0);
 				
 				TextNivel.setText("Nivel= -  dbm");
-			//	Toast.makeText(getApplicationContext(), "No hay medicion", Toast.LENGTH_SHORT).show();
-				
 			}
 			
 			strInputGlobal="";
@@ -917,7 +908,7 @@ public class ll_Inicio_Login extends Activity {
             	        public void run() {
             	    	progressDialog = new ProgressDialog(ll_Inicio_Login.this);
             	    		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            	    		progressDialog.setMessage("Esperando medicion");
+            	    		progressDialog.setMessage("Esperando medicion del Equipo..."); 
             	    		progressDialog.setMax(10);
             	    		progressDialog.setProgress(0);
             	    		progressDialog.setCancelable(false);
@@ -965,12 +956,12 @@ public class ll_Inicio_Login extends Activity {
     		if (resultCode == RESULT_OK) { 
     			curFileName = data.getStringExtra("GetFileName"); 
     			curFilePath = data.getStringExtra("GetPath"); 
-    			EditPath.setText(curFilePath+"/"+curFileName);
+    			Text_Path.setText(curFilePath+"/"+curFileName);
     			
     			/////////// carga opt
     			Log.d("OPT", "boton opt");
 				
-				p=LeerArchivo(EditPath.getText().toString());
+				p=LeerArchivo(Text_Path.getText().toString());
 				
 				CadenaPartida = p.split("\n");
 				longitudArchivo=CadenaPartida.length;
@@ -982,6 +973,7 @@ public class ll_Inicio_Login extends Activity {
 				}
 				FuncionEnviar("exit");// para ir a linux
 				Habilitacion=false;
+				btn_EnviarOPT.setEnabled(true);
 			
     		}
     	 }
