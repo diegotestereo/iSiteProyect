@@ -1006,7 +1006,7 @@ public class ll_Inicio_Login extends Activity {
             	        	 FuncionEnviar("cd /etc/idirect_falcon");
             	        	 FuncionEnviar("cat>falcon.opt");
             	        	progressDialogOPT = new ProgressDialog(ll_Inicio_Login.this);
-            				progressDialogOPT.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            				progressDialogOPT.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             				progressDialogOPT.setMessage("Cargando OPT");
             				progressDialogOPT.setMax(longitudArchivo);
             				progressDialogOPT.setProgress(0);
@@ -1018,7 +1018,7 @@ public class ll_Inicio_Login extends Activity {
                 				
                 				try {
 									Thread.sleep(20);
-									progressDialogOPT.incrementProgressBy(i);
+								//	progressDialogOPT.incrementProgressBy(i);
 								} catch (Exception e) {
 									// TODO: handle exception
 								}
