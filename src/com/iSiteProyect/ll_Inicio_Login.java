@@ -126,6 +126,33 @@ public class ll_Inicio_Login extends Activity {
 		Log.d(TAG, "OnCreate");
 		}
 	
+	private void DialogoReset() {
+		
+		 AlertDialog.Builder alert = new AlertDialog.Builder(this);                 
+		 alert.setTitle("Reset");  
+		 alert.setMessage("Desea Reiniciar el equipo?");                
+
+		 alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {  
+		     public void onClick(DialogInterface dialog, int whichButton) {  
+		        
+					FuncionEnviar("reboot");
+					FuncionEnviar("reset board");
+					
+		         return;                  
+		        }  
+		      });  
+
+		     alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+
+		         public void onClick(DialogInterface dialog, int which) {
+		          
+		             return;   
+		         }
+		     });
+		             alert.show();
+		
+		
+	}
 	
 	private void DialogoErrorPassword() {
 		
@@ -284,8 +311,7 @@ public class ll_Inicio_Login extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				FuncionEnviar("reboot");
-				FuncionEnviar("reset board");
+				DialogoReset();
 			}
 		});
 			
