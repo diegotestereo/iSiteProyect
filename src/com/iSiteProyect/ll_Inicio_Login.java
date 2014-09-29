@@ -90,9 +90,10 @@ public class ll_Inicio_Login extends Activity {
 	public VentanaDialogoNivel DialogoNivel;
 	public Boolean Lectura_pointing=false,boolPassword=true, telnet=true;
 	;
-	public Thread th1;
+	public Thread th1,thOpt;
 	//
 	////// opt 
+	static char finCadena=0x03;
 	
 	private static final int REQUEST_PATH = 1;
 	 
@@ -137,7 +138,7 @@ public class ll_Inicio_Login extends Activity {
 		        
 					FuncionEnviar("y");
 					Log.d("alert dialog enviar OPT", "Yes");
-					
+					thOpt.start();
 					 return;                  
 		        }  
 		      });  
@@ -154,6 +155,7 @@ public class ll_Inicio_Login extends Activity {
 		
 		
 	}
+	
 	
 	private void DialogoReset() {
 		
@@ -425,31 +427,14 @@ public class ll_Inicio_Login extends Activity {
 		});
 		
 		btn_EnviarOPT.setOnClickListener(new OnClickListener() {
-			char finCadena=0x03;
 			
 			@Override
 			public void onClick(View v) {
 				Toast.makeText(getApplicationContext(), "Transmitiendo Archivo...", Toast.LENGTH_SHORT).show();
 				FuncionEnviar("cd /etc/idirect/falcon");
 				FuncionEnviar("rm falcon.opt");
-				
-				
-		/*		for(int i=0;i<longitudArchivo;i++){
-					FuncionEnviar(CadenaPartida[i]);
-				}
-			
-				FuncionEnviar(""+finCadena);
-				Text_Path.setText("El OPT fue seleccionado.");
-				FuncionEnviar("service idirect_falcon restart");
-				Toast.makeText(getApplicationContext(), "Cargando y Reiniciando Servicios...", Toast.LENGTH_SHORT).show();
-				progressDialogOPT = new ProgressDialog(ll_Inicio_Login.this);
-				progressDialogOPT.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-				progressDialogOPT.setMessage("Reiniciando OPT");
-				progressDialogOPT.setMax(10);
-				progressDialogOPT.setProgress(0);
-				progressDialogOPT.setCancelable(false);
-				progressDialogOPT.show();	*/
-				
+				HiloOPT();
+
 			}
 		});
 	}
@@ -617,7 +602,7 @@ public class ll_Inicio_Login extends Activity {
 							  
 									       }
 							    });
-				// FuncionEnviar(""+excapeLog1+excapeLog2);
+				
 				}	
 			if(detectorString.contains(("tx cw on"))||detectorString.contains("tx cw off")){
 				FuncionEnviar("tx cw");
@@ -678,10 +663,7 @@ public class ll_Inicio_Login extends Activity {
 		        	DialogoenviarOPT();
 					 }
 					    });
-				
-					 
-					 
-					}
+				}
 				if(detectorString.contains("falcon_monitor:OK")){
 					 runOnUiThread(new Runnable() {
 
@@ -1008,8 +990,45 @@ public class ll_Inicio_Login extends Activity {
           });
 		}
 	
+	
 	//////////////////////// cargar opt
 	// Listen for results.
+	
+	public void HiloOPT() {
+		Log.d("HiloOPT", "hilo opete");
+		thOpt = new Thread(new Runnable() {
+          @Override
+            public void run() {
+            	 runOnUiThread(new Runnable() {
+            	        public void run() {
+            	    	
+            	        	Text_Path.setText("El OPT fue seleccionado.");
+            	        	 FuncionEnviar("cd /etc/idirect_falcon");
+            	        	 FuncionEnviar("cat>falcon.opt");
+            	        	progressDialogOPT = new ProgressDialog(ll_Inicio_Login.this);
+            				progressDialogOPT.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            				progressDialogOPT.setMessage("Cargando OPT");
+            				progressDialogOPT.setMax(10);
+            				progressDialogOPT.setProgress(0);
+            				progressDialogOPT.setCancelable(false);
+            				progressDialogOPT.show();
+
+                			for(int i=0;i<longitudArchivo;i++){
+                				FuncionEnviar(CadenaPartida[i]);
+                			}
+                			 FuncionEnviar(""+finCadena);
+                			
+                			 FuncionEnviar("service idirect_falcon restart");
+                   			
+            	        	
+            	        }
+            	    });
+            	
+          
+            }
+          });
+		}
+	
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         // See which child activity is calling us back.
     	if (requestCode == REQUEST_PATH){

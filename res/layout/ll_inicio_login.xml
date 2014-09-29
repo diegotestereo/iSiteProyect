@@ -150,7 +150,7 @@
 
                     <Button
                         android:id="@+id/btn_exit"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/selectorboton"
                         android:text="Exit" />
@@ -162,14 +162,6 @@
                     android:baselineAligned="true"
                     android:gravity="left"
                     android:orientation="vertical" >
-
-                    <Button
-                        android:id="@+id/btn_Led"
-                        style="?android:attr/buttonStyleSmall"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/selectorled"
-                        android:text="Data" />
                 </LinearLayout>
             </LinearLayout>
 
