@@ -126,6 +126,35 @@ public class ll_Inicio_Login extends Activity {
 		Log.d(TAG, "OnCreate");
 		}
 	
+	private void DialogoenviarOPT() {
+		
+		 AlertDialog.Builder alert = new AlertDialog.Builder(this);                 
+		 alert.setTitle("OPT");  
+		 alert.setMessage("Desea enviar el archivo '"+curFileName+"' al equipo ?");                
+
+		 alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {  
+		     public void onClick(DialogInterface dialog, int whichButton) {  
+		        
+					FuncionEnviar("y");
+					Log.d("alert dialog enviar OPT", "Yes");
+					
+					 return;                  
+		        }  
+		      });  
+
+		     alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+
+		         public void onClick(DialogInterface dialog, int which) {
+		        	 FuncionEnviar("n");
+		         Log.d("alert dialog enviar OPT", "No");
+		             return;   
+		         }
+		     });
+		             alert.show();
+		
+		
+	}
+	
 	private void DialogoReset() {
 		
 		 AlertDialog.Builder alert = new AlertDialog.Builder(this);                 
@@ -137,6 +166,7 @@ public class ll_Inicio_Login extends Activity {
 		        
 					FuncionEnviar("reboot");
 					FuncionEnviar("reset board");
+					  Log.d("alert dialog Reset", "Yes");
 					
 		         return;                  
 		        }  
@@ -145,7 +175,7 @@ public class ll_Inicio_Login extends Activity {
 		     alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
 
 		         public void onClick(DialogInterface dialog, int which) {
-		          
+		        	  Log.d("alert dialog Reset", "No");
 		             return;   
 		         }
 		     });
@@ -401,9 +431,8 @@ public class ll_Inicio_Login extends Activity {
 			public void onClick(View v) {
 				Toast.makeText(getApplicationContext(), "Transmitiendo Archivo...", Toast.LENGTH_SHORT).show();
 				FuncionEnviar("cd /etc/idirect/falcon");
-				FuncionEnviar("mv falcon.opt falcon.opt.old");
-			//	FuncionEnviar("rm falcon.opt");
-				FuncionEnviar("cat> falcon.opt");
+				FuncionEnviar("rm falcon.opt");
+				
 				
 		/*		for(int i=0;i<longitudArchivo;i++){
 					FuncionEnviar(CadenaPartida[i]);
@@ -437,7 +466,7 @@ public class ll_Inicio_Login extends Activity {
 		Text_Firmware=(TextView) findViewById(R.id.Text_Firmware);
 		Text_VersionLinux=(TextView) findViewById(R.id.Text_VersionLinux);
 		
-		btn_Led=(Button) findViewById(R.id.btn_Led);
+		//btn_Led=(Button) findViewById(R.id.btn_Led);
 		btn_Ingresar=(Button) findViewById(R.id.btn_Ingresar);
 		btn_SetFreq=(Button) findViewById(R.id.btn_SetFreq);
 		btn_Reset=(Button) findViewById(R.id.btn_Reset);
@@ -510,39 +539,6 @@ public class ll_Inicio_Login extends Activity {
 			        	   Text_Modelo.setText(strInputGlobal.substring(posicion+6,posicion+15));
 		        	   }
 			    });
-			}
-		//rm: remove
-		if(detectorString.contains("rm: remove")){
-			
-			 FuncionEnviar("y");
-			 runOnUiThread(new Runnable() {
-        public void run() {
-        	 String[] CadenaPartida=null;
-        	char finCadena=0x03;
-    		
-        	Toast.makeText(getApplicationContext(), "Remover archivo falcon", Toast.LENGTH_SHORT).show();
-        	FuncionEnviar("cat> falcon.opt");
-			
-			for(int i=0;i<longitudArchivo;i++){
-				FuncionEnviar(CadenaPartida[i]);
-			}
-			
-			FuncionEnviar(""+finCadena);
-			Text_Path.setText("El OPT fue seleccionado.");
-			FuncionEnviar("service idirect_falcon restart");
-			Toast.makeText(getApplicationContext(), "Cargando y Reiniciando Servicios...", Toast.LENGTH_SHORT).show();
-			progressDialogOPT = new ProgressDialog(ll_Inicio_Login.this);
-			progressDialogOPT.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			progressDialogOPT.setMessage("Reiniciando OPT");
-			progressDialogOPT.setMax(10);
-			progressDialogOPT.setProgress(0);
-			progressDialogOPT.setCancelable(false);
-			progressDialogOPT.show();	
-			 }
-			    });
-		
-			 
-			 
 			}
 		
 		
@@ -674,11 +670,17 @@ public class ll_Inicio_Login extends Activity {
 				telnet =true;
 				
 				
-		//		overwrite 'falcon.opt.old'?Starting falcon_monitor:OK	
-				
-				if (detectorString.contains("overwrite 'falcon.opt.old'?")){
-					FuncionEnviar("y");
+				if(detectorString.contains("rm:")){
 					
+					
+					 runOnUiThread(new Runnable() {
+		        public void run() {
+		        	DialogoenviarOPT();
+					 }
+					    });
+				
+					 
+					 
 					}
 				if(detectorString.contains("falcon_monitor:OK")){
 					 runOnUiThread(new Runnable() {
