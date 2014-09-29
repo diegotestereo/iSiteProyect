@@ -376,9 +376,10 @@ public class ll_Inicio_Login extends Activity {
 				Toast.makeText(getApplicationContext(), "Transmitiendo Archivo...", Toast.LENGTH_SHORT).show();
 				FuncionEnviar("cd /etc/idirect/falcon");
 				FuncionEnviar("mv falcon.opt falcon.opt.old");
+			//	FuncionEnviar("rm falcon.opt");
 				FuncionEnviar("cat> falcon.opt");
 				
-				for(int i=0;i<longitudArchivo;i++){
+		/*		for(int i=0;i<longitudArchivo;i++){
 					FuncionEnviar(CadenaPartida[i]);
 				}
 			
@@ -392,7 +393,7 @@ public class ll_Inicio_Login extends Activity {
 				progressDialogOPT.setMax(10);
 				progressDialogOPT.setProgress(0);
 				progressDialogOPT.setCancelable(false);
-				progressDialogOPT.show();	
+				progressDialogOPT.show();	*/
 				
 			}
 		});
@@ -484,8 +485,39 @@ public class ll_Inicio_Login extends Activity {
 		        	   }
 			    });
 			}
+		//rm: remove
+		if(detectorString.contains("rm: remove")){
+			
+			 FuncionEnviar("y");
+			 runOnUiThread(new Runnable() {
+        public void run() {
+        	 String[] CadenaPartida=null;
+        	char finCadena=0x03;
+    		
+        	Toast.makeText(getApplicationContext(), "Remover archivo falcon", Toast.LENGTH_SHORT).show();
+        	FuncionEnviar("cat> falcon.opt");
+			
+			for(int i=0;i<longitudArchivo;i++){
+				FuncionEnviar(CadenaPartida[i]);
+			}
+			
+			FuncionEnviar(""+finCadena);
+			Text_Path.setText("El OPT fue seleccionado.");
+			FuncionEnviar("service idirect_falcon restart");
+			Toast.makeText(getApplicationContext(), "Cargando y Reiniciando Servicios...", Toast.LENGTH_SHORT).show();
+			progressDialogOPT = new ProgressDialog(ll_Inicio_Login.this);
+			progressDialogOPT.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			progressDialogOPT.setMessage("Reiniciando OPT");
+			progressDialogOPT.setMax(10);
+			progressDialogOPT.setProgress(0);
+			progressDialogOPT.setCancelable(false);
+			progressDialogOPT.show();	
+			 }
+			    });
 		
-		
+			 
+			 
+			}
 		
 		
 		if(detectorString.contains("iDirect Linux-BSP Release")){
