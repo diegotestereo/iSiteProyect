@@ -124,6 +124,7 @@ public class ll_Inicio_Login extends Activity {
 		LevantarXML();
 		SetupUI();
 		Botones();
+		
 		Log.d(TAG, "OnCreate");
 		}
 	
@@ -156,7 +157,7 @@ public class ll_Inicio_Login extends Activity {
 		
 	}
 	
-		private void DialogoReset() {
+	private void DialogoReset() {
 		
 		 AlertDialog.Builder alert = new AlertDialog.Builder(this);                 
 		 alert.setTitle("Reset");  
@@ -314,8 +315,8 @@ public class ll_Inicio_Login extends Activity {
 			Intent intent1 = new Intent(getApplicationContext(), FileChooser.class);
 	        startActivityForResult(intent1,REQUEST_PATH);
 		
-		}
-	});
+			}
+		});
 		
 		btn_SetFreq.setOnClickListener(new OnClickListener() {
 			
@@ -350,15 +351,10 @@ public class ll_Inicio_Login extends Activity {
 			
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
 				if (isChecked){
-				 
-				Toast.makeText(getApplicationContext(), "Log Telnet ", Toast.LENGTH_SHORT).show();
-				Habilitacion=isChecked;}
+					Habilitacion=isChecked;}
 				else{Habilitacion=isChecked;
-				Toast.makeText(getApplicationContext(), "Log Linux ", Toast.LENGTH_SHORT).show();}
-				
-			
+				}
 			}
 		});
 		
@@ -429,7 +425,6 @@ public class ll_Inicio_Login extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(getApplicationContext(), "Transmitiendo Archivo...", Toast.LENGTH_SHORT).show();
 				FuncionEnviar("cd /etc/idirect/falcon");
 				FuncionEnviar("rm falcon.opt");
 				HiloOPT();

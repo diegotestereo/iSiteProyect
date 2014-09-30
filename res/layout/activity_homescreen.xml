@@ -33,12 +33,14 @@
             android:layout_width="169dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:background="@drawable/selectorboton"
             android:text="Buscar Dispositivos emparejados" />
 
         <Button
             android:id="@+id/btnConnect"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@drawable/selectorboton"
             android:enabled="false"
             android:text="Conectar" />
 
