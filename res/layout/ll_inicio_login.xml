@@ -162,6 +162,13 @@
                     android:baselineAligned="true"
                     android:gravity="left"
                     android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/Text_Log"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TextView" />
+
                 </LinearLayout>
             </LinearLayout>
 
@@ -193,7 +200,6 @@
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:ems="10"
-                        android:focusable="false"
                         android:inputType="numberDecimal"
                         android:maxLength="8"
                         android:maxWidth="7dp"
@@ -259,7 +265,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:focusable="false"
                             android:includeFontPadding="true"
                             android:inputType="number"
                             android:maxLength="2" />

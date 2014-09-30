@@ -81,7 +81,7 @@ public class ll_Inicio_Login extends Activity {
 
 	public Button btn_Led,btn_EnviarOPT,btn_exit,btn_Ingresar,btn_Cargar_OPT,btn_SetFreq,btn_Reset,btn_Browser,btn_SetPower;
 	public ToggleButton TB_Login,TB_CwOnOff,TB_Pointing;
-	public TextView  Text_Path,TextPointing,TextPrueba,TextNivel,Text_Serial,Text_Modelo,Text_Firmware,Text_VersionLinux;
+	public TextView  Text_Log,Text_Path,TextPointing,TextPrueba,TextNivel,Text_Serial,Text_Modelo,Text_Firmware,Text_VersionLinux;
 	public EditText EditFreq,EditPass,EditPrueba,EditTxPower;
 	public String password;
 	// hilos
@@ -156,8 +156,7 @@ public class ll_Inicio_Login extends Activity {
 		
 	}
 	
-	
-	private void DialogoReset() {
+		private void DialogoReset() {
 		
 		 AlertDialog.Builder alert = new AlertDialog.Builder(this);                 
 		 alert.setTitle("Reset");  
@@ -442,7 +441,7 @@ public class ll_Inicio_Login extends Activity {
 	private void  LevantarXML() {
 	
 		TextPointing=(TextView) findViewById(R.id.TextPointing);
-		//TextPrueba=(TextView) findViewById(R.id.TextPrueba);
+		Text_Log=(TextView) findViewById(R.id.Text_Log);
 		TextNivel=(TextView) findViewById(R.id.TextNivel);
 		Text_Path=(TextView) findViewById(R.id.text_Path);
 		//,,,;
@@ -486,7 +485,6 @@ public class ll_Inicio_Login extends Activity {
 	
 	public void FuncionDetectarComando(String detectorString,Boolean hab){
 		
-		Log.d("FuncionDetectarComando", "detector string: "+detectorString+" Boolean: "+hab);
 		String[] CadenaPartida = detectorString.split("\r");
 		int longitud =CadenaPartida.length;
 		Log.d("FuncionDetectarComando","Esta es la longitud  "+longitud);
@@ -494,6 +492,14 @@ public class ll_Inicio_Login extends Activity {
 		for(int i=0;i<longitud;i++){
 		Log.d("FuncionDetectarComando","Esta es la cadena "+i+": "+CadenaPartida[i]+"-");
 				}
+		
+		if(detectorString.contains("> ")){
+			 runOnUiThread(new Runnable() {
+       public void run() {
+       	Text_Log.setText("Log Telnet");
+			 }
+			    });
+		}
 		
 		
 		if(detectorString.contains("[ErrorStack]")){
@@ -654,6 +660,13 @@ public class ll_Inicio_Login extends Activity {
 		
 				telnet =true;
 				
+				if(detectorString.contains("# ")){
+					 runOnUiThread(new Runnable() {
+		        public void run() {
+		        	Text_Log.setText("Log Linux");
+					 }
+					    });
+				}
 				
 				if(detectorString.contains("rm:")){
 					
@@ -1059,7 +1072,7 @@ public class ll_Inicio_Login extends Activity {
 				for(int i=0;i<longitudArchivo;i++){
 					Log.d("OPT cargado: ",CadenaPartida[i]);
 				}
-				FuncionEnviar("exit");// para ir a linux
+				//FuncionEnviar("exit");// para ir a linux
 				Habilitacion=false;
 				btn_EnviarOPT.setEnabled(true);
 			
