@@ -10,9 +10,9 @@ import java.io.InputStream;
 import java.util.UUID;
 
 
+
 import android.app.Activity;
 import android.app.AlertDialog;
-
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -20,11 +20,9 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
@@ -79,9 +77,9 @@ public class ll_Inicio_Login extends Activity {
 	public Spinner spin_TX,spin_RX,spin_Otros;
 	public ArrayAdapter<String> TxAdapter,RxAdapter,OtrosAdapter;
 
-	public Button btn_Led,btn_EnviarOPT,btn_exit,btn_Ingresar,btn_Cargar_OPT,btn_SetFreq,btn_Reset,btn_Browser,btn_SetPower;
+	public Button btn_asinOPT,btn_Led,btn_EnviarOPT,btn_exit,btn_Ingresar,btn_Cargar_OPT,btn_SetFreq,btn_Reset,btn_Browser,btn_SetPower;
 	public ToggleButton TB_Login,TB_CwOnOff,TB_Pointing;
-	public TextView  Text_Log,Text_Path,TextPointing,TextPrueba,TextNivel,Text_Serial,Text_Modelo,Text_Firmware,Text_VersionLinux;
+	public TextView  Text_lineas,Text_Log,Text_Path,TextPointing,TextPrueba,TextNivel,Text_Serial,Text_Modelo,Text_Firmware,Text_VersionLinux;
 	public EditText EditFreq,EditPass,EditPrueba,EditTxPower;
 	public String password;
 	// hilos
@@ -91,7 +89,7 @@ public class ll_Inicio_Login extends Activity {
 	public Boolean Lectura_pointing=false,boolPassword=true, telnet=true;
 	;
 	public Thread th1,thOpt;
-	//
+	private asincOPT asinc;
 	////// opt 
 	static char finCadena=0x03;
 	
@@ -124,8 +122,6 @@ public class ll_Inicio_Login extends Activity {
 		LevantarXML();
 		SetupUI();
 		Botones();
-		
-		Log.d(TAG, "OnCreate");
 		}
 	
 	private void DialogoenviarOPT() {
@@ -139,7 +135,9 @@ public class ll_Inicio_Login extends Activity {
 		        
 					FuncionEnviar("y");
 					Log.d("alert dialog enviar OPT", "Yes");
-					thOpt.start();
+				//thOpt.start();
+					asinc=new asincOPT();
+					asinc.execute();
 					 return;                  
 		        }  
 		      });  
@@ -276,7 +274,8 @@ public class ll_Inicio_Login extends Activity {
 		TB_Login.setEnabled(false);
 		TB_Pointing.setEnabled(false);
 		TB_CwOnOff.setEnabled(false);
-	
+		
+		
 	}
 
 	private void Botones() {
@@ -427,8 +426,18 @@ public class ll_Inicio_Login extends Activity {
 			public void onClick(View v) {
 				FuncionEnviar("cd /etc/idirect/falcon");
 				FuncionEnviar("rm falcon.opt");
-				HiloOPT();
+				
+				//HiloOPT();
 
+			}
+		});
+	
+		btn_asinOPT.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				
 			}
 		});
 	}
@@ -439,6 +448,7 @@ public class ll_Inicio_Login extends Activity {
 		Text_Log=(TextView) findViewById(R.id.Text_Log);
 		TextNivel=(TextView) findViewById(R.id.TextNivel);
 		Text_Path=(TextView) findViewById(R.id.text_Path);
+		Text_lineas=(TextView) findViewById(R.id.Text_lineas);
 		//,,,;
 		Text_Serial=(TextView) findViewById(R.id.Text_Serial);
 		Text_Modelo=(TextView) findViewById(R.id.Text_Modelo);
@@ -449,7 +459,7 @@ public class ll_Inicio_Login extends Activity {
 		btn_Ingresar=(Button) findViewById(R.id.btn_Ingresar);
 		btn_SetFreq=(Button) findViewById(R.id.btn_SetFreq);
 		btn_Reset=(Button) findViewById(R.id.btn_Reset);
-	//	btn_Cargar_OPT=(Button) findViewById(R.id.btn_CargarOPT);
+		btn_asinOPT=(Button) findViewById(R.id.btn_asinOPT);
 		btn_Browser=(Button) findViewById(R.id.btn_Browser);
 		btn_SetPower=(Button) findViewById(R.id.btn_SetPower);
 		btn_exit=(Button) findViewById(R.id.btn_exit);
@@ -659,6 +669,7 @@ public class ll_Inicio_Login extends Activity {
 					 runOnUiThread(new Runnable() {
 		        public void run() {
 		        	Text_Log.setText("Log Linux");
+		        	btn_Ingresar.setEnabled(true);
 					 }
 					    });
 				}
@@ -1002,9 +1013,81 @@ public class ll_Inicio_Login extends Activity {
 	//////////////////////// cargar opt
 	// Listen for results.
 	
+	private class asincOPT extends AsyncTask<Void, Void, Void>{
+
+		@Override
+        protected void onPreExecute() {
+			Toast.makeText(getApplicationContext(), "comienza hilo", Toast.LENGTH_SHORT);
+			Log.d("ASINC", "onPreExecute() ");
+
+        	Text_Path.setText("El OPT fue seleccionado.");
+        	 FuncionEnviar("cd /etc/idirect_falcon");
+        	 FuncionEnviar("cat>falcon.opt");
+			progressDialogOPT = new ProgressDialog(ll_Inicio_Login.this);
+			progressDialogOPT.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			progressDialogOPT.setMessage("Cargando OPT");
+			progressDialogOPT.setMax(longitudArchivo);
+			progressDialogOPT.setProgress(0);
+			progressDialogOPT.setCancelable(false);
+			progressDialogOPT.show();
+			Text_lineas.setText("El archvo tiene "+longitudArchivo+" lineas a Transmitir");
+		
+            }
+		
+		
+		
+		@Override
+		protected Void doInBackground(Void... params) {
+			Log.d("ASINC", "doInBackground ");
+			
+			
+			for(int i=0;i<longitudArchivo;i++){
+				FuncionEnviar(CadenaPartida[i]);
+				
+				try {
+					Thread.sleep(10);
+					onProgressUpdate(i);
+				
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+			}
+			
+			 FuncionEnviar(""+finCadena);
+ 				 FuncionEnviar("service idirect_falcon restart");
+   			
+			return null;
+		}
+		
+	
+
+
+
+		protected void onProgressUpdate(int progreso) {
+	              progressDialogOPT.setProgress(progreso);
+	        }
+		
+		
+		@Override
+		protected void onPostExecute(Void unVoid){
+			Log.d("ASINC", "onPostExecute ");
+			progressDialogOPT.dismiss();			
+			
+			
+		}
+	
+		
+		
+	}
+	
+	
+	
+	
 	public void HiloOPT() {
 		Log.d("HiloOPT", "hilo opete");
 		thOpt = new Thread(new Runnable() {
+			
+			
           @Override
             public void run() {
             	 runOnUiThread(new Runnable() {
@@ -1020,7 +1103,7 @@ public class ll_Inicio_Login extends Activity {
             				progressDialogOPT.setProgress(0);
             				progressDialogOPT.setCancelable(false);
             				progressDialogOPT.show();
-
+            				Text_lineas.setText("El archvo tiene "+longitudArchivo+" lineas a Transmitir");
                 			for(int i=0;i<longitudArchivo;i++){
                 				FuncionEnviar(CadenaPartida[i]);
                 				

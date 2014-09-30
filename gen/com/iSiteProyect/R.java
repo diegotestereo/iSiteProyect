@@ -72,7 +72,8 @@ public final class R {
         public static final int Text_Modelo=0x7f0b0010;
         public static final int Text_Serial=0x7f0b0018;
         public static final int Text_VersionLinux=0x7f0b001c;
-        public static final int action_settings=0x7f0b0037;
+        public static final int Text_lineas=0x7f0b0037;
+        public static final int action_settings=0x7f0b0039;
         public static final int btnClear=0x7f0b000b;
         public static final int btnClearInput=0x7f0b0005;
         public static final int btnConnect=0x7f0b0003;
@@ -85,6 +86,7 @@ public final class R {
         public static final int btn_Reset=0x7f0b0036;
         public static final int btn_SetFreq=0x7f0b0024;
         public static final int btn_SetPower=0x7f0b002b;
+        public static final int btn_asinOPT=0x7f0b0038;
         public static final int btn_exit=0x7f0b001f;
         public static final int chkReceiveText=0x7f0b0007;
         public static final int chkScroll=0x7f0b0006;
