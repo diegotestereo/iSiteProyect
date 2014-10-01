@@ -145,6 +145,7 @@
                         android:id="@+id/btn_Ingresar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                          android:layout_margin="2dp"
                         android:background="@drawable/selectorboton"
                         android:text="Login" />
 
@@ -152,6 +153,7 @@
                         android:id="@+id/btn_exit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                          android:layout_margin="2dp"
                         android:background="@drawable/selectorboton"
                         android:text="Exit" />
                 </LinearLayout>
@@ -378,6 +380,7 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
                     android:orientation="horizontal" >
 
                     <Button
@@ -386,7 +389,8 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/selectorboton"
                         android:padding="2dp"
-                        android:text="Buscar OPT" />
+                          android:layout_margin="2dp"
+                        android:text="Buscar" />
 
                     <Button
                         android:id="@+id/btn_EnviarOPT"
@@ -394,21 +398,33 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/selectorboton"
                         android:padding="2dp"
-                        android:text="Enviar OPT" />
+                          android:layout_margin="2dp"
+                        android:text="Enviar" />
 
                     <Button
                         android:id="@+id/btn_Reset"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/selectorboton"
+                          android:layout_margin="2dp"
                         android:text="Reset" />
+
+                    <Button
+                        android:id="@+id/btn_RestaurarOPT"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                          android:layout_margin="2dp"
+                            android:padding="2dp"
+                        android:background="@drawable/selectorboton"
+                        android:text="Restaurar" />
+
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/Text_lineas"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="lineas del archivo a trasnmitir" />
+                    android:text="lineas del archivo a transmitir" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -416,12 +432,6 @@
                     android:orientation="horizontal" >
 
                 </LinearLayout>
-
-                <Button
-                    android:id="@+id/btn_asinOPT"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Button" />
 
             </LinearLayout>
 

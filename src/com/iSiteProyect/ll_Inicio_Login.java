@@ -69,7 +69,7 @@ public class ll_Inicio_Login extends Activity {
 	// dialogos en progreso
 	public ProgressBar progressBarBoot;
 	public ProgressDialog progressDialog,progressDialog2,progressDialogOPT;
-	public ProgressDialog progressDialogInicio;
+	public ProgressDialog progressDialogInicio,progressDialogLinux,DialogoReiniOPT,DialogoRestoreaOPT;
 	public ProgressBar progressBar_Apuntamiento;
 	
 	boolean rootBool=false;
@@ -77,7 +77,7 @@ public class ll_Inicio_Login extends Activity {
 	public Spinner spin_TX,spin_RX,spin_Otros;
 	public ArrayAdapter<String> TxAdapter,RxAdapter,OtrosAdapter;
 
-	public Button btn_asinOPT,btn_Led,btn_EnviarOPT,btn_exit,btn_Ingresar,btn_Cargar_OPT,btn_SetFreq,btn_Reset,btn_Browser,btn_SetPower;
+	public Button btn_RestaurarOPT,btn_Led,btn_EnviarOPT,btn_exit,btn_Ingresar,btn_Cargar_OPT,btn_SetFreq,btn_Reset,btn_Browser,btn_SetPower;
 	public ToggleButton TB_Login,TB_CwOnOff,TB_Pointing;
 	public TextView  Text_lineas,Text_Log,Text_Path,TextPointing,TextPrueba,TextNivel,Text_Serial,Text_Modelo,Text_Firmware,Text_VersionLinux;
 	public EditText EditFreq,EditPass,EditPrueba,EditTxPower;
@@ -122,7 +122,31 @@ public class ll_Inicio_Login extends Activity {
 		LevantarXML();
 		SetupUI();
 		Botones();
+		DialogoLinux();
+		DialogoReinicioOPT();
 		}
+	
+	
+	private void DialogoLinux(){
+		
+		progressDialogLinux = new ProgressDialog(ll_Inicio_Login.this);
+		progressDialogLinux.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progressDialogLinux.setMessage("Espere un momento...");
+		progressDialogLinux.setCancelable(false);
+		progressDialogLinux.show();
+			
+	}
+	
+private void DialogoReinicioOPT(){
+		
+	DialogoReiniOPT = new ProgressDialog(ll_Inicio_Login.this);
+	DialogoReiniOPT.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+	DialogoReiniOPT.setMessage("Reiniciando Option File");
+	DialogoReiniOPT.setCancelable(false);
+		
+		
+	}
+
 	
 	private void DialogoenviarOPT() {
 		
@@ -133,19 +157,17 @@ public class ll_Inicio_Login extends Activity {
 		 alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {  
 		     public void onClick(DialogInterface dialog, int whichButton) {  
 		        
-					FuncionEnviar("y");
-					Log.d("alert dialog enviar OPT", "Yes");
-				//thOpt.start();
+		    	 Log.d("alert dialog enviar OPT", "Yes");
 					asinc=new asincOPT();
 					asinc.execute();
-					 return;                  
+				 return;                  
 		        }  
 		      });  
 
 		     alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
 
 		         public void onClick(DialogInterface dialog, int which) {
-		        	 FuncionEnviar("n");
+		        //	 FuncionEnviar("n");
 		         Log.d("alert dialog enviar OPT", "No");
 		             return;   
 		         }
@@ -258,7 +280,6 @@ public class ll_Inicio_Login extends Activity {
 		
 	}
 
-
 	private void SetupUI() {
 		TB_Login.setChecked(false);
 		progressBar_Apuntamiento.setMax(100);
@@ -270,6 +291,8 @@ public class ll_Inicio_Login extends Activity {
 		btn_Ingresar.setEnabled(false);
 		btn_SetFreq.setEnabled(false);
 		btn_SetPower.setEnabled(false);
+		btn_RestaurarOPT.setEnabled(true);
+		
 		
 		TB_Login.setEnabled(false);
 		TB_Pointing.setEnabled(false);
@@ -424,19 +447,23 @@ public class ll_Inicio_Login extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				FuncionEnviar("cd /etc/idirect/falcon");
-				FuncionEnviar("rm falcon.opt");
-				
-				//HiloOPT();
-
+				DialogoenviarOPT();
 			}
 		});
 	
-		btn_asinOPT.setOnClickListener(new OnClickListener() {
+		btn_RestaurarOPT.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				
+			Toast.makeText(getApplicationContext(), "Restaurando archivos ...", Toast.LENGTH_SHORT).show();
+				FuncionEnviar("cd /etc/idirect/falcon");
+				FuncionEnviar("mv falcon.opt falcon.opt.post");
+				FuncionEnviar("mv falcon.opt.backup falcon.opt");
+				FuncionEnviar("rm falcon.opt.post");
+				FuncionEnviar("rm falcon.opt.backup");
+				FuncionEnviar("service idirect_falcon restart");
+				DialogoReiniOPT.show();
+				btn_RestaurarOPT.setEnabled(false);
 				
 			}
 		});
@@ -459,7 +486,7 @@ public class ll_Inicio_Login extends Activity {
 		btn_Ingresar=(Button) findViewById(R.id.btn_Ingresar);
 		btn_SetFreq=(Button) findViewById(R.id.btn_SetFreq);
 		btn_Reset=(Button) findViewById(R.id.btn_Reset);
-		btn_asinOPT=(Button) findViewById(R.id.btn_asinOPT);
+		btn_RestaurarOPT=(Button) findViewById(R.id.btn_RestaurarOPT);
 		btn_Browser=(Button) findViewById(R.id.btn_Browser);
 		btn_SetPower=(Button) findViewById(R.id.btn_SetPower);
 		btn_exit=(Button) findViewById(R.id.btn_exit);
@@ -596,7 +623,7 @@ public class ll_Inicio_Login extends Activity {
 										TB_Pointing.setEnabled(true);
 										TB_CwOnOff.setEnabled(true);
 										  Toast.makeText(getApplicationContext(), " Logueado en Telnet", Toast.LENGTH_SHORT).show();
-											
+										progressDialogLinux.dismiss();	
 									       }
 							    });
 			
@@ -669,26 +696,23 @@ public class ll_Inicio_Login extends Activity {
 					 runOnUiThread(new Runnable() {
 		        public void run() {
 		        	Text_Log.setText("Log Linux");
+		        	progressDialogLinux.dismiss();
 		        	btn_Ingresar.setEnabled(true);
 					 }
 					    });
 				}
 				
-				if(detectorString.contains("rm:")){
-					
-					
-					 runOnUiThread(new Runnable() {
-		        public void run() {
-		        	DialogoenviarOPT();
-					 }
-					    });
+				if(detectorString.contains("rm: remove")){
+				
+					FuncionEnviar("y");
+					Log.d("Borrar", "se boorro archivo");
 				}
 				if(detectorString.contains("falcon_monitor:OK")){
 					 runOnUiThread(new Runnable() {
 
 					        public void run() {
-					        	progressDialogOPT.dismiss();
-					        	Toast.makeText(getApplicationContext(), "Archivo OPT Inicializado satisfactoriamente!!!", Toast.LENGTH_LONG).show();
+					        	DialogoReiniOPT.dismiss();
+					            	Toast.makeText(getApplicationContext(), "Archivo OPT Inicializado !!!", Toast.LENGTH_LONG).show();
 					        	
 					        	  }
 					    });
@@ -858,7 +882,7 @@ public class ll_Inicio_Login extends Activity {
 			super.onPostExecute(result);
 
 			if (!mConnectSuccessful) {
-				Toast.makeText(getApplicationContext(), "Could not connect to device. Is it a Serial device? Also check if the UUID is correct in the settings", Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(), "No de puede conectar. Es un dispositivo serial? Chequear el UUID si esta seteado correctamente", Toast.LENGTH_LONG).show();
 				finish();
 			} else {
 				msg("Connected to device");
@@ -1019,9 +1043,9 @@ public class ll_Inicio_Login extends Activity {
         protected void onPreExecute() {
 			Toast.makeText(getApplicationContext(), "comienza hilo", Toast.LENGTH_SHORT);
 			Log.d("ASINC", "onPreExecute() ");
-
-        	Text_Path.setText("El OPT fue seleccionado.");
-        	 FuncionEnviar("cd /etc/idirect_falcon");
+         	Text_Path.setText("El OPT fue seleccionado.");
+        	 FuncionEnviar("cd /etc/idirect/falcon");
+        	 FuncionEnviar("mv falcon.opt falcon.opt.backup");
         	 FuncionEnviar("cat>falcon.opt");
 			progressDialogOPT = new ProgressDialog(ll_Inicio_Login.this);
 			progressDialogOPT.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -1033,9 +1057,7 @@ public class ll_Inicio_Login extends Activity {
 			Text_lineas.setText("El archvo tiene "+longitudArchivo+" lineas a Transmitir");
 		
             }
-		
-		
-		
+	    
 		@Override
 		protected Void doInBackground(Void... params) {
 			Log.d("ASINC", "doInBackground ");
@@ -1059,29 +1081,23 @@ public class ll_Inicio_Login extends Activity {
 			return null;
 		}
 		
-	
-
-
-
 		protected void onProgressUpdate(int progreso) {
 	              progressDialogOPT.setProgress(progreso);
 	        }
 		
-		
 		@Override
 		protected void onPostExecute(Void unVoid){
 			Log.d("ASINC", "onPostExecute ");
-			progressDialogOPT.dismiss();			
+			progressDialogOPT.dismiss();
+			DialogoReiniOPT.show();
+
+			btn_RestaurarOPT.setEnabled(true);
+			btn_EnviarOPT.setEnabled(false);
 			
 			
 		}
-	
-		
 		
 	}
-	
-	
-	
 	
 	public void HiloOPT() {
 		Log.d("HiloOPT", "hilo opete");

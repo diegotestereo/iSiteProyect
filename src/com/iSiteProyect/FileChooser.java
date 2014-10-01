@@ -19,7 +19,7 @@ public class FileChooser extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState); 
-        currentDir = new File("/sdcard/");
+        currentDir = new File("/sdcard/Download");
         fill(currentDir); 
     }
     private void fill(File f)
