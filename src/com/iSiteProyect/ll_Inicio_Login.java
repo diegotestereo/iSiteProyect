@@ -572,7 +572,7 @@ public class ll_Inicio_Login extends Activity {
 				        
 				        public void run() {
 				        	Log.d("Señal en dbm ",niveldbm+ " dbm");
-				        	   TextNivel.setText(niveldbm);
+				        	   TextNivel.setText(niveldbm+" dbm");
 			        	   }
 				    });
 				}
@@ -990,6 +990,7 @@ public class ll_Inicio_Login extends Activity {
 		}
 		@Override
 		protected void onPostExecute(Void result) {
+			TextNivel.setText("0 dbm");
 			}
 		
 		@Override
