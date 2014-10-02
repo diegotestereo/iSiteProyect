@@ -126,6 +126,7 @@ public class ll_Inicio_Login extends Activity {
 		DialogoReinicioOPT();
 		}
 	
+	/////////////// Dialogos /////////////////////////////////
 	
 	private void DialogoLinux(){
 		
@@ -137,7 +138,7 @@ public class ll_Inicio_Login extends Activity {
 			
 	}
 	
-private void DialogoReinicioOPT(){
+	private void DialogoReinicioOPT(){
 		
 	DialogoReiniOPT = new ProgressDialog(ll_Inicio_Login.this);
 	DialogoReiniOPT.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -146,7 +147,6 @@ private void DialogoReinicioOPT(){
 		
 		
 	}
-
 	
 	private void DialogoenviarOPT() {
 		
@@ -211,11 +211,9 @@ private void DialogoReinicioOPT(){
 		 AlertDialog.Builder alert = new AlertDialog.Builder(this);                 
 		 alert.setTitle("Login");  
 		 alert.setMessage("Error de contraseña ingresela nuevamente:");                
-
-		  // Set an EditText view to get user input   
-		  final EditText PasswordTelnet = new EditText(this); 
-		  PasswordTelnet.setTransformationMethod(PasswordTransformationMethod.getInstance());
-		  alert.setView(PasswordTelnet);
+		 final EditText PasswordTelnet = new EditText(this); 
+		 PasswordTelnet.setTransformationMethod(PasswordTransformationMethod.getInstance());
+		 alert.setView(PasswordTelnet);
 		  
 		     alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {  
 		     public void onClick(DialogInterface dialog, int whichButton) {  
@@ -280,7 +278,10 @@ private void DialogoReinicioOPT(){
 		
 	}
 
+////////////////// Fin Dialogos ////////////////////////////////
+	
 	private void SetupUI() {
+	
 		TB_Login.setChecked(false);
 		progressBar_Apuntamiento.setMax(100);
 		progressBar_Apuntamiento.setProgress(0);
@@ -293,12 +294,9 @@ private void DialogoReinicioOPT(){
 		btn_SetPower.setEnabled(false);
 		btn_RestaurarOPT.setEnabled(true);
 		
-		
 		TB_Login.setEnabled(false);
 		TB_Pointing.setEnabled(false);
 		TB_CwOnOff.setEnabled(false);
-		
-		
 	}
 
 	private void Botones() {
@@ -476,13 +474,11 @@ private void DialogoReinicioOPT(){
 		TextNivel=(TextView) findViewById(R.id.TextNivel);
 		Text_Path=(TextView) findViewById(R.id.text_Path);
 		Text_lineas=(TextView) findViewById(R.id.Text_lineas);
-		//,,,;
 		Text_Serial=(TextView) findViewById(R.id.Text_Serial);
 		Text_Modelo=(TextView) findViewById(R.id.Text_Modelo);
 		Text_Firmware=(TextView) findViewById(R.id.Text_Firmware);
 		Text_VersionLinux=(TextView) findViewById(R.id.Text_VersionLinux);
 		
-		//btn_Led=(Button) findViewById(R.id.btn_Led);
 		btn_Ingresar=(Button) findViewById(R.id.btn_Ingresar);
 		btn_SetFreq=(Button) findViewById(R.id.btn_SetFreq);
 		btn_Reset=(Button) findViewById(R.id.btn_Reset);
@@ -497,8 +493,8 @@ private void DialogoReinicioOPT(){
 		TB_Pointing=(ToggleButton) findViewById(R.id.TB_Pointing);
 		
 		EditFreq=(EditText) findViewById(R.id.EditFreq);
-	
 		EditTxPower=(EditText) findViewById(R.id.EditTxPower);
+		
 		progressBar_Apuntamiento=(ProgressBar) findViewById(R.id.progressBar_Apuntamiento);
 	}
 	
@@ -527,36 +523,28 @@ private void DialogoReinicioOPT(){
 		
 		if(detectorString.contains("> ")){
 			 runOnUiThread(new Runnable() {
-       public void run() {
-       	Text_Log.setText("Log Telnet");
-			 }
+       public void run() {Text_Log.setText("Log Telnet"); }
 			    });
 		}
-		
-		
-		if(detectorString.contains("[ErrorStack]")){
 			
+		if(detectorString.contains("[ErrorStack]")){
 			FuncionEnviar("exit");
-			 runOnUiThread(new Runnable() {
-        public void run() {
-			       	   Toast.makeText(getApplicationContext(), "Necesita el OPT !!!", Toast.LENGTH_SHORT).show();
-		        	   }
+			runOnUiThread(new Runnable() {
+        public void run() {Toast.makeText(getApplicationContext(), "Necesita el OPT !!!", Toast.LENGTH_SHORT).show();}
 			    });
 			}	
-		if(hab){	
 		
-		if(detectorString.contains("SN: ")){
+		if(hab){	
+			if(detectorString.contains("SN: ")){
 			 runOnUiThread(new Runnable() {
-
-			        int posicion =strInputGlobal.indexOf("SN:");
+				 	int posicion =strInputGlobal.indexOf("SN:");
 			        public void run() {
 			        	   Text_Serial.setText(strInputGlobal.substring(posicion+3,posicion+15));
 			        	     }
 			    });
 			}	
-		if(detectorString.contains("Model: ")){
+			if(detectorString.contains("Model: ")){
 			 runOnUiThread(new Runnable() {
-
 			        int posicion =strInputGlobal.indexOf("Model:");
 			        public void run() {
 			        	   Text_Modelo.setText(strInputGlobal.substring(posicion+6,posicion+15));
@@ -567,8 +555,7 @@ private void DialogoReinicioOPT(){
 		
 		if(detectorString.contains("iDirect Linux-BSP Release")){
 			 runOnUiThread(new Runnable() {
-
-			        int posicion =strInputGlobal.indexOf("iDirect Linux-BSP Release");
+				 int posicion =strInputGlobal.indexOf("iDirect Linux-BSP Release");
 			        public void run() {
 			        	   Text_VersionLinux.setText(strInputGlobal.substring(posicion+25,posicion+35));
 		        	   }
@@ -578,8 +565,7 @@ private void DialogoReinicioOPT(){
 		//Code Version:
 		if(detectorString.contains("Code Version:")){
 			 runOnUiThread(new Runnable() {
-
-			        int posicion =strInputGlobal.indexOf("Code Version:");
+				 	int posicion =strInputGlobal.indexOf("Code Version:");
 			        public void run() {
 			        	   Text_Firmware.setText(strInputGlobal.substring(posicion+13,posicion+23));
 		        	   }
@@ -587,17 +573,14 @@ private void DialogoReinicioOPT(){
 			}
 		
 			////////// Usuario Admin
-		 	if (detectorString.contains("Username:")){
+		if (detectorString.contains("Username:")){
 				FuncionEnviar("admin");		
 			}
 			/////////Password
-			if(detectorString.contains("Password:")){
-				
-				final String pass=password;//EditPass.getText().toString();
-				
-				 runOnUiThread(new Runnable() {
-				       
-							        public void run() {
+		if(detectorString.contains("Password:")){
+			final String pass=password;//EditPass.getText().toString();
+			runOnUiThread(new Runnable() {
+				        public void run() {
 							        	Log.d("FuncionDetectarComando","PASS EDIT: "+pass);
 							        	Toast.makeText(getApplicationContext(), "Password: "+pass, Toast.LENGTH_SHORT).show();
 										  }
@@ -607,14 +590,10 @@ private void DialogoReinicioOPT(){
 						}	
 					
 							
-			if(detectorString.contains(">")&telnet){
-				
+		if(detectorString.contains(">")&telnet){
 				telnet=false;
-				
-				 runOnUiThread(new Runnable() {
-				       
-							        public void run() {
-							        	btn_Browser.setEnabled(true);
+			 runOnUiThread(new Runnable() {
+				public void run() {    	btn_Browser.setEnabled(true);
 							    		btn_EnviarOPT.setEnabled(false);
 							        	btn_exit.setEnabled(true);
 										btn_Ingresar.setEnabled(false);
@@ -622,13 +601,13 @@ private void DialogoReinicioOPT(){
 										btn_SetPower.setEnabled(true);
 										TB_Pointing.setEnabled(true);
 										TB_CwOnOff.setEnabled(true);
-										  Toast.makeText(getApplicationContext(), " Logueado en Telnet", Toast.LENGTH_SHORT).show();
+										Toast.makeText(getApplicationContext(), " Logueado en Telnet", Toast.LENGTH_SHORT).show();
 										progressDialogLinux.dismiss();	
 									       }
 							    });
-			
 				}
-              if(detectorString.contains("Access Denied")){
+		
+         if(detectorString.contains("Access Denied")){
             	
 				telnet=false;
 				 runOnUiThread(new Runnable() {
@@ -636,27 +615,22 @@ private void DialogoReinicioOPT(){
 										  Toast.makeText(getApplicationContext(), " Error de Password", Toast.LENGTH_SHORT).show();
 										  Habilitacion=false;
 										  DialogoErrorPassword();
-										  
-							  
 									       }
 							    });
-				
 				}	
-			if(detectorString.contains(("tx cw on"))||detectorString.contains("tx cw off")){
+		if(detectorString.contains(("tx cw on"))||detectorString.contains("tx cw off")){
 				FuncionEnviar("tx cw");
 				}	
 			
-			if(detectorString.contains("cw =")){
+		if(detectorString.contains("cw =")){
 				 	  runOnUiThread(new Runnable() {
 		        int posicion =strInputGlobal.indexOf("=");
 					        public void run() {
 								  Toast.makeText(getApplicationContext(), " Clean Carrier = "+strInputGlobal.substring(posicion+2,posicion+5), Toast.LENGTH_SHORT).show();
 							       }
 					    });
-					
 				}	
-			
-			if(detectorString.contains("pointing =")){
+		if(detectorString.contains("pointing =")){
 				 runOnUiThread(new Runnable() {
 		        int posicion =strInputGlobal.indexOf("=");
 					        public void run() {
@@ -664,8 +638,7 @@ private void DialogoReinicioOPT(){
 							        }
 					    });
 			}	
-			
-			if(detectorString.contains("power =")||detectorString.contains("Tx Power   =")){
+		if(detectorString.contains("power =")||detectorString.contains("Tx Power   =")){
 				 runOnUiThread(new Runnable() {
 					 int posicion =strInputGlobal.indexOf("=");
 					        public void run() {
@@ -673,7 +646,7 @@ private void DialogoReinicioOPT(){
 					        }
 					    });
 			}	
-			if(detectorString.contains("Tx Frequency")){
+		if(detectorString.contains("Tx Frequency")){
 				 runOnUiThread(new Runnable() {
 
 				        int posicion =strInputGlobal.indexOf("=");
@@ -684,14 +657,10 @@ private void DialogoReinicioOPT(){
 				    });
 				}	
 			}
-	
-		
-		///////// *****   LINUX *****//////////////////////
-			else
+	//////// *****   LINUX *****//////////////////////
+	else
 			{
-		
 				telnet =true;
-				
 				if(detectorString.contains("# ")){
 					 runOnUiThread(new Runnable() {
 		        public void run() {
@@ -700,16 +669,14 @@ private void DialogoReinicioOPT(){
 		        	btn_Ingresar.setEnabled(true);
 					 }
 					    });
-				}
-				
+					}
 				if(detectorString.contains("rm: remove")){
 				
 					FuncionEnviar("y");
 					Log.d("Borrar", "se boorro archivo");
-				}
+					}
 				if(detectorString.contains("falcon_monitor:OK")){
 					 runOnUiThread(new Runnable() {
-
 					        public void run() {
 					        	DialogoReiniOPT.dismiss();
 					            	Toast.makeText(getApplicationContext(), "Archivo OPT Inicializado !!!", Toast.LENGTH_LONG).show();
@@ -727,9 +694,7 @@ private void DialogoReinicioOPT(){
 					        	  }
 					    });
 					}
-				
-			
-			if (detectorString.contains("iDirect login:")){
+				if (detectorString.contains("iDirect login:")){
 			FuncionEnviar("root");
 			
 			}
@@ -747,31 +712,24 @@ private void DialogoReinicioOPT(){
 				        	  }
 				    });
 				
-				}else{
-				FuncionEnviar("iDirect");
-				 runOnUiThread(new Runnable() {
-
-				        public void run() {
-				       	btn_Ingresar.setEnabled(true);
-				        	  }
+				}
+				else{
+					FuncionEnviar("iDirect");
+					runOnUiThread(new Runnable() {
+						public void run() {
+				       	btn_Ingresar.setEnabled(true);}
 				    });
 				Log.d("FuncionDetectarComando","FuncionEnviar(iDirect);");
-			
-			}
-			}
-		if(detectorString.contains("Login incorrect")){
-				
+					}
+				}
+			if(detectorString.contains("Login incorrect")){
 				if (boolPassword){
 					boolPassword=false;
 				}else{
 					boolPassword=true;
 				}
-				
-			
 			}
-		
 		}
-	
 	}
 
 	////////////***   Bluetooth    INICIO ******///////////////////////////////
@@ -1129,18 +1087,11 @@ private void DialogoReinicioOPT(){
 								} catch (Exception e) {
 									// TODO: handle exception
 								}
-                				
-                				
-                			}
+              			}
                 			 FuncionEnviar(""+finCadena);
-                			
                 			 FuncionEnviar("service idirect_falcon restart");
-                   			
-            	        	
             	        }
             	    });
-            	
-          
             }
           });
 		}
@@ -1179,41 +1130,37 @@ private void DialogoReinicioOPT(){
 	{
 
 	try{
-	File f;
-	FileReader lectorArchivo;
-	//Creamos el objeto del archivo que vamos a leer
-	f = new File(nombre);
-	//Creamos el objeto FileReader que abrira el flujo(Stream) de datos para realizar la lectura
-	lectorArchivo = new FileReader(f);
+		File f;
+		FileReader lectorArchivo;
+		//Creamos el objeto del archivo que vamos a leer
+		f = new File(nombre);
+		//Creamos el objeto FileReader que abrira el flujo(Stream) de datos para realizar la lectura
+		lectorArchivo = new FileReader(f);
 
-	//Creamos un lector en buffer para recopilar datos a travez del flujo "lectorArchivo" que hemos creado
-	BufferedReader br = new BufferedReader(lectorArchivo);
+		//Creamos un lector en buffer para recopilar datos a travez del flujo "lectorArchivo" que hemos creado
+		BufferedReader br = new BufferedReader(lectorArchivo);
 
-	String l="";
-	//Esta variable "l" la utilizamos para guardar mas adelante toda la lectura del archivo
+		String l="";
+		//Esta variable "l" la utilizamos para guardar mas adelante toda la lectura del archivo
 
-	String aux="";/*variable auxiliar*/
+		String aux="";/*variable auxiliar*/
 
-	while(true)
-	//este ciclo while se usa para repetir el proceso de lectura, ya que se lee solo 1 linea de texto a la vez
-	{
-		aux=br.readLine();
-		//leemos una linea de texto y la guardamos en la variable auxiliar
-		if(aux!=null)
-		l=l+aux+"\n";
-		/*si la variable aux tiene datos se va acumulando en la variable l,
-		* en caso de ser nula quiere decir que ya nos hemos leido todo
-		* el archivo de texto*/
-	else
-		break;
+		while(true)
+			//este ciclo while se usa para repetir el proceso de lectura, ya que se lee solo 1 linea de texto a la vez
+		{
+			aux=br.readLine();
+			//leemos una linea de texto y la guardamos en la variable auxiliar
+			if(aux!=null)
+				l=l+aux+"\n";
+			/*si la variable aux tiene datos se va acumulando en la variable l,
+			 * en caso de ser nula quiere decir que ya nos hemos leido todo
+			 * el archivo de texto*/
+			else
+				break;
 		}
-
 		br.close();
-
 		lectorArchivo.close();
-
 		return l;
-
 		}catch(IOException e){
 		System.out.println("Error:"+e.getMessage());
 		}
