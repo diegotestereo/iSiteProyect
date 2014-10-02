@@ -339,9 +339,7 @@ public class ll_Inicio_Login extends Activity {
 			TB_CwOnOff.setEnabled(false);
 			}
 		});
-		
-		btn_Browser.setOnClickListener(new OnClickListener() {
-		
+		btn_Browser.setOnClickListener(new OnClickListener() {		
 		@Override
 		public void onClick(View v) {
 			FuncionEnviar("exit");
@@ -351,7 +349,6 @@ public class ll_Inicio_Login extends Activity {
 		
 			}
 		});
-		
 		btn_SetFreq.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -362,7 +359,6 @@ public class ll_Inicio_Login extends Activity {
 				
 			}
 		});
-					
 		btn_Ingresar.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -371,16 +367,14 @@ public class ll_Inicio_Login extends Activity {
 				DialogoInicioPassword();
 				
 			}
-		});
-				
+		});		
 		btn_Reset.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				DialogoReset();
 			}
-		});
-			
+		});			
 		TB_Login.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
 			@Override
@@ -390,8 +384,7 @@ public class ll_Inicio_Login extends Activity {
 				else{Habilitacion=isChecked;
 				}
 			}
-		});
-		
+		});		
 		TB_CwOnOff.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
 			@Override
@@ -409,7 +402,6 @@ public class ll_Inicio_Login extends Activity {
 			
 			}
 		});
-	
 		btn_SetPower.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -424,8 +416,7 @@ public class ll_Inicio_Login extends Activity {
 				imm.hideSoftInputFromWindow(EditTxPower.getWindowToken(), 0);}
 				
 			}
-		});
-		
+		});		
 		btn_Prueba.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -466,16 +457,14 @@ public class ll_Inicio_Login extends Activity {
 				}
 				
 			}
-		});
-		
+		});		
 		btn_EnviarOPT.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				DialogoenviarOPT();
 			}
-		});
-	
+		});	
 		btn_RestaurarOPT.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -539,9 +528,9 @@ public class ll_Inicio_Login extends Activity {
 		// separador de CadenaPArtida para tenerla en lineas.
 		String[] CadenaPartida = detectorString.split("\r");
 		int longitud =CadenaPartida.length;
-	//	Log.d("FuncionDetectarComando","Esta es la longitud  "+longitud);
+		//Log.d("FuncionDetectarComando","Esta es la longitud  "+longitud);
 
-	/*	for(int i=0;i<longitud;i++){
+		/*for(int i=0;i<longitud;i++){
 		Log.d("FuncionDetectarComando","Esta es la cadena "+i+": "+CadenaPartida[i]+"-");
 				}*/
 		
@@ -576,11 +565,14 @@ public class ll_Inicio_Login extends Activity {
 			    });
 			}
 		
-			if(detectorString.contains("Rx Power:")){
+			if(detectorString.contains("Rx Power: ")){
 				 runOnUiThread(new Runnable() {
-				        int posicion =strInputGlobal.indexOf(":");
+				        int posicion =strInputGlobal.indexOf(": ");
+				        String niveldbm=strInputGlobal.substring(posicion+1,posicion+8);
+				        
 				        public void run() {
-				        	   TextNivel.setText(strInputGlobal.substring(posicion+2,posicion+8));
+				        	Log.d("Señal en dbm ",niveldbm+ " dbm");
+				        	   TextNivel.setText(niveldbm);
 			        	   }
 				    });
 				}
@@ -983,6 +975,7 @@ public class ll_Inicio_Login extends Activity {
 			try {
 				Log.d("Midiendo Señal","Medicion");
 				Thread.sleep(1500);
+				FuncionEnviar("rx power");
 					 
 			} catch (Exception e) {
 				// TODO: handle exception
