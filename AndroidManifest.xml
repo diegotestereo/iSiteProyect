@@ -39,15 +39,16 @@
         <activity android:name="PreferencesActivity"></activity>
         <activity android:name="com.iSiteProyect.ll_login"
               android:label="Proyecto iSite"></activity>
-            <activity android:name="com.iSiteProyect.ll_Inicio_Login"
+        <activity android:name="com.iSiteProyect.ll_Inicio_Login"
               android:label="Proyecto iSite"></activity>
-               
         <activity
             android:name=".FileChooser"
             android:label="Choose File" 
             > 
             
         </activity>
-    </application>
+   		<service android:name=".MiServicio"></service>
+        
+        </application>
 
 </manifest>

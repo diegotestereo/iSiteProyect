@@ -567,6 +567,7 @@ public class ll_Inicio_Login extends Activity {
 			}
 		
 			if(detectorString.contains("Rx Power: ")){
+				
 				 runOnUiThread(new Runnable() {
 				        int posicion =strInputGlobal.indexOf(": -");
 				        String niveldbm=strInputGlobal.substring(posicion+2,posicion+8);
@@ -819,9 +820,9 @@ public class ll_Inicio_Login extends Activity {
 
 	@Override
 	protected void onPause() {
-	/*	if (mBTSocket != null && mIsBluetoothConnected) {
+		if (mBTSocket != null && mIsBluetoothConnected) {
 			new DisConnectBT().execute();
-		}*/
+		}
 		Log.d(TAG, "Paused");
 		super.onPause();
 	}
