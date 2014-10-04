@@ -24,13 +24,14 @@
                 android:background="@color/blanco"
                 android:gravity="center"
                 android:text="Info Modem"
+                android:textColor="@color/azul1"
                 android:textSize="20dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="3dp"
-                android:background="@color/amarillo"
+                android:background="@color/verdeclaro"
                 android:baselineAligned="true"
                 android:gravity="center"
                 android:orientation="vertical" >
@@ -145,17 +146,20 @@
                         android:id="@+id/btn_Ingresar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                          android:layout_margin="2dp"
+                        android:layout_margin="2dp"
                         android:background="@drawable/selectorboton"
-                        android:text="Login" />
+                        android:text="Login"
+                        android:textColor="@color/blanco" />
 
                     <Button
                         android:id="@+id/btn_exit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                          android:layout_margin="2dp"
+                        android:layout_margin="2dp"
                         android:background="@drawable/selectorboton"
-                        android:text="Exit" />
+                        android:text="Exit"
+                        android:textColor="@color/blanco" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -169,7 +173,8 @@
                         android:id="@+id/Text_Log"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Log ?" />
+                        android:text="Log ?"
+                        android:textColor="@color/blanco" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -181,6 +186,7 @@
                 android:background="@color/blanco"
                 android:gravity="center"
                 android:text="Clean Carrier"
+                android:textColor="@color/azul1"
                 android:textSize="20dp" />
 
             <LinearLayout
@@ -199,8 +205,9 @@
 
                     <EditText
                         android:id="@+id/EditFreq"
-                        android:layout_width="80dp"
+                        android:layout_width="62dp"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/back"
                         android:ems="10"
                         android:inputType="numberDecimal"
                         android:maxLength="8"
@@ -213,7 +220,9 @@
                         android:layout_width="63dp"
                         android:layout_height="wrap_content"
                         android:background="@drawable/selectorboton"
-                        android:text="Set Freq" />
+                        android:text="Set Freq"
+                        android:textColor="@color/blanco" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -227,7 +236,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="CW" />
+                        android:text="CW"
+                        android:textColor="@color/blanco"
+                        android:textColorHint="@color/blanco" />
 
                     <ToggleButton
                         android:id="@+id/TB_CwOnOff"
@@ -248,7 +259,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="Nivel de TX" />
+                        android:text="Nivel de TX"
+                        android:textColor="@color/blanco" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -266,7 +278,8 @@
                             android:id="@+id/EditTxPower"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_weight="0.71"
+                            android:background="@drawable/back"
                             android:includeFontPadding="true"
                             android:inputType="number"
                             android:maxLength="2" />
@@ -286,7 +299,9 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:background="@drawable/selectorboton"
-                        android:text="Set" />
+                        android:text="Set"
+                        android:textColor="@color/blanco" />
+
                 </LinearLayout>
             </LinearLayout>
 
@@ -297,6 +312,7 @@
                 android:background="@color/blanco"
                 android:gravity="center"
                 android:text="Apuntamiento"
+                android:textColor="@color/azul1"
                 android:textSize="20dp" />
 
             <LinearLayout
@@ -321,7 +337,9 @@
                         android:id="@+id/TextPointing"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Pointing Off" />
+                        android:text="Pointing Off"
+                        android:textColor="@color/blanco" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -348,7 +366,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="-70 dbm" />
+                        android:text="Sin medición"
+                        android:textColor="@color/blanco"
+                        android:textSize="25dp" />
+
                 </LinearLayout>
 
             </LinearLayout>
@@ -360,6 +381,7 @@
                 android:background="@color/blanco"
                 android:gravity="center"
                 android:text="Cargar OPT"
+                android:textColor="@color/azul1"
                 android:textSize="20dp" />
 
             <LinearLayout
@@ -375,6 +397,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Buscar Archivo OPT para cargar"
+                    android:textColor="@color/blanco"
                     android:textSize="16dp" />
 
                 <LinearLayout
@@ -387,27 +410,30 @@
                         android:id="@+id/btn_Browser"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
                         android:background="@drawable/selectorboton"
                         android:padding="2dp"
-                          android:layout_margin="2dp"
-                        android:text="Buscar" />
+                        android:text="Buscar"
+                        android:textColor="@color/blanco" />
 
                     <Button
                         android:id="@+id/btn_EnviarOPT"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
                         android:background="@drawable/selectorboton"
                         android:padding="2dp"
-                          android:layout_margin="2dp"
-                        android:text="Enviar" />
+                        android:text="Enviar"
+                        android:textColor="@color/blanco" />
 
                     <Button
                         android:id="@+id/btn_Reset"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
                         android:background="@drawable/selectorboton"
-                          android:layout_margin="2dp"
-                        android:text="Reset" />
+                        android:text="Reset"
+                        android:textColor="@color/blanco" />
 
                     <Button
                         android:id="@+id/btn_RestaurarOPT"
@@ -416,7 +442,8 @@
                         android:layout_margin="2dp"
                         android:background="@drawable/selectorboton"
                         android:padding="2dp"
-                        android:text="Backup" />
+                        android:text="Backup"
+                        android:textColor="@color/blanco" />
 
                 </LinearLayout>
 
@@ -424,7 +451,8 @@
                     android:id="@+id/Text_lineas"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="lineas del archivo a transmitir" />
+                    android:text="lineas del archivo a transmitir"
+                    android:textColor="@color/blanco" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"

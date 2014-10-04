@@ -294,9 +294,9 @@ public class ll_Inicio_Login extends Activity {
 	
 	private void SetupUI() {
 	
-		TextNivel.setText("0 dbm");
+		TextNivel.setText("Sin medición");
 		TB_Login.setChecked(false);
-		progressBar_Apuntamiento.setMax(100);
+		progressBar_Apuntamiento.setMax(7500);
 		progressBar_Apuntamiento.setProgress(0);
 		
 		btn_Browser.setEnabled(true);
@@ -453,6 +453,7 @@ public class ll_Inicio_Login extends Activity {
 					 TB_CwOnOff.setEnabled(true);
 					 btn_SetFreq.setEnabled(true);
 					 btn_SetPower.setEnabled(true);
+					 TextNivel.setText("Sin medición");
 				
 				}
 				
@@ -567,12 +568,33 @@ public class ll_Inicio_Login extends Activity {
 		
 			if(detectorString.contains("Rx Power: ")){
 				 runOnUiThread(new Runnable() {
-				        int posicion =strInputGlobal.indexOf(": ");
-				        String niveldbm=strInputGlobal.substring(posicion+1,posicion+8);
-				        
+				        int posicion =strInputGlobal.indexOf(": -");
+				        String niveldbm=strInputGlobal.substring(posicion+2,posicion+8);
+				   	
 				        public void run() {
-				        	Log.d("Señal en dbm ",niveldbm+ " dbm");
-				        	   TextNivel.setText(niveldbm+" dbm");
+				        	Log.d("Señal en dbm ","entra:"+niveldbm+ "dbm");
+				        	
+				        	///////////////////
+				      	
+				        	String[] NivelesAlmacenados = strInputGlobal.split("\r");
+						
+							try {
+								float nivelFlotante= Float.parseFloat(niveldbm)*100;
+								int NivelBaliza=7500+(int)nivelFlotante;
+								progressBar_Apuntamiento.setProgress(NivelBaliza);
+								TextNivel.setText("Nivel: "+niveldbm+" dbm");
+								
+							} catch (Exception e) {
+								progressBar_Apuntamiento.setProgress(0);
+								
+								TextNivel.setText("Error en la medicion");
+							}
+							
+							//strInputGlobal="";
+				        	
+				        	////////////////////
+				        	//   TextNivel.setText(niveldbm+" dbm");
+				        	 
 			        	   }
 				    });
 				}
@@ -747,6 +769,8 @@ public class ll_Inicio_Login extends Activity {
 				}
 			}
 		}
+		
+		  //strInputGlobal="";
 	}
 
 	////////////***   Bluetooth    INICIO ******///////////////////////////////
@@ -951,7 +975,7 @@ public class ll_Inicio_Login extends Activity {
 			} catch (Exception e) {
 				progressBar_Apuntamiento.setProgress(0);
 				
-				TextNivel.setText("Nivel= -  dbm");
+				TextNivel.setText("Error en la medicion");
 			}
 			
 			strInputGlobal="";
@@ -959,6 +983,7 @@ public class ll_Inicio_Login extends Activity {
 
 	}
 
+    
     public class MedirNivelSeñal extends AsyncTask<Void, Void, Void> {
 		
 		@Override 
@@ -973,13 +998,15 @@ public class ll_Inicio_Login extends Activity {
 			
 			while(!isCancelled()){
 			try {
-				Log.d("Midiendo Señal","Medicion");
 				Thread.sleep(1500);
 				FuncionEnviar("rx power");
 					 
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
+			
+		
+			
 			}
 			return null;
 			
@@ -990,13 +1017,13 @@ public class ll_Inicio_Login extends Activity {
 		}
 		@Override
 		protected void onPostExecute(Void result) {
-			TextNivel.setText("0 dbm");
+		//	TextNivel.setText("0 dbm");
 			}
 		
 		@Override
 		protected void onCancelled(Void result) {
 			
-			  Toast.makeText(getApplicationContext(), "Cancelado", Toast.LENGTH_SHORT).show();
+			  Toast.makeText(getApplicationContext(), "Medicion Cancelada", Toast.LENGTH_SHORT).show();
 				
 			
 		}
@@ -1064,8 +1091,7 @@ public void Hilo() {
 			Toast.makeText(getApplicationContext(), "comienza hilo", Toast.LENGTH_SHORT);
 			Text_Path.setText("El OPT fue seleccionado.");
         	FuncionEnviar("cd /etc/idirect/falcon");
-        	// FuncionEnviar("mv falcon.opt falcon.opt.backup");
-        	//FuncionEnviar("rm falcon.opt");
+        	
         	FuncionEnviar("cat>falcon.opt");
 			progressDialogOPT = new ProgressDialog(ll_Inicio_Login.this);
 			progressDialogOPT.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -1114,8 +1140,7 @@ public void Hilo() {
 		}
 		
 	}
-	
-	
+		
 	public void HiloOPT() {
 		Log.d("HiloOPT", "hilo opete");
 		thOpt = new Thread(new Runnable() {
