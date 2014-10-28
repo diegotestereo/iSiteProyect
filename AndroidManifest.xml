@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.iSiteProyect.Homescreen"
+            android:name=".ll_Apuntamiento"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name" >
             <intent-filter>
@@ -47,6 +47,7 @@
             > 
             
         </activity>
+        <activity android:name=".Homescreen"></activity>
    		<service android:name=".MiServicio"></service>
         
         </application>
