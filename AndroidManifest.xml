@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ll_Apuntamiento"
+            android:name="com.iSiteProyect.ll_Apuntamiento"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name" >
             <intent-filter>
