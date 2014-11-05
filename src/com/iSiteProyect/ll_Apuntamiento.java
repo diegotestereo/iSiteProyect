@@ -32,7 +32,7 @@ public class ll_Apuntamiento extends Activity{
 	private TextView Azimuth,Elevacion,Polarizador,TextPrueba;
 	private EditText ETxt_Lat,ETxt_Lon,ETxt_Sat;
 	private Spinner Spin_Satelites,Spin_Offset;
-	private String[] Satelites={"IS23","Arsat 1","AMC6"},OffsetAntena={"0°","15°","16°","17°","18°","19°","20°","21°","22°","23°","24°","25°"};
+	private String[] Satelites={"IS23","Arsat 1","AMC6","G28"},OffsetAntena={"0°","15°","16°","17°","18°","19°","20°","21°","22°","23°","24°","25°"};
 	ArrayAdapter<String> AdaptadorSatelites,AdaptadorOffset;
 	double OffSet=0,Az=0,AzRad,El=0,ElRad,Skew=0,SkewRad=0,Sat,SatRad,Lat,LatRad,Lon,LonRad,Dif=0,DifRad, Const=0.1512,ConstRad=0;
 	private LocationManager locManager;
@@ -70,6 +70,9 @@ public class ll_Apuntamiento extends Activity{
 					break;
 				case 2:
 					var="-72.0";
+					break;
+				case 3:
+					var="-89.0";
 					break;
 				default:
 					break;
@@ -145,7 +148,7 @@ public class ll_Apuntamiento extends Activity{
 	private void EnableGPSIfPossible()
 	{   
 	    final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
-	     if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+	     if ( !manager.isProviderEnabled( LocationManager.NETWORK_PROVIDER ) ) {
 	            buildAlertMessageNoGps();
 	           
 	        }
@@ -259,7 +262,7 @@ public class ll_Apuntamiento extends Activity{
     	locManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
     	
     	//Obtenemos la última posición conocida
-    	Location loc = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+    	Location loc = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
     	
     	//Mostramos la última posición conocida
     	mostrarPosicion(loc);
@@ -289,7 +292,7 @@ public class ll_Apuntamiento extends Activity{
     	};
     	
     	locManager.requestLocationUpdates(
-    			LocationManager.GPS_PROVIDER, 30000, 0, locListener);
+    			LocationManager.NETWORK_PROVIDER, 30000, 0, locListener);
     }
 	
 	private void mostrarPosicion(Location loc) {
